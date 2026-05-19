@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Better High 2026 · Check-In</title>
+<script src="/lib/html5-qrcode.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; }
+  body { background: #0f0d0a; color: #f5f1e8; min-height: 100vh; padding: 16px; }
+  .wrap { max-width: 500px; margin: 0 auto; }
+
+  /* Header */
+  .header { text-align: center; padding: 20px 0 24px; border-bottom: 1px solid rgba(201,169,97,0.2); margin-bottom: 24px; }
+  .header h1 { color: #c9a961; font-size: 20px; letter-spacing: 3px; font-weight: 700; }
+  .header p { color: #a8a298; font-size: 11px; margin-top: 6px; letter-spacing: 2px; }
+
+  /* Buttons */
+  .btn { width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; cursor: pointer; margin-bottom: 12px; transition: transform 0.1s; }
+  .btn:active { transform: scale(0.98); }
+  .btn-gold { background: #c9a961; color: #0f0d0a; }
+  .btn-green { background: #4a8a4a; color: #fff; }
+  .btn-red { background: #c5453c; color: #fff; }
+  .btn-dark { background: #1a1816; color: #f5f1e8; border: 1px solid rgba(255,255,255,0.15); }
+
+  /* Cards */
+  .card { background: #1a1816; border-radius: 14px; padding: 20px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.06); }
+  .card h2 { font-size: 22px; margin-bottom: 6px; color: #f5f1e8; }
+  .card .sub { color: #a8a298; font-size: 13px; margin-bottom: 16px; }
+
+  /* Form */
+  input { width: 100%; background: #0f0d0a; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 16px; font-size: 16px; border-radius: 10px; margin-bottom: 12px; }
+  input:focus { outline: none; border-color: #c9a961; }
+  label { display: block; color: #a8a298; font-size: 11px; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; }
+
+  /* Detail rows */
+  .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px; }
+  .row:last-child { border: none; }
+  .row .label { color: #a8a298; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+  .row .value { color: #fff; font-weight: 500; text-align: right; }
+
+  /* Badge */
+  .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 10px; letter-spacing: 1px; font-weight: 700; text-transform: uppercase; }
+  .badge-green { background: rgba(74,138,74,0.2); color: #4a8a4a; border: 1px solid #4a8a4a; }
+  .badge-red { background: rgba(197,69,60,0.15); color: #c5453c; border: 1px solid #c5453c; }
+  .badge-gold { background: rgba(201,169,97,0.15); color: #c9a961; border: 1px solid #c9a961; }
+
+  /* Reader */
+  #reader { width: 100%; border-radius: 14px; overflow: hidden; background: #000; margin-bottom: 12px; display: none; min-height: 300px; }
+  #reader.show { display: block; }
+
+  /* Messages */
+  .msg { padding: 14px; border-radius: 10px; margin-bottom: 16px; font-size: 13px; line-height: 1.5; display: none; }
+  .msg.show { display: block; }
+  .msg-error { background: rgba(197,69,60,0.15); border: 1px solid #c5453c; color: #ff8a82; }
+  .msg-warn  { background: rgba(201,169,97,0.15); border: 1px solid #c9a961; color: #e6c878; }
+  .msg-ok    { background: rgba(74,138,74,0.2); border: 1px solid #4a8a4a; color: #8ad48a; }
+
+  /* Hidden */
+  .hidden { display: none !important; }
+
+  /* Spinner */
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.2); border-top-color: #c9a961; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Big scanned ID display */
+  .big-id { font-family: 'SF Mono', Menlo, monospace; font-size: 26px; color: #c9a961; text-align: center; padding: 12px; background: #0f0d0a; border-radius: 10px; margin: 12px 0; letter-spacing: 2px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="header">
+    <h1>🎟️ BETTER HIGH 2026</h1>
+    <p>RECEPTION CHECK-IN</p>
+  </div>
+
+  <div id="msg" class="msg"></div>
+
+  <!-- STEP 1: SCAN GUEST -->
+  <div id="step1">
+    <div class="card">
+      <h2>Step 1: Scan Guest QR</h2>
+      <div class="sub">Camera kholo aur guest ka QR scan karo</div>
+      <button class="btn btn-gold" id="btnScanGuest">📷 OPEN SCANNER</button>
+      <div id="reader"></div>
+      <button class="btn btn-red hidden" id="btnStopScan">✕ STOP SCANNER</button>
+
+      <label style="margin-top:16px;">OR ENTER QR ID MANUALLY</label>
+      <input type="text" id="manualQr" placeholder="e.g. 0V66O46" autocapitalize="characters">
+      <button class="btn btn-dark" id="btnManualLookup">🔍 LOOKUP MANUALLY</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: GUEST FOUND -->
+  <div id="step2" class="hidden">
+    <div class="card">
+      <h2 id="guestName">—</h2>
+      <div class="sub" id="guestEmail">—</div>
+
+      <div class="row">
+        <span class="label">QR ID</span>
+        <span class="value" id="guestQrId">—</span>
+      </div>
+      <div class="row">
+        <span class="label">Status</span>
+        <span class="value"><span id="guestStatus" class="badge">—</span></span>
+      </div>
+      <div class="row">
+        <span class="label">Phone</span>
+        <span class="value" id="guestPhone">—</span>
+      </div>
+      <div class="row">
+        <span class="label">Invited By</span>
+        <span class="value" id="guestInvitedBy">—</span>
+      </div>
+      <div class="row">
+        <span class="label">Special</span>
+        <span class="value" id="guestSpecial">—</span>
+      </div>
+    </div>
+
+    <div id="step2Actions">
+      <button class="btn btn-gold" id="btnScanBand">🎟️ SCAN WRISTBAND</button>
+      <button class="btn btn-dark" id="btnBackHome">← BACK</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: CONFIRM -->
+  <div id="step3" class="hidden">
+    <div class="card">
+      <h2>Step 3: Confirm Check-In</h2>
+      <div class="row"><span class="label">Guest</span><span class="value" id="confirmName">—</span></div>
+      <div class="row"><span class="label">Wristband</span><span class="value" id="confirmBand">—</span></div>
+    </div>
+    <button class="btn btn-green" id="btnConfirm">✓ CONFIRM CHECK-IN</button>
+    <button class="btn btn-dark" id="btnCancelConfirm">← BACK</button>
+  </div>
+
+  <!-- STEP 4: SUCCESS -->
+  <div id="step4" class="hidden">
+    <div class="card" style="text-align:center;">
+      <div style="font-size:60px; margin-bottom:8px;">✅</div>
+      <h2 id="successName">Checked In!</h2>
+      <div class="sub" id="successDetail">—</div>
+    </div>
+    <button class="btn btn-gold" id="btnNewGuest">+ NEXT GUEST</button>
+  </div>
+
+</div>
+
+<script>
+// ---------- STATE ----------
+let scanner = null;
+let scanMode = null; // 'guest' or 'band'
+let currentGuest = null;
+let currentBand = null;
+
+const $ = id => document.getElementById(id);
+
+// ---------- HELPERS ----------
+function show(stepId) {
+  ['step1','step2','step3','step4'].forEach(s => $(s).classList.add('hidden'));
+  $(stepId).classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+function msg(text, type) {
+  const m = $('msg');
+  m.textContent = text;
+  m.className = 'msg show msg-' + type;
+  setTimeout(() => m.classList.remove('show'), 5000);
+}
+
+function esc(s) {
+  if (s == null) return '—';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+
+// ---------- SCANNER ----------
+async function startScan(mode) {
+  if (typeof Html5Qrcode === 'undefined') {
+    msg('QR library load nahi hui. Page refresh karo.', 'error');
+    return;
+  }
+  if (!navigator.mediaDevices) {
+    msg('Camera support nahi. HTTPS use karo.', 'error');
+    return;
+  }
+
+  scanMode = mode;
+  $('reader').classList.add('show');
+  $('btnStopScan').classList.remove('hidden');
+  if (mode === 'guest') $('btnScanGuest').classList.add('hidden');
+  if (mode === 'band')  $('btnScanBand').classList.add('hidden');
+
+  try {
+    scanner = new Html5Qrcode('reader');
+    const config = {
+      fps: 15,
+      qrbox: { width: 260, height: 260 },
+      aspectRatio: 1.0,
+      experimentalFeatures: { useBarCodeDetectorIfSupported: true }
+    };
+    try {
+      await scanner.start({ facingMode: 'environment' }, config, onScan, ()=>{});
+    } catch(e) {
+      await scanner.start({ facingMode: 'user' }, config, onScan, ()=>{});
+    }
+  } catch (err) {
+    msg('Camera nahi khul raha: ' + (err.message || err.name), 'error');
+    await stopScan();
+  }
+}
+
+async function stopScan() {
+  if (scanner) {
+    try {
+      if (scanner.isScanning) await scanner.stop();
+      await scanner.clear();
+    } catch(e) {}
+    scanner = null;
+  }
+  $('reader').classList.remove('show');
+  $('btnStopScan').classList.add('hidden');
+  $('btnScanGuest').classList.remove('hidden');
+  $('btnScanBand').classList.remove('hidden');
+}
+
+async function onScan(text) {
+  const mode = scanMode;
+  await stopScan();
+  const code = text.trim();
+  if (mode === 'guest') await lookupGuest(code);
+  else if (mode === 'band') await lookupBand(code);
+}
+
+// ---------- API CALLS ----------
+async function lookupGuest(qrId) {
+  msg('⏳ Guest dhund raha hu...', 'warn');
+  try {
+    const res = await fetch('/api/guest?qrId=' + encodeURIComponent(qrId));
+    const data = await res.json();
+    if (!res.ok) { msg('Server error: ' + (data.error || res.status), 'error'); return; }
+    if (!data.guest) { msg(`❌ "${qrId}" Airtable me nahi mila`, 'error'); return; }
+    currentGuest = data.guest;
+    renderGuest(data.guest);
+    show('step2');
+    $('msg').classList.remove('show');
+  } catch (err) {
+    msg('Connection error: ' + err.message, 'error');
+  }
+}
+
+async function lookupBand(bandId) {
+  msg('⏳ Wristband check kar raha hu...', 'warn');
+  try {
+    const res = await fetch('/api/band?bandId=' + encodeURIComponent(bandId));
+    const data = await res.json();
+    if (!res.ok) { msg('Server error: ' + (data.error || res.status), 'error'); return; }
+    if (!data.band) { msg(`❌ Wristband "${bandId}" nahi mila`, 'error'); return; }
+    if (data.band.fields.Status === 'Assigned') {
+      msg(`❌ Yeh band already assigned hai: ${data.band.fields['Guest Name'] || ''}`, 'error');
+      return;
+    }
+    currentBand = data.band;
+    $('confirmName').textContent = `${currentGuest.fields['FIRST NAME']||''} ${currentGuest.fields['LAST NAME']||''}`.trim();
+    $('confirmBand').textContent = data.band.fields['Band ID'];
+    show('step3');
+    $('msg').classList.remove('show');
+  } catch (err) {
+    msg('Connection error: ' + err.message, 'error');
+  }
+}
+
+async function confirmCheckin() {
+  msg('⏳ Check-in kar raha hu...', 'warn');
+  try {
+    const res = await fetch('/api/checkin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ guestId: currentGuest.id, bandId: currentBand.id })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) { msg('Check-in fail: ' + (data.error || 'unknown'), 'error'); return; }
+    const name = `${currentGuest.fields['FIRST NAME']||''} ${currentGuest.fields['LAST NAME']||''}`.trim();
+    $('successName').textContent = `${name} ✓`;
+    $('successDetail').textContent = `Wristband ${currentBand.fields['Band ID']} linked at ${new Date().toLocaleTimeString()}`;
+    show('step4');
+    $('msg').classList.remove('show');
+  } catch (err) {
+    msg('Connection error: ' + err.message, 'error');
+  }
+}
+
+// ---------- RENDER GUEST ----------
+function renderGuest(g) {
+  const f = g.fields;
+  const name = `${f['FIRST NAME']||''} ${f['LAST NAME']||''}`.trim() || '(no name)';
+  $('guestName').textContent = name;
+  $('guestEmail').textContent = f['EMAIL ADDRESS'] || '—';
+  $('guestQrId').textContent = f['QR CODE ID'] || '—';
+  $('guestPhone').textContent = f['PHONE NUMBER'] || '—';
+  $('guestInvitedBy').textContent = f['INVITED BY?'] || '—';
+  $('guestSpecial').textContent = f['SPECIAL REQUESTS'] || '—';
+
+  const status = f.Status || 'Unknown';
+  const badge = $('guestStatus');
+  badge.textContent = status;
+  badge.className = 'badge';
+  if (status === 'Checked-in') badge.classList.add('badge-red');
+  else if (status === 'Approved') badge.classList.add('badge-green');
+  else badge.classList.add('badge-gold');
+
+  // Action buttons based on status
+  const actions = $('step2Actions');
+  if (status === 'Checked-in') {
+    actions.innerHTML = `
+      <div class="msg msg-warn show" style="margin-bottom:12px;">⚠ Yeh guest already checked-in hai!</div>
+      <button class="btn btn-dark" onclick="resetFlow()">← BACK</button>
+    `;
+  } else if (status === 'Pending') {
+    actions.innerHTML = `
+      <div class="msg msg-warn show" style="margin-bottom:12px;">⚠ Status Pending hai. Ops ko bolo approve karne ke liye.</div>
+      <button class="btn btn-dark" onclick="resetFlow()">← BACK</button>
+    `;
+  } else {
+    actions.innerHTML = `
+      <button class="btn btn-gold" id="btnScanBand2">🎟️ SCAN WRISTBAND</button>
+      <button class="btn btn-dark" onclick="resetFlow()">← BACK</button>
+    `;
+    $('btnScanBand2').addEventListener('click', () => startScan('band'));
+  }
+}
+
+// ---------- RESET ----------
+function resetFlow() {
+  currentGuest = null;
+  currentBand = null;
+  scanMode = null;
+  $('manualQr').value = '';
+  show('step1');
+}
+
+// ---------- EVENT LISTENERS ----------
+$('btnScanGuest').addEventListener('click', () => startScan('guest'));
+$('btnStopScan').addEventListener('click', stopScan);
+$('btnManualLookup').addEventListener('click', () => {
+  const val = $('manualQr').value.trim();
+  if (!val) { msg('QR ID daalo pehle', 'error'); return; }
+  lookupGuest(val);
+});
+$('manualQr').addEventListener('keypress', e => {
+  if (e.key === 'Enter') $('btnManualLookup').click();
+});
+$('btnBackHome').addEventListener('click', resetFlow);
+$('btnConfirm').addEventListener('click', confirmCheckin);
+$('btnCancelConfirm').addEventListener('click', () => show('step2'));
+$('btnNewGuest').addEventListener('click', resetFlow);
+
+// Library check on load
+window.addEventListener('DOMContentLoaded', () => {
+  if (typeof Html5Qrcode === 'undefined') {
+    msg('⚠ QR library file missing. Verify /lib/html5-qrcode.min.js deployed hai.', 'error');
+  }
+});
+</script>
+
+</body>
+</html>
