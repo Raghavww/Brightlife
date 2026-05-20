@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BH 2026">
 <meta name="theme-color" content="#0f0d0a">
-<title>Better High 2026 · Reception Check-In</title>
+<title>Better High 2026 · Check-In System</title>
 <link rel="manifest" href="/manifest.json">
 <script src="/lib/html5-qrcode.min.js"></script>
 <style>
@@ -56,9 +56,6 @@
 
   .hidden { display: none !important; }
 
-  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.2); border-top-color: #c9a961; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
   .band-banner {
     background: linear-gradient(135deg, #c9a961, #8a7340);
     color: #0f0d0a;
@@ -72,17 +69,38 @@
   .band-banner .label { font-size: 10px; letter-spacing: 2px; opacity: 0.7; margin-bottom: 4px; }
   .band-banner .id { font-size: 22px; font-family: 'SF Mono', Menlo, monospace; }
 
-  .nfc-instruction {
-    background: rgba(70,130,180,0.1);
-    border: 1px dashed #5a8ac0;
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 12px;
-    font-size: 12px;
-    color: #9ec4e8;
+  .nfc-tap-zone {
+    background: linear-gradient(135deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02));
+    border: 2px dashed #c9a961;
+    border-radius: 16px;
+    padding: 32px 20px;
     text-align: center;
-    line-height: 1.5;
+    margin-bottom: 16px;
   }
+  .nfc-icon {
+    font-size: 70px;
+    line-height: 1;
+    margin-bottom: 16px;
+    color: #c9a961;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+  }
+  .nfc-title { font-size: 18px; font-weight: 700; color: #c9a961; margin-bottom: 8px; letter-spacing: 1px; }
+  .nfc-subtitle { color: #a8a298; font-size: 13px; line-height: 1.6; }
+
+  .verify-result { border-radius: 20px; padding: 36px 24px; text-align: center; margin-bottom: 16px; }
+  .verify-result.success { background: linear-gradient(135deg, rgba(74,138,74,0.25), rgba(74,138,74,0.1)); border: 3px solid #4a8a4a; }
+  .verify-result.failure { background: linear-gradient(135deg, rgba(197,69,60,0.25), rgba(197,69,60,0.1)); border: 3px solid #c5453c; }
+  .verify-icon { font-size: 80px; line-height: 1; margin-bottom: 16px; }
+  .verify-result.success .verify-icon { color: #4a8a4a; }
+  .verify-result.failure .verify-icon { color: #c5453c; }
+  .verify-name { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: #f5f1e8; }
+  .verify-band-id { font-family: 'SF Mono', Menlo, monospace; font-size: 14px; color: #c9a961; letter-spacing: 2px; margin-bottom: 12px; }
+  .verify-tier { display: inline-block; padding: 6px 14px; border-radius: 6px; font-size: 12px; letter-spacing: 2px; font-weight: 700; background: rgba(201,169,97,0.2); color: #c9a961; border: 1px solid #c9a961; margin: 10px 0; }
+  .verify-message { font-size: 16px; font-weight: 600; color: #fff; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -91,22 +109,49 @@
 
   <div class="header">
     <h1>BETTER HIGH 2026</h1>
-    <p>RECEPTION CHECK-IN</p>
+    <p>EVENT CHECK-IN SYSTEM</p>
   </div>
 
   <div id="msg" class="msg"></div>
 
-  <!-- NFC detected band banner (shown when ?band=XXX in URL) -->
   <div id="bandBanner" class="band-banner hidden">
     <div class="label">WRISTBAND DETECTED</div>
     <div class="id" id="bandBannerId">—</div>
   </div>
 
-  <!-- STEP 1: SCAN GUEST -->
-  <div id="step1">
+  <div id="screenHome">
+    <div class="nfc-tap-zone">
+      <div class="nfc-icon">📡</div>
+      <div class="nfc-title">TAP WRISTBAND</div>
+      <div class="nfc-subtitle">
+        Tap any wristband against the top of this iPhone.<br><br>
+        The app will automatically detect if it needs check-in or verification.
+      </div>
+    </div>
+
+    <label>OR ENTER BAND ID MANUALLY</label>
+    <input type="text" id="manualBand" placeholder="e.g. BAND001" autocapitalize="characters">
+    <button class="btn btn-dark" id="btnManualBand">🔍 PROCESS BAND</button>
+  </div>
+
+  <div id="screenReception" class="hidden">
     <div class="card">
-      <h2>Step 1: Scan Guest QR</h2>
-      <div class="sub">Open the scanner and align the guest's invitation QR code</div>
+      <h2>Assign Wristband</h2>
+      <div class="sub">This wristband is available. Scan the guest's QR to link it.</div>
+
+      <div class="row">
+        <span class="label">Wristband</span>
+        <span class="value" id="receptionBandId">—</span>
+      </div>
+      <div class="row">
+        <span class="label">Status</span>
+        <span class="value"><span class="badge badge-gold">AVAILABLE</span></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Scan Guest QR</h2>
+      <div class="sub">Open the camera scanner or enter the QR ID manually</div>
       <button class="btn btn-gold" id="btnScanGuest">📷 OPEN QR SCANNER</button>
       <div id="reader"></div>
       <button class="btn btn-red hidden" id="btnStopScan">✕ STOP SCANNER</button>
@@ -115,10 +160,11 @@
       <input type="text" id="manualQr" placeholder="e.g. 0V66O46" autocapitalize="characters">
       <button class="btn btn-dark" id="btnManualLookup">🔍 LOOKUP GUEST</button>
     </div>
+
+    <button class="btn btn-dark" id="btnCancelReception">← CANCEL</button>
   </div>
 
-  <!-- STEP 2: GUEST FOUND -->
-  <div id="step2" class="hidden">
+  <div id="screenGuestFound" class="hidden">
     <div class="card">
       <h2 id="guestName">—</h2>
       <div class="sub" id="guestEmail">—</div>
@@ -136,64 +182,51 @@
         <span class="value" id="guestPhone">—</span>
       </div>
       <div class="row">
-        <span class="label">Invited By</span>
-        <span class="value" id="guestInvitedBy">—</span>
-      </div>
-      <div class="row">
-        <span class="label">Special Requests</span>
-        <span class="value" id="guestSpecial">—</span>
+        <span class="label">Wristband</span>
+        <span class="value" id="guestBandId">—</span>
       </div>
     </div>
 
-    <div id="step2Actions"></div>
+    <div id="guestActions"></div>
   </div>
 
-  <!-- STEP 3: CONFIRM -->
-  <div id="step3" class="hidden">
-    <div class="card">
-      <h2>Step 3: Confirm Check-In</h2>
-      <div class="sub">Verify the details before confirming the wristband assignment</div>
-      <div class="row"><span class="label">Guest</span><span class="value" id="confirmName">—</span></div>
-      <div class="row"><span class="label">Email</span><span class="value" id="confirmEmail">—</span></div>
-      <div class="row"><span class="label">Wristband</span><span class="value" id="confirmBand">—</span></div>
-    </div>
-    <button class="btn btn-green" id="btnConfirm">✓ CONFIRM AND CHECK IN</button>
-    <button class="btn btn-dark" id="btnCancelConfirm">← BACK TO GUEST</button>
+  <div id="screenCheckpoint" class="hidden">
+    <div id="verifyResultBox"></div>
+    <button class="btn btn-gold" id="btnDoneVerify">📡 VERIFY NEXT GUEST</button>
   </div>
 
-  <!-- STEP 4: SUCCESS -->
-  <div id="step4" class="hidden">
+  <div id="screenSuccess" class="hidden">
     <div class="card" style="text-align:center;">
       <div style="font-size:60px; margin-bottom:8px;">✅</div>
-      <h2 id="successName">Successfully Checked In!</h2>
+      <h2 id="successName">Successfully Checked In</h2>
       <div class="sub" id="successDetail">—</div>
       <div style="margin-top:16px; font-size:11px; color:#6a6359; letter-spacing:1px;">
         WRISTBAND LINKED · AIRTABLE UPDATED
       </div>
     </div>
-    <button class="btn btn-gold" id="btnNewGuest">+ NEXT GUEST</button>
+    <button class="btn btn-gold" id="btnNext">📡 NEXT GUEST</button>
   </div>
 
 </div>
 
 <script>
 // ============================================================
-//  BETTER HIGH 2026 — RECEPTION APP
-//  Supports: QR scan, manual entry, NFC URL parameter detection
+//  BETTER HIGH 2026 — SMART AUTO-DETECT CHECK-IN APP
+//  Single URL, status-based routing.
+//  Available band = Reception flow (assign to guest)
+//  Assigned band = Checkpoint flow (verify guest)
 // ============================================================
 
 let scanner = null;
-let scanMode = null;        // 'guest' or 'band'
-let currentGuest = null;
 let currentBand = null;
-let pendingBandFromNfc = null; // band detected from URL ?band=XXX
+let currentGuest = null;
 
 const $ = id => document.getElementById(id);
 
-// ----------- NAVIGATION -----------
-function show(stepId) {
-  ['step1','step2','step3','step4'].forEach(s => $(s).classList.add('hidden'));
-  $(stepId).classList.remove('hidden');
+function show(screenId) {
+  ['screenHome','screenReception','screenGuestFound','screenCheckpoint','screenSuccess']
+    .forEach(s => $(s).classList.add('hidden'));
+  $(screenId).classList.remove('hidden');
   window.scrollTo(0,0);
 }
 
@@ -209,45 +242,102 @@ function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 }
 
-// ----------- NFC URL PARAMETER DETECTION -----------
 function checkNfcParameter() {
   const params = new URLSearchParams(window.location.search);
   const bandId = params.get('band');
 
   if (bandId) {
-    pendingBandFromNfc = bandId.trim().toUpperCase();
-    $('bandBannerId').textContent = pendingBandFromNfc;
-    $('bandBanner').classList.remove('hidden');
+    const cleanBandId = bandId.trim().toUpperCase();
 
-    msg('NFC wristband detected: ' + pendingBandFromNfc + '. Now scan or enter the guest QR to assign this band.', 'info');
-
-    // Clean the URL so refresh doesn't repeat
     if (window.history && window.history.replaceState) {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
+
+    $('bandBannerId').textContent = cleanBandId;
+    $('bandBanner').classList.remove('hidden');
+
+    processBand(cleanBandId);
   }
 }
 
-// ----------- SCANNER -----------
-async function startScan(mode) {
+// SMART BAND PROCESSING — Core Logic
+async function processBand(bandId) {
+  msg('Checking wristband status...', 'warn');
+
+  try {
+    const res = await fetch('/api/band?bandId=' + encodeURIComponent(bandId));
+    const data = await res.json();
+
+    if (!res.ok) {
+      msg('Server error: ' + (data.error || res.status), 'error');
+      show('screenHome');
+      return;
+    }
+
+    if (!data.band) {
+      msg('Wristband "' + bandId + '" was not found in the database.', 'error');
+      show('screenHome');
+      return;
+    }
+
+    currentBand = data.band;
+    const status = data.band.fields.Status || 'Available';
+
+    if (status === 'Available') {
+      $('receptionBandId').textContent = data.band.fields['Band ID'];
+      show('screenReception');
+      msg('Wristband is available. Scan the guest QR to assign it.', 'info');
+    } else if (status === 'Assigned') {
+      verifyCheckpoint(data.band);
+    } else {
+      msg('Wristband has unknown status: ' + status, 'error');
+      show('screenHome');
+    }
+  } catch (err) {
+    msg('Connection error: ' + err.message, 'error');
+    show('screenHome');
+  }
+}
+
+function verifyCheckpoint(band) {
+  const f = band.fields;
+  const guestName = f['Guest Name'] || '(name not available)';
+  const guestTier = f['Guest Tier'] || 'STANDARD';
+  const guestStatus = f['Guest Status'] || 'Checked-in';
+  const bandId = f['Band ID'] || '—';
+
+  if (guestStatus === 'Checked-in') {
+    $('verifyResultBox').innerHTML =
+      '<div class="verify-result success">' +
+      '<div class="verify-icon">✓</div>' +
+      '<div class="verify-name">' + esc(guestName) + '</div>' +
+      '<div class="verify-band-id">' + esc(bandId) + '</div>' +
+      '<div class="verify-tier">' + esc(guestTier) + '</div>' +
+      '<div class="verify-message">Access Granted</div>' +
+      '</div>';
+  } else {
+    $('verifyResultBox').innerHTML =
+      '<div class="verify-result failure">' +
+      '<div class="verify-icon">✗</div>' +
+      '<div class="verify-name">' + esc(guestName) + '</div>' +
+      '<div class="verify-band-id">' + esc(bandId) + '</div>' +
+      '<div class="verify-message">Guest status: ' + esc(guestStatus) + '</div>' +
+      '</div>';
+  }
+
+  show('screenCheckpoint');
+  $('msg').classList.remove('show');
+}
+
+async function startGuestScan() {
   if (typeof Html5Qrcode === 'undefined') {
     msg('QR scanner library failed to load. Please refresh the page.', 'error');
     return;
   }
-  if (!navigator.mediaDevices) {
-    msg('Camera access is not supported on this browser. Please use Safari or Chrome.', 'error');
-    return;
-  }
 
-  scanMode = mode;
   $('reader').classList.add('show');
   $('btnStopScan').classList.remove('hidden');
-
-  // Safely hide scan buttons that exist
-  const btnGuest = document.getElementById('btnScanGuest');
-  const btnBand = document.getElementById('btnScanBand');
-  if (btnGuest && mode === 'guest') btnGuest.classList.add('hidden');
-  if (btnBand && mode === 'band') btnBand.classList.add('hidden');
+  $('btnScanGuest').classList.add('hidden');
 
   try {
     scanner = new Html5Qrcode('reader');
@@ -258,17 +348,17 @@ async function startScan(mode) {
       experimentalFeatures: { useBarCodeDetectorIfSupported: true }
     };
     try {
-      await scanner.start({ facingMode: 'environment' }, config, onScan, ()=>{});
+      await scanner.start({ facingMode: 'environment' }, config, onGuestScan, ()=>{});
     } catch(e) {
-      await scanner.start({ facingMode: 'user' }, config, onScan, ()=>{});
+      await scanner.start({ facingMode: 'user' }, config, onGuestScan, ()=>{});
     }
   } catch (err) {
     msg('Unable to access camera: ' + (err.message || err.name), 'error');
-    await stopScan();
+    await stopGuestScan();
   }
 }
 
-async function stopScan() {
+async function stopGuestScan() {
   if (scanner) {
     try {
       if (scanner.isScanning) await scanner.stop();
@@ -278,30 +368,27 @@ async function stopScan() {
   }
   $('reader').classList.remove('show');
   $('btnStopScan').classList.add('hidden');
-
-  const btnGuest = document.getElementById('btnScanGuest');
-  const btnBand = document.getElementById('btnScanBand');
-  if (btnGuest) btnGuest.classList.remove('hidden');
-  if (btnBand) btnBand.classList.remove('hidden');
+  if ($('btnScanGuest')) $('btnScanGuest').classList.remove('hidden');
 }
 
-async function onScan(text) {
-  const mode = scanMode;
-  await stopScan();
-  const code = text.trim();
-  if (mode === 'guest') await lookupGuest(code);
-  else if (mode === 'band') await lookupBand(code);
+async function onGuestScan(text) {
+  await stopGuestScan();
+  await lookupGuest(text.trim());
 }
 
-// ----------- API CALLS -----------
 async function lookupGuest(qrId) {
+  if (!qrId) {
+    msg('Please provide a valid QR ID.', 'error');
+    return;
+  }
+
   msg('Looking up guest record...', 'warn');
   try {
     const res = await fetch('/api/guest?qrId=' + encodeURIComponent(qrId));
     const data = await res.json();
 
     if (!res.ok) {
-      msg('Server error while fetching guest: ' + (data.error || res.status), 'error');
+      msg('Server error: ' + (data.error || res.status), 'error');
       return;
     }
     if (!data.guest) {
@@ -311,60 +398,53 @@ async function lookupGuest(qrId) {
 
     currentGuest = data.guest;
     renderGuest(data.guest);
-    show('step2');
+    show('screenGuestFound');
     $('msg').classList.remove('show');
-
-    // If band was detected from NFC URL, auto-lookup the band next
-    if (pendingBandFromNfc) {
-      const bandId = pendingBandFromNfc;
-      pendingBandFromNfc = null;
-      $('bandBanner').classList.add('hidden');
-      setTimeout(() => lookupBand(bandId), 600);
-    }
   } catch (err) {
     msg('Connection error: ' + err.message, 'error');
   }
 }
 
-async function lookupBand(bandId) {
-  if (!currentGuest) {
-    msg('Please look up a guest first before assigning a wristband.', 'error');
-    return;
-  }
+function renderGuest(g) {
+  const f = g.fields;
+  const name = ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim() || '(unnamed guest)';
+  $('guestName').textContent = name;
+  $('guestEmail').textContent = f['EMAIL ADDRESS'] || '—';
+  $('guestQrId').textContent = f['QR CODE ID'] || '—';
+  $('guestPhone').textContent = f['PHONE NUMBER'] || '—';
+  $('guestBandId').textContent = currentBand ? currentBand.fields['Band ID'] : '—';
 
-  msg('Verifying wristband...', 'warn');
-  try {
-    const res = await fetch('/api/band?bandId=' + encodeURIComponent(bandId));
-    const data = await res.json();
+  const status = f.Status || 'Unknown';
+  const badge = $('guestStatus');
+  badge.textContent = status;
+  badge.className = 'badge';
+  if (status === 'Checked-in') badge.classList.add('badge-red');
+  else if (status === 'Approved') badge.classList.add('badge-green');
+  else badge.classList.add('badge-gold');
 
-    if (!res.ok) {
-      msg('Server error while verifying wristband: ' + (data.error || res.status), 'error');
-      return;
-    }
-    if (!data.band) {
-      msg('Wristband "' + bandId + '" was not found in the database.', 'error');
-      return;
-    }
-
-    if (data.band.fields.Status === 'Assigned') {
-      const linkedName = data.band.fields['Guest Name'] || 'another guest';
-      msg('This wristband is already assigned to ' + linkedName + '.', 'error');
-      return;
-    }
-
-    currentBand = data.band;
-    const f = currentGuest.fields;
-    $('confirmName').textContent = ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim() || '(no name)';
-    $('confirmEmail').textContent = f['EMAIL ADDRESS'] || '—';
-    $('confirmBand').textContent = data.band.fields['Band ID'];
-    show('step3');
-    $('msg').classList.remove('show');
-  } catch (err) {
-    msg('Connection error: ' + err.message, 'error');
+  const actions = $('guestActions');
+  if (status === 'Checked-in') {
+    actions.innerHTML =
+      '<div class="msg msg-warn show" style="margin-bottom:12px;">⚠ This guest has already been checked in. Cannot re-assign a wristband.</div>' +
+      '<button class="btn btn-dark" onclick="resetFlow()">← BACK</button>';
+  } else if (status === 'Pending') {
+    actions.innerHTML =
+      '<div class="msg msg-warn show" style="margin-bottom:12px;">⚠ Guest status is Pending. Please escalate to operations team.</div>' +
+      '<button class="btn btn-dark" onclick="resetFlow()">← BACK</button>';
+  } else {
+    actions.innerHTML =
+      '<button class="btn btn-green" id="btnConfirmCheckin">✓ CONFIRM AND CHECK IN</button>' +
+      '<button class="btn btn-dark" onclick="resetFlow()">← CANCEL</button>';
+    document.getElementById('btnConfirmCheckin').addEventListener('click', confirmCheckin);
   }
 }
 
 async function confirmCheckin() {
+  if (!currentGuest || !currentBand) {
+    msg('Missing guest or band data', 'error');
+    return;
+  }
+
   msg('Processing check-in...', 'warn');
   try {
     const res = await fetch('/api/checkin', {
@@ -382,83 +462,37 @@ async function confirmCheckin() {
     const name = ((currentGuest.fields['FIRST NAME']||'') + ' ' + (currentGuest.fields['LAST NAME']||'')).trim();
     $('successName').textContent = name + ' ✓';
     $('successDetail').textContent = 'Wristband ' + currentBand.fields['Band ID'] + ' linked at ' + new Date().toLocaleTimeString();
-    show('step4');
+    show('screenSuccess');
     $('msg').classList.remove('show');
   } catch (err) {
     msg('Connection error: ' + err.message, 'error');
   }
 }
 
-// ----------- RENDER GUEST -----------
-function renderGuest(g) {
-  const f = g.fields;
-  const name = ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim() || '(unnamed guest)';
-  $('guestName').textContent = name;
-  $('guestEmail').textContent = f['EMAIL ADDRESS'] || '—';
-  $('guestQrId').textContent = f['QR CODE ID'] || '—';
-  $('guestPhone').textContent = f['PHONE NUMBER'] || '—';
-  $('guestInvitedBy').textContent = f['INVITED BY?'] || '—';
-  $('guestSpecial').textContent = f['SPECIAL REQUESTS'] || '—';
-
-  const status = f.Status || 'Unknown';
-  const badge = $('guestStatus');
-  badge.textContent = status;
-  badge.className = 'badge';
-  if (status === 'Checked-in') badge.classList.add('badge-red');
-  else if (status === 'Approved') badge.classList.add('badge-green');
-  else badge.classList.add('badge-gold');
-
-  const actions = $('step2Actions');
-  if (status === 'Checked-in') {
-    actions.innerHTML = `
-      <div class="msg msg-warn show" style="margin-bottom:12px;">⚠ This guest has already been checked in. Do not issue another wristband.</div>
-      <button class="btn btn-dark" onclick="resetFlow()">← BACK TO START</button>
-    `;
-  } else if (status === 'Pending') {
-    actions.innerHTML = `
-      <div class="msg msg-warn show" style="margin-bottom:12px;">⚠ Guest status is Pending. Please escalate to operations team for approval.</div>
-      <button class="btn btn-dark" onclick="resetFlow()">← BACK TO START</button>
-    `;
-  } else {
-    actions.innerHTML = `
-      <div class="nfc-instruction">
-        📡 Tap an NFC wristband on your iPhone, or scan the wristband QR sticker below
-      </div>
-      <button class="btn btn-gold" id="btnScanBand">📷 SCAN WRISTBAND QR</button>
-
-      <label style="margin-top:8px;">OR ENTER BAND ID MANUALLY</label>
-      <input type="text" id="manualBand" placeholder="e.g. BAND001" autocapitalize="characters">
-      <button class="btn btn-dark" id="btnManualBand">🔍 LOOKUP BAND</button>
-
-      <button class="btn btn-dark" onclick="resetFlow()" style="margin-top:12px;">← BACK</button>
-    `;
-    document.getElementById('btnScanBand').addEventListener('click', () => startScan('band'));
-    document.getElementById('btnManualBand').addEventListener('click', () => {
-      const val = document.getElementById('manualBand').value.trim().toUpperCase();
-      if (!val) { msg('Please enter a Band ID first.', 'error'); return; }
-      lookupBand(val);
-    });
-    document.getElementById('manualBand').addEventListener('keypress', e => {
-      if (e.key === 'Enter') document.getElementById('btnManualBand').click();
-    });
-  }
-}
-
-// ----------- RESET -----------
 function resetFlow() {
-  currentGuest = null;
   currentBand = null;
-  scanMode = null;
-  pendingBandFromNfc = null;
+  currentGuest = null;
   $('manualQr').value = '';
+  $('manualBand').value = '';
   $('bandBanner').classList.add('hidden');
-  show('step1');
+  show('screenHome');
 }
 window.resetFlow = resetFlow;
 
-// ----------- EVENT LISTENERS -----------
-$('btnScanGuest').addEventListener('click', () => startScan('guest'));
-$('btnStopScan').addEventListener('click', stopScan);
+$('btnManualBand').addEventListener('click', () => {
+  const val = $('manualBand').value.trim().toUpperCase();
+  if (!val) { msg('Please enter a band ID first.', 'error'); return; }
+  $('bandBannerId').textContent = val;
+  $('bandBanner').classList.remove('hidden');
+  processBand(val);
+});
+$('manualBand').addEventListener('keypress', e => {
+  if (e.key === 'Enter') $('btnManualBand').click();
+});
+
+$('btnScanGuest').addEventListener('click', startGuestScan);
+$('btnStopScan').addEventListener('click', stopGuestScan);
+
 $('btnManualLookup').addEventListener('click', () => {
   const val = $('manualQr').value.trim();
   if (!val) { msg('Please enter a QR ID first.', 'error'); return; }
@@ -467,15 +501,19 @@ $('btnManualLookup').addEventListener('click', () => {
 $('manualQr').addEventListener('keypress', e => {
   if (e.key === 'Enter') $('btnManualLookup').click();
 });
-$('btnConfirm').addEventListener('click', confirmCheckin);
-$('btnCancelConfirm').addEventListener('click', () => show('step2'));
-$('btnNewGuest').addEventListener('click', resetFlow);
 
-// ----------- INIT -----------
+$('btnCancelReception').addEventListener('click', resetFlow);
+$('btnDoneVerify').addEventListener('click', resetFlow);
+$('btnNext').addEventListener('click', resetFlow);
+
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof Html5Qrcode === 'undefined') {
-    msg('QR scanner library failed to load. Please check your internet connection and refresh.', 'error');
+    msg('QR scanner library failed to load. Please check your internet connection.', 'error');
   }
+  checkNfcParameter();
+});
+
+window.addEventListener('focus', () => {
   checkNfcParameter();
 });
 </script>
