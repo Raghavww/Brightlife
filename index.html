@@ -3,19 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Better High 2026 · Check-In</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BH 2026">
+<meta name="theme-color" content="#0f0d0a">
+<title>Better High 2026 · Reception Check-In</title>
+<link rel="manifest" href="/manifest.json">
 <script src="/lib/html5-qrcode.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; }
   body { background: #0f0d0a; color: #f5f1e8; min-height: 100vh; padding: 16px; }
   .wrap { max-width: 500px; margin: 0 auto; }
 
-  /* Header */
   .header { text-align: center; padding: 20px 0 24px; border-bottom: 1px solid rgba(201,169,97,0.2); margin-bottom: 24px; }
   .header h1 { color: #c9a961; font-size: 20px; letter-spacing: 3px; font-weight: 700; }
   .header p { color: #a8a298; font-size: 11px; margin-top: 6px; letter-spacing: 2px; }
 
-  /* Buttons */
   .btn { width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; cursor: pointer; margin-bottom: 12px; transition: transform 0.1s; }
   .btn:active { transform: scale(0.98); }
   .btn-gold { background: #c9a961; color: #0f0d0a; }
@@ -23,48 +26,63 @@
   .btn-red { background: #c5453c; color: #fff; }
   .btn-dark { background: #1a1816; color: #f5f1e8; border: 1px solid rgba(255,255,255,0.15); }
 
-  /* Cards */
   .card { background: #1a1816; border-radius: 14px; padding: 20px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.06); }
   .card h2 { font-size: 22px; margin-bottom: 6px; color: #f5f1e8; }
   .card .sub { color: #a8a298; font-size: 13px; margin-bottom: 16px; }
 
-  /* Form */
   input { width: 100%; background: #0f0d0a; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 16px; font-size: 16px; border-radius: 10px; margin-bottom: 12px; }
   input:focus { outline: none; border-color: #c9a961; }
   label { display: block; color: #a8a298; font-size: 11px; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; }
 
-  /* Detail rows */
-  .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px; }
+  .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px; gap: 12px; }
   .row:last-child { border: none; }
-  .row .label { color: #a8a298; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
-  .row .value { color: #fff; font-weight: 500; text-align: right; }
+  .row .label { color: #a8a298; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; }
+  .row .value { color: #fff; font-weight: 500; text-align: right; word-break: break-word; }
 
-  /* Badge */
   .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 10px; letter-spacing: 1px; font-weight: 700; text-transform: uppercase; }
   .badge-green { background: rgba(74,138,74,0.2); color: #4a8a4a; border: 1px solid #4a8a4a; }
   .badge-red { background: rgba(197,69,60,0.15); color: #c5453c; border: 1px solid #c5453c; }
   .badge-gold { background: rgba(201,169,97,0.15); color: #c9a961; border: 1px solid #c9a961; }
 
-  /* Reader */
-  #reader { width: 100%; border-radius: 14px; overflow: hidden; background: #000; margin-bottom: 12px; display: none; min-height: 300px; }
+  #reader { width: 100%; border-radius: 14px; overflow: hidden; background: #000; margin-bottom: 12px; display: none; min-height: 320px; }
   #reader.show { display: block; }
 
-  /* Messages */
   .msg { padding: 14px; border-radius: 10px; margin-bottom: 16px; font-size: 13px; line-height: 1.5; display: none; }
   .msg.show { display: block; }
   .msg-error { background: rgba(197,69,60,0.15); border: 1px solid #c5453c; color: #ff8a82; }
   .msg-warn  { background: rgba(201,169,97,0.15); border: 1px solid #c9a961; color: #e6c878; }
   .msg-ok    { background: rgba(74,138,74,0.2); border: 1px solid #4a8a4a; color: #8ad48a; }
+  .msg-info  { background: rgba(70,130,180,0.15); border: 1px solid #5a8ac0; color: #9ec4e8; }
 
-  /* Hidden */
   .hidden { display: none !important; }
 
-  /* Spinner */
   .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.2); border-top-color: #c9a961; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Big scanned ID display */
-  .big-id { font-family: 'SF Mono', Menlo, monospace; font-size: 26px; color: #c9a961; text-align: center; padding: 12px; background: #0f0d0a; border-radius: 10px; margin: 12px 0; letter-spacing: 2px; }
+  .band-banner {
+    background: linear-gradient(135deg, #c9a961, #8a7340);
+    color: #0f0d0a;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  .band-banner .label { font-size: 10px; letter-spacing: 2px; opacity: 0.7; margin-bottom: 4px; }
+  .band-banner .id { font-size: 22px; font-family: 'SF Mono', Menlo, monospace; }
+
+  .nfc-instruction {
+    background: rgba(70,130,180,0.1);
+    border: 1px dashed #5a8ac0;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: #9ec4e8;
+    text-align: center;
+    line-height: 1.5;
+  }
 </style>
 </head>
 <body>
@@ -72,24 +90,30 @@
 <div class="wrap">
 
   <div class="header">
-    <h1>🎟️ BETTER HIGH 2026</h1>
+    <h1>BETTER HIGH 2026</h1>
     <p>RECEPTION CHECK-IN</p>
   </div>
 
   <div id="msg" class="msg"></div>
 
+  <!-- NFC detected band banner (shown when ?band=XXX in URL) -->
+  <div id="bandBanner" class="band-banner hidden">
+    <div class="label">WRISTBAND DETECTED</div>
+    <div class="id" id="bandBannerId">—</div>
+  </div>
+
   <!-- STEP 1: SCAN GUEST -->
   <div id="step1">
     <div class="card">
       <h2>Step 1: Scan Guest QR</h2>
-      <div class="sub">Camera kholo aur guest ka QR scan karo</div>
-      <button class="btn btn-gold" id="btnScanGuest">📷 OPEN SCANNER</button>
+      <div class="sub">Open the scanner and align the guest's invitation QR code</div>
+      <button class="btn btn-gold" id="btnScanGuest">📷 OPEN QR SCANNER</button>
       <div id="reader"></div>
       <button class="btn btn-red hidden" id="btnStopScan">✕ STOP SCANNER</button>
 
       <label style="margin-top:16px;">OR ENTER QR ID MANUALLY</label>
       <input type="text" id="manualQr" placeholder="e.g. 0V66O46" autocapitalize="characters">
-      <button class="btn btn-dark" id="btnManualLookup">🔍 LOOKUP MANUALLY</button>
+      <button class="btn btn-dark" id="btnManualLookup">🔍 LOOKUP GUEST</button>
     </div>
   </div>
 
@@ -116,34 +140,36 @@
         <span class="value" id="guestInvitedBy">—</span>
       </div>
       <div class="row">
-        <span class="label">Special</span>
+        <span class="label">Special Requests</span>
         <span class="value" id="guestSpecial">—</span>
       </div>
     </div>
 
-    <div id="step2Actions">
-      <button class="btn btn-gold" id="btnScanBand">🎟️ SCAN WRISTBAND</button>
-      <button class="btn btn-dark" id="btnBackHome">← BACK</button>
-    </div>
+    <div id="step2Actions"></div>
   </div>
 
   <!-- STEP 3: CONFIRM -->
   <div id="step3" class="hidden">
     <div class="card">
       <h2>Step 3: Confirm Check-In</h2>
+      <div class="sub">Verify the details before confirming the wristband assignment</div>
       <div class="row"><span class="label">Guest</span><span class="value" id="confirmName">—</span></div>
+      <div class="row"><span class="label">Email</span><span class="value" id="confirmEmail">—</span></div>
       <div class="row"><span class="label">Wristband</span><span class="value" id="confirmBand">—</span></div>
     </div>
-    <button class="btn btn-green" id="btnConfirm">✓ CONFIRM CHECK-IN</button>
-    <button class="btn btn-dark" id="btnCancelConfirm">← BACK</button>
+    <button class="btn btn-green" id="btnConfirm">✓ CONFIRM AND CHECK IN</button>
+    <button class="btn btn-dark" id="btnCancelConfirm">← BACK TO GUEST</button>
   </div>
 
   <!-- STEP 4: SUCCESS -->
   <div id="step4" class="hidden">
     <div class="card" style="text-align:center;">
       <div style="font-size:60px; margin-bottom:8px;">✅</div>
-      <h2 id="successName">Checked In!</h2>
+      <h2 id="successName">Successfully Checked In!</h2>
       <div class="sub" id="successDetail">—</div>
+      <div style="margin-top:16px; font-size:11px; color:#6a6359; letter-spacing:1px;">
+        WRISTBAND LINKED · AIRTABLE UPDATED
+      </div>
     </div>
     <button class="btn btn-gold" id="btnNewGuest">+ NEXT GUEST</button>
   </div>
@@ -151,15 +177,20 @@
 </div>
 
 <script>
-// ---------- STATE ----------
+// ============================================================
+//  BETTER HIGH 2026 — RECEPTION APP
+//  Supports: QR scan, manual entry, NFC URL parameter detection
+// ============================================================
+
 let scanner = null;
-let scanMode = null; // 'guest' or 'band'
+let scanMode = null;        // 'guest' or 'band'
 let currentGuest = null;
 let currentBand = null;
+let pendingBandFromNfc = null; // band detected from URL ?band=XXX
 
 const $ = id => document.getElementById(id);
 
-// ---------- HELPERS ----------
+// ----------- NAVIGATION -----------
 function show(stepId) {
   ['step1','step2','step3','step4'].forEach(s => $(s).classList.add('hidden'));
   $(stepId).classList.remove('hidden');
@@ -178,22 +209,45 @@ function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 }
 
-// ---------- SCANNER ----------
+// ----------- NFC URL PARAMETER DETECTION -----------
+function checkNfcParameter() {
+  const params = new URLSearchParams(window.location.search);
+  const bandId = params.get('band');
+
+  if (bandId) {
+    pendingBandFromNfc = bandId.trim().toUpperCase();
+    $('bandBannerId').textContent = pendingBandFromNfc;
+    $('bandBanner').classList.remove('hidden');
+
+    msg('NFC wristband detected: ' + pendingBandFromNfc + '. Now scan or enter the guest QR to assign this band.', 'info');
+
+    // Clean the URL so refresh doesn't repeat
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }
+}
+
+// ----------- SCANNER -----------
 async function startScan(mode) {
   if (typeof Html5Qrcode === 'undefined') {
-    msg('QR library load nahi hui. Page refresh karo.', 'error');
+    msg('QR scanner library failed to load. Please refresh the page.', 'error');
     return;
   }
   if (!navigator.mediaDevices) {
-    msg('Camera support nahi. HTTPS use karo.', 'error');
+    msg('Camera access is not supported on this browser. Please use Safari or Chrome.', 'error');
     return;
   }
 
   scanMode = mode;
   $('reader').classList.add('show');
   $('btnStopScan').classList.remove('hidden');
-  if (mode === 'guest') $('btnScanGuest').classList.add('hidden');
-  if (mode === 'band')  $('btnScanBand').classList.add('hidden');
+
+  // Safely hide scan buttons that exist
+  const btnGuest = document.getElementById('btnScanGuest');
+  const btnBand = document.getElementById('btnScanBand');
+  if (btnGuest && mode === 'guest') btnGuest.classList.add('hidden');
+  if (btnBand && mode === 'band') btnBand.classList.add('hidden');
 
   try {
     scanner = new Html5Qrcode('reader');
@@ -209,7 +263,7 @@ async function startScan(mode) {
       await scanner.start({ facingMode: 'user' }, config, onScan, ()=>{});
     }
   } catch (err) {
-    msg('Camera nahi khul raha: ' + (err.message || err.name), 'error');
+    msg('Unable to access camera: ' + (err.message || err.name), 'error');
     await stopScan();
   }
 }
@@ -224,8 +278,11 @@ async function stopScan() {
   }
   $('reader').classList.remove('show');
   $('btnStopScan').classList.add('hidden');
-  $('btnScanGuest').classList.remove('hidden');
-  $('btnScanBand').classList.remove('hidden');
+
+  const btnGuest = document.getElementById('btnScanGuest');
+  const btnBand = document.getElementById('btnScanBand');
+  if (btnGuest) btnGuest.classList.remove('hidden');
+  if (btnBand) btnBand.classList.remove('hidden');
 }
 
 async function onScan(text) {
@@ -236,36 +293,69 @@ async function onScan(text) {
   else if (mode === 'band') await lookupBand(code);
 }
 
-// ---------- API CALLS ----------
+// ----------- API CALLS -----------
 async function lookupGuest(qrId) {
-  msg('⏳ Guest dhund raha hu...', 'warn');
+  msg('Looking up guest record...', 'warn');
   try {
     const res = await fetch('/api/guest?qrId=' + encodeURIComponent(qrId));
     const data = await res.json();
-    if (!res.ok) { msg('Server error: ' + (data.error || res.status), 'error'); return; }
-    if (!data.guest) { msg(`❌ "${qrId}" Airtable me nahi mila`, 'error'); return; }
+
+    if (!res.ok) {
+      msg('Server error while fetching guest: ' + (data.error || res.status), 'error');
+      return;
+    }
+    if (!data.guest) {
+      msg('No guest found with QR ID "' + qrId + '". Please verify and try again.', 'error');
+      return;
+    }
+
     currentGuest = data.guest;
     renderGuest(data.guest);
     show('step2');
     $('msg').classList.remove('show');
+
+    // If band was detected from NFC URL, auto-lookup the band next
+    if (pendingBandFromNfc) {
+      const bandId = pendingBandFromNfc;
+      pendingBandFromNfc = null;
+      $('bandBanner').classList.add('hidden');
+      setTimeout(() => lookupBand(bandId), 600);
+    }
   } catch (err) {
     msg('Connection error: ' + err.message, 'error');
   }
 }
 
 async function lookupBand(bandId) {
-  msg('⏳ Wristband check kar raha hu...', 'warn');
+  if (!currentGuest) {
+    msg('Please look up a guest first before assigning a wristband.', 'error');
+    return;
+  }
+
+  msg('Verifying wristband...', 'warn');
   try {
     const res = await fetch('/api/band?bandId=' + encodeURIComponent(bandId));
     const data = await res.json();
-    if (!res.ok) { msg('Server error: ' + (data.error || res.status), 'error'); return; }
-    if (!data.band) { msg(`❌ Wristband "${bandId}" nahi mila`, 'error'); return; }
-    if (data.band.fields.Status === 'Assigned') {
-      msg(`❌ Yeh band already assigned hai: ${data.band.fields['Guest Name'] || ''}`, 'error');
+
+    if (!res.ok) {
+      msg('Server error while verifying wristband: ' + (data.error || res.status), 'error');
       return;
     }
+    if (!data.band) {
+      msg('Wristband "' + bandId + '" was not found in the database.', 'error');
+      return;
+    }
+
+    if (data.band.fields.Status === 'Assigned') {
+      const linkedName = data.band.fields['Guest Name'] || 'another guest';
+      msg('This wristband is already assigned to ' + linkedName + '.', 'error');
+      return;
+    }
+
     currentBand = data.band;
-    $('confirmName').textContent = `${currentGuest.fields['FIRST NAME']||''} ${currentGuest.fields['LAST NAME']||''}`.trim();
+    const f = currentGuest.fields;
+    $('confirmName').textContent = ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim() || '(no name)';
+    $('confirmEmail').textContent = f['EMAIL ADDRESS'] || '—';
     $('confirmBand').textContent = data.band.fields['Band ID'];
     show('step3');
     $('msg').classList.remove('show');
@@ -275,7 +365,7 @@ async function lookupBand(bandId) {
 }
 
 async function confirmCheckin() {
-  msg('⏳ Check-in kar raha hu...', 'warn');
+  msg('Processing check-in...', 'warn');
   try {
     const res = await fetch('/api/checkin', {
       method: 'POST',
@@ -283,10 +373,15 @@ async function confirmCheckin() {
       body: JSON.stringify({ guestId: currentGuest.id, bandId: currentBand.id })
     });
     const data = await res.json();
-    if (!res.ok || !data.success) { msg('Check-in fail: ' + (data.error || 'unknown'), 'error'); return; }
-    const name = `${currentGuest.fields['FIRST NAME']||''} ${currentGuest.fields['LAST NAME']||''}`.trim();
-    $('successName').textContent = `${name} ✓`;
-    $('successDetail').textContent = `Wristband ${currentBand.fields['Band ID']} linked at ${new Date().toLocaleTimeString()}`;
+
+    if (!res.ok || !data.success) {
+      msg('Check-in failed: ' + (data.error || 'unknown error'), 'error');
+      return;
+    }
+
+    const name = ((currentGuest.fields['FIRST NAME']||'') + ' ' + (currentGuest.fields['LAST NAME']||'')).trim();
+    $('successName').textContent = name + ' ✓';
+    $('successDetail').textContent = 'Wristband ' + currentBand.fields['Band ID'] + ' linked at ' + new Date().toLocaleTimeString();
     show('step4');
     $('msg').classList.remove('show');
   } catch (err) {
@@ -294,10 +389,10 @@ async function confirmCheckin() {
   }
 }
 
-// ---------- RENDER GUEST ----------
+// ----------- RENDER GUEST -----------
 function renderGuest(g) {
   const f = g.fields;
-  const name = `${f['FIRST NAME']||''} ${f['LAST NAME']||''}`.trim() || '(no name)';
+  const name = ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim() || '(unnamed guest)';
   $('guestName').textContent = name;
   $('guestEmail').textContent = f['EMAIL ADDRESS'] || '—';
   $('guestQrId').textContent = f['QR CODE ID'] || '—';
@@ -313,57 +408,75 @@ function renderGuest(g) {
   else if (status === 'Approved') badge.classList.add('badge-green');
   else badge.classList.add('badge-gold');
 
-  // Action buttons based on status
   const actions = $('step2Actions');
   if (status === 'Checked-in') {
     actions.innerHTML = `
-      <div class="msg msg-warn show" style="margin-bottom:12px;">⚠ Yeh guest already checked-in hai!</div>
-      <button class="btn btn-dark" onclick="resetFlow()">← BACK</button>
+      <div class="msg msg-warn show" style="margin-bottom:12px;">⚠ This guest has already been checked in. Do not issue another wristband.</div>
+      <button class="btn btn-dark" onclick="resetFlow()">← BACK TO START</button>
     `;
   } else if (status === 'Pending') {
     actions.innerHTML = `
-      <div class="msg msg-warn show" style="margin-bottom:12px;">⚠ Status Pending hai. Ops ko bolo approve karne ke liye.</div>
-      <button class="btn btn-dark" onclick="resetFlow()">← BACK</button>
+      <div class="msg msg-warn show" style="margin-bottom:12px;">⚠ Guest status is Pending. Please escalate to operations team for approval.</div>
+      <button class="btn btn-dark" onclick="resetFlow()">← BACK TO START</button>
     `;
   } else {
     actions.innerHTML = `
-      <button class="btn btn-gold" id="btnScanBand2">🎟️ SCAN WRISTBAND</button>
-      <button class="btn btn-dark" onclick="resetFlow()">← BACK</button>
+      <div class="nfc-instruction">
+        📡 Tap an NFC wristband on your iPhone, or scan the wristband QR sticker below
+      </div>
+      <button class="btn btn-gold" id="btnScanBand">📷 SCAN WRISTBAND QR</button>
+
+      <label style="margin-top:8px;">OR ENTER BAND ID MANUALLY</label>
+      <input type="text" id="manualBand" placeholder="e.g. BAND001" autocapitalize="characters">
+      <button class="btn btn-dark" id="btnManualBand">🔍 LOOKUP BAND</button>
+
+      <button class="btn btn-dark" onclick="resetFlow()" style="margin-top:12px;">← BACK</button>
     `;
-    $('btnScanBand2').addEventListener('click', () => startScan('band'));
+    document.getElementById('btnScanBand').addEventListener('click', () => startScan('band'));
+    document.getElementById('btnManualBand').addEventListener('click', () => {
+      const val = document.getElementById('manualBand').value.trim().toUpperCase();
+      if (!val) { msg('Please enter a Band ID first.', 'error'); return; }
+      lookupBand(val);
+    });
+    document.getElementById('manualBand').addEventListener('keypress', e => {
+      if (e.key === 'Enter') document.getElementById('btnManualBand').click();
+    });
   }
 }
 
-// ---------- RESET ----------
+// ----------- RESET -----------
 function resetFlow() {
   currentGuest = null;
   currentBand = null;
   scanMode = null;
+  pendingBandFromNfc = null;
   $('manualQr').value = '';
+  $('bandBanner').classList.add('hidden');
   show('step1');
 }
+window.resetFlow = resetFlow;
 
-// ---------- EVENT LISTENERS ----------
+// ----------- EVENT LISTENERS -----------
 $('btnScanGuest').addEventListener('click', () => startScan('guest'));
 $('btnStopScan').addEventListener('click', stopScan);
 $('btnManualLookup').addEventListener('click', () => {
   const val = $('manualQr').value.trim();
-  if (!val) { msg('QR ID daalo pehle', 'error'); return; }
+  if (!val) { msg('Please enter a QR ID first.', 'error'); return; }
   lookupGuest(val);
 });
 $('manualQr').addEventListener('keypress', e => {
   if (e.key === 'Enter') $('btnManualLookup').click();
 });
-$('btnBackHome').addEventListener('click', resetFlow);
 $('btnConfirm').addEventListener('click', confirmCheckin);
 $('btnCancelConfirm').addEventListener('click', () => show('step2'));
 $('btnNewGuest').addEventListener('click', resetFlow);
 
-// Library check on load
+// ----------- INIT -----------
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof Html5Qrcode === 'undefined') {
-    msg('⚠ QR library file missing. Verify /lib/html5-qrcode.min.js deployed hai.', 'error');
+    msg('QR scanner library failed to load. Please check your internet connection and refresh.', 'error');
   }
+  checkNfcParameter();
 });
 </script>
 

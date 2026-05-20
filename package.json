@@ -1,0 +1,9 @@
+{
+  "name": "bh2026-checkin-final",
+  "version": "1.0.0",
+  "description": "Better High 2026 Reception Check-In with NFC support",
+  "type": "module",
+  "engines": {
+    "node": ">=18.x"
+  }
+}
