@@ -407,7 +407,7 @@ async function lookupGuest(qrId) {
 
 function renderGuest(g) {
   const f = g.fields;
-  const name = ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim() || '(unnamed guest)';
+  const name = f['Full Name'] || ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim() || '(unnamed guest)';
   $('guestName').textContent = name;
   $('guestEmail').textContent = f['EMAIL ADDRESS'] || '—';
   $('guestQrId').textContent = f['QR CODE ID'] || '—';
@@ -459,7 +459,7 @@ async function confirmCheckin() {
       return;
     }
 
-    const name = ((currentGuest.fields['FIRST NAME']||'') + ' ' + (currentGuest.fields['LAST NAME']||'')).trim();
+    const name = currentGuest.fields['Full Name'] || ((currentGuest.fields['FIRST NAME']||'') + ' ' + (currentGuest.fields['LAST NAME']||'')).trim();
     $('successName').textContent = name + ' ✓';
     $('successDetail').textContent = 'Wristband ' + currentBand.fields['Band ID'] + ' linked at ' + new Date().toLocaleTimeString();
     show('screenSuccess');
