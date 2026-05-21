@@ -301,7 +301,8 @@ async function processBand(bandId) {
 
 function verifyCheckpoint(band) {
   const f = band.fields;
-  const guestName = f['Guest Name'] || '(name not available)';
+  const rollup = f['Full Name Rollup (from Linked Invitee)'];
+  const guestName = (Array.isArray(rollup) ? rollup[0] : rollup) || f['Guest Name'] || '(name not available)';
   const guestTier = f['Guest Tier'] || 'STANDARD';
   const guestStatus = f['Guest Status'] || 'Checked-in';
   const bandId = f['Band ID'] || '—';
