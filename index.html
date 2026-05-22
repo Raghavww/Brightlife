@@ -78,9 +78,6 @@
     min-height: 100dvh;
   }
 
-  /* ============================== */
-  /*  FRAME                         */
-  /* ============================== */
   .hs-frame {
     background: var(--black);
     border-radius: 22px;
@@ -100,7 +97,7 @@
   }
 
   /* ============================== */
-  /*  MOBILE (< 768px)              */
+  /*  MOBILE (< 768px) — BIGGER     */
   /* ============================== */
   @media (max-width: 767px) {
     .wrap { padding: 0; }
@@ -108,7 +105,7 @@
       border-radius: 0 !important;
       border: none !important;
       min-height: 100dvh;
-      padding: 16px 18px 28px !important;
+      padding: 18px 20px 32px !important;
     }
     .hs-frame > .hs-top { flex-shrink: 0; }
     .hs-frame > .hs-brand { flex-shrink: 0; }
@@ -116,14 +113,13 @@
     .hs-frame > .hs-card {
       flex-shrink: 0;
       margin-top: auto;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
     .hs-frame > .hs-foot {
       flex-shrink: 0;
       margin-top: auto;
     }
 
-    /* Make scan/wristband screens flow naturally */
     #screenGate1 > *, #screenGate2Step1 > *, #screenGate2Step2 > *,
     #screenGate2Step3 > *, #screenGate2Success > *, #screenCheckpoint > *,
     #screenGate1Result > * {
@@ -131,42 +127,71 @@
     }
     #screenGate1 .section-label,
     #screenGate2Step2 .section-label {
-      margin-top: 24px;
+      margin-top: 28px;
     }
 
-    .hs-name { font-size: 30px !important; letter-spacing: 0.14em; }
-    .hs-event { font-size: 10px; letter-spacing: 0.32em; margin-top: 6px; }
-    .brand-info { font-size: 13px; line-height: 1.7; padding: 18px 16px; margin-bottom: 24px; }
-    .hs-card { padding: 24px 18px; }
-    .hs-card-title { font-size: 24px; margin-bottom: 4px; }
-    .hs-card-sub { font-size: 12px; margin-bottom: 20px; }
+    .hs-top { font-size: 12px; padding: 0 8px 16px; }
+    .hs-est { font-size: 11px; letter-spacing: 0.32em; margin-bottom: 8px; }
+    .hs-name { font-size: 36px !important; letter-spacing: 0.14em; }
+    .hs-event { font-size: 12px; letter-spacing: 0.32em; margin-top: 8px; }
+    .hs-pill { font-size: 11px; padding: 7px 16px; margin-top: 14px; }
+    .brand-info { font-size: 15px; line-height: 1.7; padding: 20px 18px; margin-bottom: 24px; }
+    .brand-info strong { font-size: 11px; margin-bottom: 10px; }
+    .hs-card { padding: 26px 20px; }
+    .hs-card-title { font-size: 28px; margin-bottom: 6px; }
+    .hs-card-sub { font-size: 14px; margin-bottom: 22px; }
     .hs-options { gap: 14px; }
-    .hs-opt { padding: 28px 12px 22px; border-radius: 14px; }
-    .hs-icon-wrap { width: 68px; height: 68px; margin-bottom: 14px; }
-    .hs-icon-wrap i { font-size: 30px; }
-    .hs-num { font-size: 10px; letter-spacing: 0.24em; margin-bottom: 6px; }
-    .hs-opt-title { font-size: 14px; letter-spacing: 0.18em; margin-bottom: 4px; }
-    .hs-opt-desc { font-size: 11px; }
+    .hs-opt { padding: 30px 12px 24px; border-radius: 14px; }
+    .hs-icon-wrap { width: 72px; height: 72px; margin-bottom: 14px; }
+    .hs-icon-wrap i { font-size: 34px; }
+    .hs-num { font-size: 12px; letter-spacing: 0.24em; margin-bottom: 6px; }
+    .hs-opt-title { font-size: 16px; letter-spacing: 0.18em; margin-bottom: 6px; }
+    .hs-opt-desc { font-size: 13px; }
 
-    .hs-foot { padding-top: 24px; font-size: 10px; }
-    .hs-foot-event { font-size: 11px; }
+    .hs-foot { padding-top: 26px; font-size: 12px; }
+    .hs-foot-event { font-size: 13px; margin-top: 8px; }
 
-    /* QR scan area bigger on mobile */
-    .qr-scan-area { max-width: 280px !important; }
-    #reader, #reader2 { max-width: 320px; }
-
-    /* Scan screen titles bigger */
     #screenGate1 .hs-brand .hs-name,
     #screenGate2Step1 .hs-brand .hs-name,
     #screenGate2Step2 .hs-brand .hs-name,
     #screenGate2Step3 .hs-brand .hs-name,
     #screenGate2Success .hs-brand .hs-name {
-      font-size: 26px !important;
+      font-size: 32px !important;
     }
+
+    .wb-btn { font-size: 13px; padding: 16px; letter-spacing: 0.22em; }
+    .wb-input { font-size: 15px; padding: 16px 18px; }
+    .wb-label { font-size: 11px; letter-spacing: 0.24em; margin-bottom: 10px; }
+
+    .qr-scan-area { max-width: 280px !important; }
+    #reader, #reader2 { max-width: 320px; }
+
+    .result-name { font-size: 32px; }
+    .result-icon { width: 80px; height: 80px; }
+    .result-icon i { font-size: 36px; }
+    .result-message { font-size: 13px; }
+    .result-detail { font-size: 13px; }
+    .result-meta { font-size: 11px; }
+    .result-tier { font-size: 11px; padding: 7px 20px; }
+
+    .flow-progress .circ { width: 28px; height: 28px; font-size: 12px; }
+    .flow-progress .lbl { font-size: 10px; }
+    .flow-progress .line { width: 22px; }
+
+    .merge-side .t { font-size: 12px; }
+    .merge-side .id { font-size: 11px; }
+    .merge-side i { font-size: 24px; }
+
+    .section-label { font-size: 11px; margin: 22px 0 14px; }
+    .row { font-size: 14px; padding: 13px 0; }
+    .row .label-text { font-size: 11px; }
+    .badge { font-size: 10px; padding: 5px 12px; }
+
+    .msg { font-size: 13px; padding: 14px 16px; }
   }
 
- /* ============================== */
-  /*  TABLET (≥ 768px)              */
+  /* ============================== */
+  /*  TABLET (≥ 768px) — BIGGER    */
   /* ============================== */
   @media (min-width: 768px) {
     body {
@@ -180,68 +205,88 @@
       padding: 0 24px;
       min-height: auto;
     }
-    .hs-frame { padding: 40px 36px 44px; border-radius: 24px; }
-    .hs-top { font-size: 11px; padding: 0 8px 18px; margin-bottom: 22px; }
-    .hs-brand { margin-bottom: 24px; }
-    .hs-est { font-size: 11px; margin-bottom: 8px; }
-    .hs-name { font-size: 44px !important; letter-spacing: 0.16em; }
-    .hs-event { font-size: 11px; margin-top: 8px; }
-    .hs-pill { font-size: 11px; padding: 7px 18px; margin-top: 14px; }
-    .brand-info { font-size: 15px; padding: 22px 24px; margin-bottom: 22px; line-height: 1.8; }
-    .brand-info strong { font-size: 11px; margin-bottom: 10px; }
-    .hs-card { padding: 32px 28px; border-radius: 16px; }
-    .hs-card-title { font-size: 30px; margin-bottom: 6px; }
-    .hs-card-sub { font-size: 14px; margin-bottom: 22px; }
-    .hs-options { gap: 18px; }
-    .hs-opt { padding: 32px 16px 26px; border-radius: 14px; }
-    .hs-icon-wrap { width: 80px; height: 80px; margin-bottom: 16px; }
-    .hs-icon-wrap i { font-size: 36px; }
-    .hs-num { font-size: 11px; letter-spacing: 0.28em; margin-bottom: 8px; }
-    .hs-opt-title { font-size: 16px; letter-spacing: 0.2em; margin-bottom: 6px; }
-    .hs-opt-desc { font-size: 13px; }
-    .hs-foot { font-size: 11px; padding-top: 22px; margin-top: 22px; }
-    .hs-foot-event { font-size: 13px; margin-top: 10px; }
+    .hs-frame { padding: 44px 40px 48px; border-radius: 24px; }
+    .hs-top { font-size: 13px; padding: 0 10px 20px; margin-bottom: 26px; }
+    .hs-brand { margin-bottom: 28px; }
+    .hs-est { font-size: 13px; letter-spacing: 0.32em; margin-bottom: 10px; }
+    .hs-name { font-size: 52px !important; letter-spacing: 0.16em; }
+    .hs-event { font-size: 13px; margin-top: 10px; letter-spacing: 0.32em; }
+    .hs-pill { font-size: 12px; padding: 8px 20px; margin-top: 16px; letter-spacing: 0.24em; }
+    .brand-info { font-size: 17px; padding: 26px 28px; margin-bottom: 26px; line-height: 1.8; }
+    .brand-info strong { font-size: 13px; margin-bottom: 12px; }
+    .hs-card { padding: 36px 32px; border-radius: 16px; }
+    .hs-card-title { font-size: 36px; margin-bottom: 8px; }
+    .hs-card-sub { font-size: 16px; margin-bottom: 26px; }
+    .hs-options { gap: 20px; }
+    .hs-opt { padding: 38px 18px 30px; border-radius: 14px; }
+    .hs-icon-wrap { width: 88px; height: 88px; margin-bottom: 18px; }
+    .hs-icon-wrap i { font-size: 40px; }
+    .hs-num { font-size: 13px; letter-spacing: 0.28em; margin-bottom: 10px; }
+    .hs-opt-title { font-size: 18px; letter-spacing: 0.2em; margin-bottom: 8px; }
+    .hs-opt-desc { font-size: 15px; }
+    .hs-foot { font-size: 13px; padding-top: 26px; margin-top: 26px; }
+    .hs-foot-event { font-size: 15px; margin-top: 12px; }
 
-    .qr-scan-area { max-width: 320px; }
-    #reader, #reader2 { max-width: 360px; }
-    .wb-stage { max-width: 360px; height: 280px; }
+    .qr-scan-area { max-width: 360px; }
+    #reader, #reader2 { max-width: 400px; }
+    .wb-stage { max-width: 400px; height: 300px; }
 
-    .result-name { font-size: 36px; }
-    .result-icon { width: 88px; height: 88px; }
-    .result-icon i { font-size: 40px; }
+    .result-name { font-size: 42px; }
+    .result-icon { width: 96px; height: 96px; }
+    .result-icon i { font-size: 44px; }
+    .result-message { font-size: 14px; }
+    .result-detail { font-size: 15px; }
+    .result-meta { font-size: 13px; }
+    .result-tier { font-size: 13px; padding: 8px 22px; }
 
-    .wb-btn { padding: 16px; font-size: 12px; }
-    .wb-input { padding: 16px 18px; font-size: 14px; }
+    .wb-btn { padding: 18px; font-size: 14px; letter-spacing: 0.24em; }
+    .wb-input { padding: 18px 22px; font-size: 16px; }
+    .wb-label { font-size: 13px; letter-spacing: 0.26em; margin-bottom: 12px; }
+
+    .flow-progress .circ { width: 32px; height: 32px; font-size: 14px; }
+    .flow-progress .lbl { font-size: 11px; }
+    .flow-progress .line { width: 26px; }
+
+    .merge-card { padding: 18px 20px; }
+    .merge-side .t { font-size: 13px; }
+    .merge-side .id { font-size: 12px; }
+    .merge-side i { font-size: 26px; }
+
+    .section-label { font-size: 12px; margin: 26px 0 16px; }
+    .row { font-size: 15px; padding: 15px 0; }
+    .row .label-text { font-size: 12px; }
+    .badge { font-size: 11px; padding: 6px 14px; }
+
+    .msg { font-size: 14px; padding: 16px 20px; }
   }
 
   /* ============================== */
-  /*  DESKTOP (≥ 1024px)            */
+  /*  DESKTOP (≥ 1024px) — BIGGER  */
   /* ============================== */
   @media (min-width: 1024px) {
-    .wrap { max-width: 820px; padding: 0 32px; }
-    .hs-frame { padding: 48px 44px 52px; border-radius: 28px; }
-    .hs-name { font-size: 52px !important; }
-    .brand-info { font-size: 16px; padding: 26px 28px; }
-    .hs-card { padding: 36px 32px; }
-    .hs-card-title { font-size: 34px; }
-    .hs-card-sub { font-size: 15px; }
-    .hs-options { gap: 22px; }
-    .hs-opt { padding: 38px 18px 30px; }
-    .hs-icon-wrap { width: 88px; height: 88px; margin-bottom: 18px; }
-    .hs-icon-wrap i { font-size: 40px; }
-    .hs-opt-title { font-size: 18px; letter-spacing: 0.22em; }
-    .hs-opt-desc { font-size: 14px; }
+    .wrap { max-width: 860px; padding: 0 32px; }
+    .hs-frame { padding: 52px 48px 56px; border-radius: 28px; }
+    .hs-name { font-size: 60px !important; }
+    .hs-card-title { font-size: 40px; }
+    .hs-card-sub { font-size: 17px; }
+    .hs-icon-wrap { width: 96px; height: 96px; }
+    .hs-icon-wrap i { font-size: 44px; }
+    .hs-opt-title { font-size: 20px; }
+    .hs-opt-desc { font-size: 16px; }
+    .brand-info { font-size: 18px; padding: 30px; }
+    .result-name { font-size: 48px; }
   }
 
   /* ============================== */
   /*  LARGE DESKTOP (≥ 1280px)      */
   /* ============================== */
   @media (min-width: 1280px) {
-    .wrap { max-width: 900px; }
+    .wrap { max-width: 940px; }
+    .hs-name { font-size: 68px !important; }
   }
 
   /* ============================== */
-  /*  TOP STATUS BAR                */
+  /*  BASE STYLES                   */
   /* ============================== */
   .hs-top {
     display: flex;
@@ -263,9 +308,6 @@
   }
   .hs-top .close:hover { opacity: 0.7; }
 
-  /* ============================== */
-  /*  BRAND BLOCK                   */
-  /* ============================== */
   .hs-brand { text-align: center; margin-bottom: 18px; }
   .hs-est {
     font-size: 9px;
@@ -432,9 +474,6 @@
     font-style: italic;
   }
 
-  /* ============================== */
-  /*  QR SCAN AREA (FIXED)          */
-  /* ============================== */
   .qr-scan-area {
     aspect-ratio: 1;
     width: 100%;
@@ -453,26 +492,10 @@
     border: 2.5px solid var(--gold);
     z-index: 2;
   }
-  .qr-corner.tl {
-    top: 8px; left: 8px;
-    border-right: none; border-bottom: none;
-    border-radius: 8px 0 0 0;
-  }
-  .qr-corner.tr {
-    top: 8px; right: 8px;
-    border-left: none; border-bottom: none;
-    border-radius: 0 8px 0 0;
-  }
-  .qr-corner.bl {
-    bottom: 8px; left: 8px;
-    border-right: none; border-top: none;
-    border-radius: 0 0 0 8px;
-  }
-  .qr-corner.br {
-    bottom: 8px; right: 8px;
-    border-left: none; border-top: none;
-    border-radius: 0 0 8px 0;
-  }
+  .qr-corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; border-radius: 8px 0 0 0; }
+  .qr-corner.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; border-radius: 0 8px 0 0; }
+  .qr-corner.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; border-radius: 0 0 0 8px; }
+  .qr-corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; border-radius: 0 0 8px 0; }
   .qr-laser {
     position: absolute;
     left: 20px;
@@ -498,12 +521,8 @@
     opacity: 0.15;
     z-index: 1;
   }
-  .qr-grid span {
-    background: var(--gold);
-    border-radius: 1px;
-  }
+  .qr-grid span { background: var(--gold); border-radius: 1px; }
 
-  /* Camera video */
   #reader, #reader2 {
     width: 100%;
     max-width: 280px;
@@ -517,15 +536,8 @@
     border: 2px solid var(--gold);
   }
   #reader.show, #reader2.show { display: block; }
-  #reader video, #reader2 video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  #reader video, #reader2 video { width: 100%; height: 100%; object-fit: cover; }
 
-  /* ============================== */
-  /*  WRISTBAND STAGE               */
-  /* ============================== */
   .wb-stage {
     position: relative;
     height: 230px;
@@ -634,9 +646,6 @@
     50% { top: 50px; opacity: 1; }
   }
 
-  /* ============================== */
-  /*  INPUTS & BUTTONS              */
-  /* ============================== */
   .wb-input {
     width: 100%;
     background: rgba(0, 0, 0, 0.4);
@@ -697,9 +706,6 @@
     color: white;
   }
 
-  /* ============================== */
-  /*  PROGRESS NODES                */
-  /* ============================== */
   .flow-progress {
     display: flex;
     align-items: center;
@@ -751,9 +757,6 @@
   }
   .flow-progress .line.done { background: var(--gold); }
 
-  /* ============================== */
-  /*  MERGE CARD                    */
-  /* ============================== */
   .merge-card {
     background: rgba(212, 175, 55, 0.04);
     border: 0.5px solid rgba(212, 175, 55, 0.25);
@@ -798,9 +801,6 @@
     flex-shrink: 0;
   }
 
-  /* ============================== */
-  /*  RESULT HERO                   */
-  /* ============================== */
   .result-hero {
     border-radius: 14px;
     padding: 28px 18px 24px;
