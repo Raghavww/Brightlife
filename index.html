@@ -57,15 +57,6 @@
     font-family: var(--font-sans);
     position: relative;
     overflow-x: hidden;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-  }
-
-  @media (min-width: 768px) {
-    body {
-      align-items: center;
-    }
   }
 
   /* Subtle gold radial atmosphere */
@@ -87,20 +78,62 @@
   }
 
   .wrap {
-    max-width: 480px;
+    width: 100%;
     margin: 0 auto;
-    padding: 16px;
+    padding: 12px;
     min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
   }
 
-  /* Tablet & Desktop — wider frame with breathing room */
+  /* MOBILE: Full screen frame, no outer card look */
+  @media (max-width: 767px) {
+    .wrap {
+      padding: 0;
+    }
+    .hs-frame {
+      border-radius: 0 !important;
+      border: none !important;
+      min-height: 100dvh;
+      padding: 16px 18px 24px !important;
+    }
+    .hs-name {
+      font-size: 28px !important;
+    }
+    .brand-info {
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .hs-card-title {
+      font-size: 22px;
+    }
+    .hs-card-sub {
+      font-size: 12px;
+    }
+    .hs-opt {
+      padding: 24px 10px 18px;
+    }
+    .hs-icon-wrap {
+      width: 64px;
+      height: 64px;
+    }
+    .hs-icon-wrap i {
+      font-size: 28px;
+    }
+    .hs-opt-title {
+      font-size: 13px;
+    }
+  }
+
+  /* TABLET & DESKTOP: Centered card with breathing room */
   @media (min-width: 768px) {
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 0;
+    }
     .wrap {
       max-width: 560px;
-      padding: 32px 24px;
+      padding: 0 24px;
     }
     .hs-frame {
       padding: 32px 28px 36px;
@@ -143,11 +176,10 @@
     }
   }
 
-  /* Large desktop — keep frame compact, lots of margin around */
+  /* LARGE DESKTOP: Keep frame compact, lots of margin around */
   @media (min-width: 1024px) {
     .wrap {
       max-width: 600px;
-      padding: 48px 32px;
     }
   }
 
@@ -1358,10 +1390,13 @@ function showLoading(text) {
 
 function updateTime() {
   const now = new Date();
-  const h = now.getHours();
+  const h = String(now.getHours()).padStart(2, '0');
   const m = String(now.getMinutes()).padStart(2, '0');
   const timeStr = `${h}:${m}`;
-  ['topTime','topTime2'].forEach(id => { if($(id)) $(id).textContent = timeStr; });
+  // Update ALL spans inside .hs-top that contain time
+  document.querySelectorAll('.hs-top > span:first-child').forEach(el => {
+    el.textContent = timeStr;
+  });
 }
 setInterval(updateTime, 30000);
 updateTime();
