@@ -1052,14 +1052,14 @@
       <button class="btn btn-ghost" id="btnGate1Manual">VERIFY MANUALLY</button>
     </div>
 
-    <button class="btn btn-dark" onclick="goHome()">← Change Gate</button>
+    <button class="btn btn-dark" onclick="goHome()">← Back</button>
   </div>
 
   <!-- Gate 1 Result -->
   <div id="screenGate1Result" class="hidden">
     <div id="gate1ResultBox"></div>
     <button class="btn btn-gold" id="btnGate1Next">VERIFY NEXT GUEST</button>
-    <button class="btn btn-dark" onclick="goHome()">← Change Gate</button>
+    <button class="btn btn-dark" onclick="goHome()">← Back</button>
   </div>
 
   <!-- ============================================ -->
@@ -1084,7 +1084,7 @@
     <input type="text" id="manualBand" placeholder="BAND001" autocapitalize="characters">
     <button class="btn btn-ghost" id="btnManualBand">PROCESS BAND</button>
 
-    <button class="btn btn-dark" onclick="goHome()" style="margin-top:18px;">← Change Gate</button>
+    <button class="btn btn-dark" onclick="goHome()" style="margin-top:18px;">← Back</button>
   </div>
 
   <!-- Band Banner -->
@@ -1162,7 +1162,7 @@
   <div id="screenCheckpoint" class="hidden">
     <div id="verifyResultBox"></div>
     <button class="btn btn-gold" id="btnDoneVerify">VERIFY NEXT GUEST</button>
-    <button class="btn btn-dark" onclick="goHome()">← Change Gate</button>
+    <button class="btn btn-dark" onclick="goHome()">← Back</button>
   </div>
 
   <!-- Gate 2 Success -->
@@ -1177,7 +1177,7 @@
       <div class="verify-detail-line">Wristband linked · Records updated</div>
     </div>
     <button class="btn btn-gold" id="btnNext">NEXT GUEST</button>
-    <button class="btn btn-dark" onclick="goHome()">← Change Gate</button>
+    <button class="btn btn-dark" onclick="goHome()">← Back</button>
   </div>
 
   <!-- Loading -->
@@ -1246,11 +1246,11 @@ function selectGate(gate) {
 
   if (gate === 'gate1') {
     $('selectGate1').classList.add('active');
-    $('modeIndicator').textContent = 'GATE I · ENTRY VERIFY';
+    $('modeIndicator').textContent = '· ENTRY VERIFY';
     showScreen('screenGate1Home');
   } else {
     $('selectGate2').classList.add('active');
-    $('modeIndicator').textContent = 'GATE II · WRISTBAND';
+    $('modeIndicator').textContent = 'ASSIGN WRISTBAND';
     showScreen('screenGate2Home');
   }
 }
