@@ -980,7 +980,9 @@
   @keyframes contentIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
-  }
+  }.card-centered { text-align: center; }
+  .card-centered h2 { text-align: center; }
+  .card-centered .sub { text-align: center; }
 </style>
 </head>
 <body>
@@ -1007,9 +1009,9 @@
   <!--  GATE SELECTOR (Home)                        -->
   <!-- ============================================ -->
   <div id="screenGateSelect">
-    <div class="card">
+    <div class="card card-centered">
       <h2>Reception Desk</h2>
-      <div class="sub">Choose the checkpoint you're operating</div>
+      <div class="sub">Choose the operation to begin</div>
 
       <div class="gate-selector">
         <div class="gate-card" id="selectGate1" onclick="selectGate('gate1')">
