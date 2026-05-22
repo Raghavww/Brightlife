@@ -5,49 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="BH 2026">
+<meta name="apple-mobile-web-app-title" content="Heaven Sake">
 <meta name="theme-color" content="#0a0807">
-<title>Better High 2026 · Check-In</title>
+<title>Heaven Sake · A Better High 2026</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/[email protected]/dist/tabler-icons.min.css">
 <script src="/lib/html5-qrcode.min.js"></script>
 <style>
   :root {
-    /* Colors — Deco Speakeasy */
+    /* Heaven Sake Palette */
     --black: #0a0807;
     --black-deep: #050403;
     --noir: #14100c;
-    --noir-warm: #1c1610;
-    --champagne: #f4e8c8;
-    --ivory: #ebe2d1;
-    --bone: #c7baa1;
-    --brass: #c9a961;
-    --brass-bright: #e6c878;
-    --brass-deep: #8a7340;
-    --brass-rich: #b8945a;
-    --emerald: #4a8a4a;
-    --emerald-bright: #5fb672;
-    --crimson: #c5453c;
-    --burgundy: #6b1f1f;
+    --ivory: #f3e9d2;
+    --bone: rgba(243, 233, 210, 0.65);
+    --bone-soft: rgba(243, 233, 210, 0.45);
+    --gold: #d4af37;
+    --gold-bright: #e8d28a;
+    --gold-deep: #a8862a;
+    --gold-soft: rgba(212, 175, 55, 0.5);
+    --emerald: #5fb672;
+    --crimson: #e84545;
 
-    /* Gradients */
-    --grad-brass: linear-gradient(135deg, #e6c878 0%, #c9a961 50%, #8a7340 100%);
-    --grad-vip: linear-gradient(120deg, #d4af37 0%, #f9e286 30%, #c9a961 70%, #8a7340 100%);
-    --grad-success: linear-gradient(135deg, rgba(95,182,114,0.3) 0%, rgba(74,138,74,0.1) 100%);
-    --grad-fail: linear-gradient(135deg, rgba(197,69,60,0.3) 0%, rgba(107,31,31,0.1) 100%);
-    --grad-pending: linear-gradient(135deg, rgba(201,169,97,0.25) 0%, rgba(138,115,64,0.08) 100%);
-
-    /* Typography */
-    --display: 'Italiana', 'Cormorant Garamond', Georgia, serif;
-    --serif: 'Cormorant Garamond', Georgia, serif;
-    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* Fonts */
+    --font-display: 'Italiana', 'Cormorant Garamond', Georgia, serif;
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'SF Mono', Menlo, monospace;
 
     /* Lines */
-    --line: rgba(201, 169, 97, 0.15);
-    --line-soft: rgba(201, 169, 97, 0.08);
-    --line-strong: rgba(201, 169, 97, 0.3);
+    --line: rgba(212, 175, 55, 0.18);
+    --line-soft: rgba(212, 175, 55, 0.1);
+    --line-strong: rgba(212, 175, 55, 0.35);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -57,1173 +49,1226 @@
     background: var(--black);
     color: var(--ivory);
     min-height: 100dvh;
-    font-family: var(--sans);
+    font-family: var(--font-sans);
     position: relative;
     overflow-x: hidden;
   }
 
-  /* ===== ATMOSPHERIC BACKGROUND ===== */
+  /* Subtle gold radial atmosphere */
   body::before {
     content: '';
-    position: fixed; inset: 0; z-index: -3;
+    position: fixed; inset: 0; z-index: -2;
     background:
-      radial-gradient(ellipse 800px 600px at 20% 0%, rgba(201, 169, 97, 0.08) 0%, transparent 60%),
-      radial-gradient(ellipse 700px 500px at 80% 100%, rgba(184, 148, 90, 0.05) 0%, transparent 60%),
-      linear-gradient(180deg, var(--black-deep) 0%, var(--black) 100%);
+      radial-gradient(ellipse 800px 600px at 50% 0%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 600px 400px at 50% 100%, rgba(168, 134, 42, 0.05) 0%, transparent 60%);
   }
 
+  /* Film grain noise */
   body::after {
     content: '';
-    position: fixed; inset: 0; z-index: -2;
+    position: fixed; inset: 0; z-index: -1;
     pointer-events: none;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* Decorative deco frame on edges */
-  .deco-frame {
-    position: fixed;
-    inset: 12px;
-    border: 1px solid var(--brass-deep);
-    border-radius: 3px;
-    pointer-events: none;
-    z-index: -1;
-    opacity: 0.25;
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 16px;
+    min-height: 100dvh;
   }
-  .deco-frame::before, .deco-frame::after {
+
+  /* ============================== */
+  /*  FRAME (the main card)         */
+  /* ============================== */
+  .hs-frame {
+    background: var(--black);
+    border-radius: 22px;
+    padding: 20px 16px 24px;
+    border: 0.5px solid rgba(212, 175, 55, 0.18);
+    position: relative;
+    overflow: hidden;
+  }
+  .hs-frame::before {
     content: '';
     position: absolute;
-    width: 30px; height: 30px;
-    border: 2px solid var(--brass);
-  }
-  .deco-frame::before {
-    top: -1px; left: -1px;
-    border-right: none;
-    border-bottom: none;
-  }
-  .deco-frame::after {
-    bottom: -1px; right: -1px;
-    border-left: none;
-    border-top: none;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.08), transparent 60%);
+    pointer-events: none;
   }
 
-  /* ===== LAYOUT ===== */
-  .wrap {
-    max-width: 540px;
-    margin: 0 auto;
-    padding: 24px 18px 32px;
-    min-height: 100dvh;
-    position: relative;
-  }
-
-  /* ===== HEADER ===== */
-  .masthead {
-    text-align: center;
-    padding: 14px 0 28px;
-    position: relative;
-  }
-  .masthead .est {
-    font-family: var(--serif);
-    font-style: italic;
-    font-weight: 400;
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--bone);
-    margin-bottom: 6px;
-    opacity: 0.7;
-  }
-  .masthead h1 {
-    font-family: var(--display);
-    font-weight: 400;
-    color: var(--champagne);
-    font-size: 36px;
-    letter-spacing: 6px;
-    line-height: 1;
-    text-shadow: 0 1px 0 rgba(255,255,255,0.05);
-  }
-  .masthead .deco-line {
+  /* Top status bar */
+  .hs-top {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin: 14px 0 12px;
-  }
-  .masthead .deco-line .bar {
-    width: 40px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--brass), transparent);
-  }
-  .masthead .deco-line .diamond {
-    width: 6px; height: 6px;
-    background: var(--brass);
-    transform: rotate(45deg);
-  }
-  .masthead .subtitle {
-    font-family: var(--sans);
-    color: var(--brass);
+    justify-content: space-between;
     font-size: 10px;
-    letter-spacing: 5px;
-    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: rgba(212, 175, 55, 0.55);
+    padding: 0 6px 14px;
+    border-bottom: 0.5px solid rgba(212, 175, 55, 0.12);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .hs-top .close {
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--gold);
+    transition: opacity 0.2s;
+  }
+  .hs-top .close:hover { opacity: 0.7; }
+
+  /* Brand block */
+  .hs-brand {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .hs-est {
+    font-size: 9px;
+    letter-spacing: 0.32em;
+    color: rgba(212, 175, 55, 0.5);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .hs-name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 0.12em;
+    color: var(--gold-bright);
+    font-weight: 400;
+  }
+  .hs-event {
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    color: rgba(212, 175, 55, 0.45);
+    margin-top: 4px;
+    font-weight: 500;
   }
 
-  /* Gate indicator pill */
-  .gate-pill {
+  /* Status pill */
+  .hs-pill {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 18px;
-    background: rgba(20, 16, 12, 0.6);
-    border: 1px solid var(--brass-deep);
-    border-radius: 100px;
-    font-family: var(--sans);
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--brass);
-    font-weight: 700;
-    margin-top: 16px;
-    backdrop-filter: blur(8px);
+    gap: 6px;
+    padding: 5px 14px;
+    border: 0.5px solid rgba(212, 175, 55, 0.35);
+    border-radius: 999px;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    margin: 10px auto 0;
+    font-weight: 500;
   }
-  .gate-pill::before {
-    content: '';
-    width: 6px; height: 6px;
+  .hs-dot {
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-    background: var(--brass);
-    box-shadow: 0 0 10px var(--brass);
+    background: var(--gold);
+    box-shadow: 0 0 6px rgba(212, 175, 55, 0.6);
     animation: pulse-dot 2s ease-in-out infinite;
   }
   @keyframes pulse-dot {
     0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
+    50% { opacity: 0.5; transform: scale(0.85); }
   }
 
-  /* ===== CARDS ===== */
-  .card {
-    background:
-      linear-gradient(180deg, rgba(28, 22, 16, 0.85) 0%, rgba(20, 16, 12, 0.7) 100%);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 28px 24px;
-    margin-bottom: 18px;
-    box-shadow:
-      0 30px 60px rgba(0,0,0,0.5),
-      inset 0 1px 0 rgba(255,255,255,0.03);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(8px);
-  }
-  /* Top accent strip */
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--brass), transparent);
-  }
-  /* Corner ornaments */
-  .card::after {
-    content: '';
-    position: absolute;
-    top: 8px; right: 8px;
-    width: 16px; height: 16px;
-    border-top: 1px solid var(--brass-deep);
-    border-right: 1px solid var(--brass-deep);
-    opacity: 0.4;
-  }
-
-  .card h2 {
-    font-family: var(--display);
-    font-weight: 400;
-    font-size: 30px;
-    margin-bottom: 8px;
-    color: var(--champagne);
-    letter-spacing: 2px;
-    line-height: 1;
-  }
-  .card .sub {
-    font-family: var(--serif);
-    font-style: italic;
-    color: var(--bone);
-    font-size: 14px;
-    margin-bottom: 22px;
-    opacity: 0.85;
-  }
-
-  /* ===== BUTTONS ===== */
-  .btn {
-    width: 100%;
-    padding: 18px 24px;
-    border: none;
-    border-radius: 2px;
-    font-family: var(--sans);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 4px;
-    cursor: pointer;
-    margin-bottom: 12px;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-  }
-  .btn:active { transform: scale(0.98); }
-
-  .btn-gold {
-    background: var(--grad-brass);
-    color: var(--black);
-    box-shadow:
-      0 8px 24px rgba(201, 169, 97, 0.3),
-      inset 0 1px 0 rgba(255,255,255,0.3),
-      inset 0 -1px 0 rgba(0,0,0,0.2);
-  }
-  .btn-gold:hover {
-    box-shadow:
-      0 12px 32px rgba(201, 169, 97, 0.45),
-      inset 0 1px 0 rgba(255,255,255,0.4);
-  }
-  .btn-gold::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.6s;
-  }
-  .btn-gold:hover::before { left: 100%; }
-
-  .btn-green {
-    background: linear-gradient(135deg, var(--emerald-bright), var(--emerald));
-    color: white;
-    box-shadow: 0 8px 24px rgba(95, 182, 114, 0.3);
-  }
-
-  .btn-red {
-    background: linear-gradient(135deg, var(--crimson), var(--burgundy));
-    color: white;
-  }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--brass);
-    border: 1px solid var(--brass-deep);
-  }
-  .btn-ghost:hover {
-    background: rgba(201, 169, 97, 0.08);
-    border-color: var(--brass);
-  }
-
-  .btn-dark {
-    background: rgba(20, 16, 12, 0.6);
-    color: var(--bone);
-    border: 1px solid var(--line);
-    backdrop-filter: blur(8px);
-  }
-
-  /* Scan action button — extra prominent */
-  .scan-action {
-    background: var(--grad-brass);
-    color: var(--black);
-    border: none;
-    width: 100%;
-    padding: 26px;
-    border-radius: 2px;
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 5px;
-    cursor: pointer;
+  /* Brand info card (intro) */
+  .brand-info {
+    background: rgba(212, 175, 55, 0.03);
+    border: 0.5px solid rgba(212, 175, 55, 0.15);
+    border-radius: 10px;
+    padding: 14px;
     margin-bottom: 14px;
-    box-shadow:
-      0 16px 40px rgba(201, 169, 97, 0.35),
-      inset 0 1px 0 rgba(255,255,255,0.3),
-      inset 0 -1px 0 rgba(0,0,0,0.15);
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--bone);
+    text-align: center;
+    font-style: italic;
+    font-family: var(--font-serif);
+  }
+  .brand-info strong {
+    color: var(--gold);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    font-style: normal;
+    font-family: var(--font-sans);
+    font-size: 9px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* Inner card */
+  .hs-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 0.5px solid rgba(212, 175, 55, 0.18);
+    border-radius: 14px;
+    padding: 18px 14px;
+    margin-bottom: 12px;
+  }
+  .hs-card-title {
+    font-family: var(--font-display);
+    font-size: 17px;
+    text-align: center;
+    color: var(--gold-bright);
+    margin-bottom: 3px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+  }
+  .hs-card-sub {
+    font-size: 11px;
+    text-align: center;
+    color: rgba(243, 233, 210, 0.5);
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+  }
+
+  /* Option cards */
+  .hs-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .hs-opt {
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.06), rgba(212, 175, 55, 0.02));
+    border: 0.5px solid rgba(212, 175, 55, 0.25);
+    border-radius: 12px;
+    padding: 18px 8px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .hs-opt:hover {
+    border-color: rgba(212, 175, 55, 0.55);
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.12), rgba(212, 175, 55, 0.04));
+  }
+  .hs-opt:active { transform: scale(0.97); }
+  .hs-icon-wrap {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 0.5px solid rgba(212, 175, 55, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    text-transform: uppercase;
-    position: relative;
-    overflow: hidden;
+    margin: 0 auto 10px;
+    background: rgba(212, 175, 55, 0.05);
   }
-  .scan-action::before {
+  .hs-icon-wrap i {
+    font-size: 24px;
+    color: var(--gold);
+  }
+  .hs-num {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: rgba(212, 175, 55, 0.55);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .hs-opt-title {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--ivory);
+    margin-bottom: 3px;
+  }
+  .hs-opt-desc {
+    font-size: 10px;
+    color: rgba(243, 233, 210, 0.45);
+    font-style: italic;
+    font-family: var(--font-serif);
+  }
+
+  /* Footer */
+  .hs-foot {
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: rgba(212, 175, 55, 0.3);
+    padding-top: 14px;
+    border-top: 0.5px solid rgba(212, 175, 55, 0.1);
+    margin-top: 14px;
+    font-weight: 500;
+  }
+  .hs-foot-event {
+    color: rgba(212, 175, 55, 0.5);
+    font-family: var(--font-serif);
+    letter-spacing: 0.18em;
+    margin-top: 6px;
+    font-size: 10px;
+    font-style: italic;
+  }
+
+  /* ============================== */
+  /*  QR SCAN AREA                  */
+  /* ============================== */
+  .qr-scan-area {
+    aspect-ratio: 1;
+    max-width: 240px;
+    margin: 0 auto 14px;
+    position: relative;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.4);
+  }
+  .qr-corner {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border: 2px solid var(--gold);
+  }
+  .qr-corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; border-radius: 8px 0 0 0; }
+  .qr-corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; border-radius: 0 8px 0 0; }
+  .qr-corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; border-radius: 0 0 0 8px; }
+  .qr-corner.br { bottom: 0; right: 0; border-left: none; border-top: none; border-radius: 0 0 8px 0; }
+  .qr-laser {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    top: 30px;
+    animation: laser 2.4s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+  }
+  @keyframes laser {
+    0%, 100% { top: 14px; opacity: 0.4; }
+    50% { top: calc(100% - 14px); opacity: 1; }
+  }
+  .qr-grid {
+    position: absolute;
+    inset: 24px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    gap: 3px;
+    opacity: 0.18;
+  }
+  .qr-grid span {
+    background: var(--gold);
+    border-radius: 1px;
+  }
+
+  /* Camera video container */
+  #reader, #reader2 {
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 1;
+    margin: 0 auto 14px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+    display: none;
+    position: relative;
+    border: 2px solid var(--gold);
+  }
+  #reader.show, #reader2.show { display: block; }
+  #reader video, #reader2 video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ============================== */
+  /*  WRISTBAND STAGE (Animation)   */
+  /* ============================== */
+  .wb-stage {
+    position: relative;
+    height: 230px;
+    margin: 0 auto 12px;
+    max-width: 280px;
+  }
+  .wb-phone {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 96px;
+    height: 170px;
+    border: 1.5px solid rgba(212, 175, 55, 0.5);
+    border-radius: 18px;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 14px;
+  }
+  .wb-phone::before {
+    content: '';
+    width: 32px;
+    height: 4px;
+    background: rgba(212, 175, 55, 0.25);
+    border-radius: 2px;
+    margin-bottom: 10px;
+  }
+  .wb-nfc {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 0.5px solid rgba(212, 175, 55, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(212, 175, 55, 0.06);
+  }
+  .wb-nfc i {
+    font-size: 22px;
+    color: var(--gold);
+    animation: nfc-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes nfc-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.05); }
+  }
+  .wb-wave {
+    position: absolute;
+    left: 50%;
+    bottom: 88px;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    opacity: 0;
+    animation: wave 2s ease-out infinite;
+  }
+  .wb-wave.w2 { animation-delay: 0.6s; }
+  .wb-wave.w3 { animation-delay: 1.2s; }
+  @keyframes wave {
+    0% { transform: translateX(-50%) scale(0.4); opacity: 0.8; }
+    100% { transform: translateX(-50%) scale(2.2); opacity: 0; }
+  }
+  .wb-band {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 36px;
+    border: 1.5px solid var(--gold);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: approach 3s ease-in-out infinite;
+  }
+  .wb-band::before,
+  .wb-band::after {
     content: '';
     position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: shimmer 3s infinite;
+    width: 24px;
+    height: 6px;
+    background: rgba(212, 175, 55, 0.4);
+    border-radius: 3px;
+    top: 50%;
+    transform: translateY(-50%);
   }
-  @keyframes shimmer {
-    0% { left: -100%; }
-    100% { left: 100%; }
+  .wb-band::before { left: -22px; }
+  .wb-band::after { right: -22px; }
+  .wb-band-chip {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 6px rgba(212, 175, 55, 0.6);
   }
-  .scan-action svg {
-    width: 24px; height: 24px;
-    stroke: currentColor;
-    stroke-width: 1.5;
-    fill: none;
+  @keyframes approach {
+    0%, 100% { top: 0; opacity: 0.7; }
+    50% { top: 50px; opacity: 1; }
   }
 
-  /* ===== INPUTS ===== */
-  input {
+  /* ============================== */
+  /*  INPUTS & BUTTONS              */
+  /* ============================== */
+  .wb-input {
     width: 100%;
-    background: rgba(10, 8, 7, 0.5);
-    border: 1px solid var(--line);
+    background: rgba(0, 0, 0, 0.4);
+    border: 0.5px solid rgba(212, 175, 55, 0.25);
+    border-radius: 8px;
+    padding: 14px 16px;
     color: var(--ivory);
-    padding: 16px 18px;
-    font-size: 16px;
-    font-family: 'SF Mono', Menlo, monospace;
-    border-radius: 2px;
-    margin-bottom: 12px;
-    letter-spacing: 2px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+    text-align: center;
     transition: all 0.2s;
   }
-  input:focus {
+  .wb-input:focus {
     outline: none;
-    border-color: var(--brass);
-    background: rgba(10, 8, 7, 0.8);
-    box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.1);
+    border-color: var(--gold);
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
   }
-  input::placeholder {
-    color: rgba(199, 186, 161, 0.3);
-    letter-spacing: 1px;
+  .wb-input::placeholder {
+    color: rgba(212, 175, 55, 0.3);
+  }
+  .wb-label {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: rgba(212, 175, 55, 0.5);
+    margin-bottom: 8px;
+    text-align: center;
+    font-weight: 500;
+  }
+  .wb-btn {
+    width: 100%;
+    background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+    color: var(--black);
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: all 0.2s;
+    font-family: var(--font-sans);
+  }
+  .wb-btn:active { transform: scale(0.98); }
+  .wb-btn.ghost {
+    background: transparent;
+    border: 0.5px solid rgba(212, 175, 55, 0.3);
+    color: var(--gold);
+  }
+  .wb-btn.ghost:hover { border-color: rgba(212, 175, 55, 0.6); }
+  .wb-btn.danger {
+    background: linear-gradient(180deg, #c5453c, #8b2f29);
+    color: white;
+  }
+  .wb-btn.success {
+    background: linear-gradient(180deg, var(--emerald), #3a6b3a);
+    color: white;
   }
 
-  label {
-    display: block;
-    color: var(--brass);
-    font-family: var(--sans);
+  /* ============================== */
+  /*  PROGRESS NODES                */
+  /* ============================== */
+  .flow-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 0 0 14px;
+  }
+  .flow-progress .node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .flow-progress .circ {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 0.5px solid rgba(212, 175, 55, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 10px;
-    letter-spacing: 3px;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    font-weight: 700;
+    color: rgba(212, 175, 55, 0.5);
+    transition: all 0.3s;
+  }
+  .flow-progress .circ.done {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+  }
+  .flow-progress .circ.active {
+    border-color: var(--gold);
+    color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+  }
+  .flow-progress .lbl {
+    font-size: 8px;
+    letter-spacing: 0.14em;
+    color: rgba(243, 233, 210, 0.45);
+    font-weight: 500;
+  }
+  .flow-progress .lbl.active { color: var(--gold); }
+  .flow-progress .line {
+    width: 18px;
+    height: 0.5px;
+    background: rgba(212, 175, 55, 0.2);
+    margin-bottom: 14px;
+    transition: background 0.3s;
+  }
+  .flow-progress .line.done { background: var(--gold); }
+
+  /* ============================== */
+  /*  MERGE CARD                    */
+  /* ============================== */
+  .merge-card {
+    background: rgba(212, 175, 55, 0.04);
+    border: 0.5px solid rgba(212, 175, 55, 0.25);
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    gap: 8px;
+  }
+  .merge-side {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+  .merge-side i {
+    font-size: 20px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+  .merge-side .t {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--ivory);
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .merge-side .id {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(243, 233, 210, 0.5);
+  }
+  .merge-side.r { justify-content: flex-end; text-align: right; }
+  .merge-link {
+    color: rgba(212, 175, 55, 0.5);
+    font-size: 14px;
+    flex-shrink: 0;
   }
 
-  /* ===== ROWS ===== */
+  /* ============================== */
+  /*  RESULT HERO (Gate 1 / Verify) */
+  /* ============================== */
+  .result-hero {
+    border-radius: 14px;
+    padding: 28px 18px 24px;
+    text-align: center;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+    animation: heroIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes heroIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .result-hero.success {
+    background: linear-gradient(135deg, rgba(95, 182, 114, 0.15), rgba(95, 182, 114, 0.04));
+    border: 0.5px solid var(--emerald);
+  }
+  .result-hero.failure {
+    background: linear-gradient(135deg, rgba(232, 69, 69, 0.15), rgba(232, 69, 69, 0.04));
+    border: 0.5px solid var(--crimson);
+  }
+  .result-hero.pending {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), rgba(212, 175, 55, 0.04));
+    border: 0.5px solid var(--gold);
+  }
+  .result-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    border: 0.5px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: iconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+    position: relative;
+  }
+  @keyframes iconPop {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .result-icon i { font-size: 32px; }
+  .result-icon::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: currentColor;
+    filter: blur(16px);
+    opacity: 0.25;
+    z-index: -1;
+  }
+  .result-hero.success .result-icon { color: var(--emerald); }
+  .result-hero.failure .result-icon { color: var(--crimson); }
+  .result-hero.pending .result-icon { color: var(--gold); }
+  .result-name {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--gold-bright);
+    margin-bottom: 4px;
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+  }
+  .result-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--gold-soft);
+    letter-spacing: 0.18em;
+    margin-bottom: 14px;
+  }
+  .result-tier {
+    display: inline-block;
+    padding: 6px 18px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    margin: 6px 0 14px;
+    text-transform: uppercase;
+    font-family: var(--font-sans);
+  }
+  .tier-vip {
+    background: linear-gradient(135deg, #d4af37 0%, #f9e286 50%, #c9a961 100%);
+    color: #2a1f00;
+    border: 0.5px solid #f9e286;
+  }
+  .tier-standard {
+    background: rgba(212, 175, 55, 0.15);
+    color: var(--gold);
+    border: 0.5px solid var(--gold);
+  }
+  .tier-crew {
+    background: rgba(243, 233, 210, 0.08);
+    color: var(--bone);
+    border: 0.5px solid rgba(243, 233, 210, 0.3);
+  }
+  .tier-default {
+    background: rgba(243, 233, 210, 0.05);
+    color: var(--bone-soft);
+    border: 0.5px solid rgba(243, 233, 210, 0.15);
+  }
+  .result-message {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ivory);
+    letter-spacing: 0.28em;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+  .result-detail {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--bone-soft);
+    margin-top: 6px;
+  }
+
+  /* ============================== */
+  /*  DETAIL ROWS                   */
+  /* ============================== */
   .row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 13px 0;
-    border-bottom: 1px solid var(--line-soft);
-    font-size: 14px;
+    padding: 11px 0;
+    border-bottom: 0.5px solid rgba(212, 175, 55, 0.08);
+    font-size: 13px;
     gap: 12px;
   }
   .row:last-child { border: none; }
   .row .label-text {
-    color: var(--brass);
-    font-family: var(--sans);
+    color: rgba(212, 175, 55, 0.6);
     font-size: 9px;
-    letter-spacing: 2.5px;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     flex-shrink: 0;
-    font-weight: 700;
-    opacity: 0.8;
+    font-weight: 600;
   }
   .row .value {
     color: var(--ivory);
-    font-family: var(--sans);
     font-weight: 500;
     text-align: right;
     word-break: break-word;
-    letter-spacing: 0.5px;
   }
-
-  /* ===== BADGES ===== */
   .badge {
     display: inline-block;
-    padding: 5px 12px;
-    border-radius: 2px;
-    font-family: var(--sans);
-    font-size: 10px;
-    letter-spacing: 2px;
-    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    font-weight: 600;
     text-transform: uppercase;
   }
-  .badge-green { background: rgba(95, 182, 114, 0.15); color: var(--emerald-bright); border: 1px solid var(--emerald-bright); }
-  .badge-red { background: rgba(197, 69, 60, 0.15); color: var(--crimson); border: 1px solid var(--crimson); }
-  .badge-gold { background: rgba(201, 169, 97, 0.12); color: var(--brass-bright); border: 1px solid var(--brass); }
+  .badge-green { background: rgba(95, 182, 114, 0.15); color: var(--emerald); border: 0.5px solid var(--emerald); }
+  .badge-red { background: rgba(232, 69, 69, 0.15); color: var(--crimson); border: 0.5px solid var(--crimson); }
+  .badge-gold { background: rgba(212, 175, 55, 0.12); color: var(--gold); border: 0.5px solid var(--gold); }
 
-  /* ===== TIER BADGE (Hero Display) ===== */
-  .tier-display {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 24px 0 16px;
-  }
-  .tier-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 32px;
-    border-radius: 2px;
-    font-family: var(--display);
-    font-size: 22px;
-    font-weight: 400;
-    letter-spacing: 8px;
-    text-align: center;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-    position: relative;
-    text-transform: uppercase;
-  }
-  .tier-badge::before,
-  .tier-badge::after {
-    content: '◆';
-    font-size: 10px;
-    opacity: 0.4;
-  }
-
-  .tier-vip {
-    background: var(--grad-vip);
-    color: #2a1f00;
-    border: 1px solid #f9e286;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
-    box-shadow:
-      0 20px 50px rgba(212, 175, 55, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-    animation: vip-shine 4s ease-in-out infinite;
-  }
-  @keyframes vip-shine {
-    0%, 100% { filter: brightness(1); }
-    50% { filter: brightness(1.1); }
-  }
-  .tier-standard {
-    background: linear-gradient(135deg, var(--brass), var(--brass-deep));
-    color: var(--black);
-    border: 1px solid var(--brass-bright);
-  }
-  .tier-crew {
-    background: linear-gradient(135deg, #5a5046, #3a3228);
-    color: var(--champagne);
-    border: 1px solid var(--bone);
-  }
-  .tier-default {
-    background: linear-gradient(135deg, #3a3228, #1f1812);
-    color: var(--bone);
-    border: 1px solid var(--brass-deep);
-  }
-
-  /* ===== QR SCANNER ===== */
-  #reader, #reader2 {
-    width: 100%;
-    border-radius: 4px;
-    overflow: hidden;
-    background: #000;
-    margin-bottom: 14px;
-    display: none;
-    min-height: 320px;
-    border: 1px solid var(--brass);
-    position: relative;
-    box-shadow:
-      0 0 0 4px var(--black),
-      0 0 0 5px var(--brass-deep),
-      0 20px 60px rgba(201, 169, 97, 0.2);
-  }
-  #reader.show, #reader2.show { display: block; }
-  #reader video, #reader2 video { border-radius: 3px; }
-
-  /* Scanner corner markers */
-  .scanner-corners {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 10;
-  }
-  .scanner-corners::before,
-  .scanner-corners::after {
-    content: '';
-    position: absolute;
-    width: 32px; height: 32px;
-    border: 2px solid var(--brass-bright);
-  }
-
-  /* ===== MESSAGES ===== */
+  /* ============================== */
+  /*  MESSAGES                      */
+  /* ============================== */
   .msg {
-    padding: 14px 18px;
-    border-radius: 2px;
-    margin-bottom: 16px;
-    font-size: 13px;
-    line-height: 1.6;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    font-size: 12px;
+    line-height: 1.5;
     display: none;
-    border-left: 3px solid currentColor;
+    border-left: 2px solid currentColor;
   }
-  .msg.show { display: block; animation: slideIn 0.4s ease-out; }
+  .msg.show {
+    display: block;
+    animation: slideIn 0.3s ease-out;
+  }
   @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-8px); }
+    from { opacity: 0; transform: translateY(-6px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .msg-error { background: rgba(197, 69, 60, 0.12); color: #ffaaa5; }
-  .msg-warn { background: rgba(201, 169, 97, 0.12); color: var(--brass-bright); }
-  .msg-ok { background: rgba(95, 182, 114, 0.18); color: #a5e8b5; }
+  .msg-error { background: rgba(232, 69, 69, 0.12); color: #ffaaa5; }
+  .msg-warn { background: rgba(212, 175, 55, 0.12); color: var(--gold-bright); }
+  .msg-ok { background: rgba(95, 182, 114, 0.15); color: #a5e8b5; }
   .msg-info { background: rgba(70, 130, 180, 0.12); color: #9ec4e8; }
 
   .hidden { display: none !important; }
 
-  /* ===== BAND BANNER ===== */
-  .band-banner {
-    background: var(--grad-vip);
-    color: var(--black);
-    padding: 22px 26px;
-    border-radius: 2px;
-    margin-bottom: 18px;
-    text-align: center;
-    box-shadow:
-      0 16px 40px rgba(212, 175, 55, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4);
-    position: relative;
-    animation: bandDrop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  @keyframes bandDrop {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  .band-banner .label-mini {
-    font-family: var(--sans);
-    font-size: 10px;
-    letter-spacing: 4px;
-    opacity: 0.7;
-    margin-bottom: 8px;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-  .band-banner .id-big {
-    font-family: 'SF Mono', Menlo, monospace;
-    font-size: 28px;
-    letter-spacing: 4px;
-    font-weight: 700;
-  }
-  .band-banner::before,
-  .band-banner::after {
-    content: '◆';
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 10px;
-    opacity: 0.4;
-  }
-  .band-banner::before { left: 16px; }
-  .band-banner::after { right: 16px; }
-
-  /* ===== NFC TAP ZONE ===== */
-  .nfc-tap-zone {
-    background:
-      radial-gradient(ellipse at center, rgba(201, 169, 97, 0.12) 0%, transparent 60%),
-      linear-gradient(180deg, rgba(28, 22, 16, 0.5), rgba(20, 16, 12, 0.3));
-    border: 1px dashed var(--brass);
-    border-radius: 4px;
-    padding: 48px 28px;
-    text-align: center;
-    margin-bottom: 18px;
-    position: relative;
-    overflow: hidden;
-  }
-  .nfc-tap-zone::before,
-  .nfc-tap-zone::after {
-    content: '';
-    position: absolute;
-    width: 30px; height: 30px;
-  }
-  .nfc-tap-zone::before {
-    top: 8px; left: 8px;
-    border-top: 1px solid var(--brass);
-    border-left: 1px solid var(--brass);
-  }
-  .nfc-tap-zone::after {
-    bottom: 8px; right: 8px;
-    border-bottom: 1px solid var(--brass);
-    border-right: 1px solid var(--brass);
-  }
-
-  .nfc-icon-wrap {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 20px;
-  }
-  .nfc-icon-wrap svg {
-    width: 80px; height: 80px;
-    stroke: var(--brass);
-    stroke-width: 1.5;
-    fill: none;
-    filter: drop-shadow(0 8px 24px rgba(201, 169, 97, 0.4));
-    animation: nfc-pulse 2.5s ease-in-out infinite;
-  }
-  @keyframes nfc-pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.8; }
-  }
-  /* Radio wave rings */
-  .nfc-icon-wrap::before,
-  .nfc-icon-wrap::after {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 80px; height: 80px;
-    border: 1px solid var(--brass);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    animation: wave 2.5s ease-out infinite;
-  }
-  .nfc-icon-wrap::after {
-    animation-delay: 1.25s;
-  }
-  @keyframes wave {
-    0% { opacity: 0.6; width: 80px; height: 80px; }
-    100% { opacity: 0; width: 160px; height: 160px; }
-  }
-
-  .nfc-title {
-    font-family: var(--display);
-    font-size: 32px;
-    font-weight: 400;
-    color: var(--champagne);
-    margin-bottom: 12px;
-    letter-spacing: 4px;
-  }
-  .nfc-subtitle {
-    font-family: var(--serif);
-    font-style: italic;
-    color: var(--bone);
-    font-size: 15px;
-    line-height: 1.7;
-    max-width: 340px;
-    margin: 0 auto;
-    opacity: 0.9;
-  }
-
-  /* ===== VERIFY HERO (Result Screen) ===== */
-  .verify-hero {
-    border-radius: 4px;
-    padding: 48px 28px 40px;
-    text-align: center;
-    margin-bottom: 16px;
-    position: relative;
-    overflow: hidden;
-    animation: heroIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  @keyframes heroIn {
-    from { opacity: 0; transform: translateY(20px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  .verify-hero.success {
-    background: var(--grad-success);
-    border: 1px solid var(--emerald-bright);
-    box-shadow: 0 0 80px rgba(95, 182, 114, 0.25);
-  }
-  .verify-hero.failure {
-    background: var(--grad-fail);
-    border: 1px solid var(--crimson);
-    box-shadow: 0 0 80px rgba(197, 69, 60, 0.25);
-  }
-  .verify-hero.pending {
-    background: var(--grad-pending);
-    border: 1px solid var(--brass);
-    box-shadow: 0 0 80px rgba(201, 169, 97, 0.25);
-  }
-
-  /* Decorative corners on verify hero */
-  .verify-hero::before,
-  .verify-hero::after {
-    content: '';
-    position: absolute;
-    width: 40px; height: 40px;
-  }
-  .verify-hero::before {
-    top: 12px; left: 12px;
-    border-top: 1px solid currentColor;
-    border-left: 1px solid currentColor;
-    opacity: 0.4;
-  }
-  .verify-hero::after {
-    bottom: 12px; right: 12px;
-    border-bottom: 1px solid currentColor;
-    border-right: 1px solid currentColor;
-    opacity: 0.4;
-  }
-  .verify-hero.success::before, .verify-hero.success::after { color: var(--emerald-bright); }
-  .verify-hero.failure::before, .verify-hero.failure::after { color: var(--crimson); }
-  .verify-hero.pending::before, .verify-hero.pending::after { color: var(--brass); }
-
-  .verify-icon-big {
-    width: 110px;
-    height: 110px;
-    margin: 0 auto 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    border: 1.5px solid currentColor;
-    animation: iconPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
-    position: relative;
-  }
-  @keyframes iconPop {
-    0% { transform: scale(0) rotate(-30deg); opacity: 0; }
-    60% { transform: scale(1.15) rotate(0deg); }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
-  }
-  .verify-icon-big svg {
-    width: 56px; height: 56px;
-    stroke: currentColor;
-    stroke-width: 2;
-    fill: none;
-  }
-  .verify-hero.success .verify-icon-big { color: var(--emerald-bright); }
-  .verify-hero.failure .verify-icon-big { color: var(--crimson); }
-  .verify-hero.pending .verify-icon-big { color: var(--brass-bright); }
-  /* Glow halo */
-  .verify-icon-big::before {
-    content: '';
-    position: absolute;
-    inset: -8px;
-    border-radius: 50%;
-    background: currentColor;
-    filter: blur(20px);
-    opacity: 0.3;
-    z-index: -1;
-  }
-
-  .verify-name {
-    font-family: var(--display);
-    font-size: 40px;
-    font-weight: 400;
-    margin-bottom: 6px;
-    color: var(--champagne);
-    line-height: 1.05;
-    letter-spacing: 1px;
-  }
-
-  .verify-meta {
-    font-family: 'SF Mono', Menlo, monospace;
-    font-size: 12px;
-    color: var(--brass);
-    letter-spacing: 3px;
-    margin-bottom: 16px;
-    opacity: 0.85;
-  }
-
-  .verify-message {
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--champagne);
-    margin-top: 20px;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-  }
-  .verify-detail-line {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 13px;
-    color: var(--bone);
-    margin-top: 10px;
-    opacity: 0.7;
-  }
-
-  /* ===== LOADING ===== */
+  /* Loading */
   .loading-state {
     text-align: center;
-    padding: 60px 20px;
+    padding: 48px 20px;
   }
   .loading-spinner {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 24px;
-    border: 1.5px solid var(--line);
-    border-top-color: var(--brass);
-    border-right-color: var(--brass);
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 16px;
+    border: 1.5px solid rgba(212, 175, 55, 0.15);
+    border-top-color: var(--gold);
+    border-right-color: var(--gold);
     border-radius: 50%;
-    animation: spin 1s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
-    position: relative;
-  }
-  .loading-spinner::after {
-    content: '';
-    position: absolute;
-    inset: 6px;
-    border: 1px solid var(--brass-deep);
-    border-radius: 50%;
-    opacity: 0.4;
+    animation: spin 1s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-text {
-    font-family: var(--sans);
-    color: var(--brass);
-    font-size: 11px;
-    letter-spacing: 5px;
+    color: var(--gold);
+    font-size: 10px;
+    letter-spacing: 0.32em;
     text-transform: uppercase;
-    font-weight: 700;
+    font-weight: 600;
   }
   .loading-subtitle {
-    font-family: var(--serif);
+    font-family: var(--font-serif);
     font-style: italic;
-    color: var(--bone);
-    font-size: 13px;
-    margin-top: 12px;
-    opacity: 0.6;
+    color: var(--bone-soft);
+    font-size: 12px;
+    margin-top: 10px;
   }
 
-  /* ===== GATE SELECTOR ===== */
-  .gate-selector {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 18px;
-  }
-  .gate-card {
-    background: linear-gradient(180deg, rgba(28, 22, 16, 0.8), rgba(20, 16, 12, 0.6));
-    border: 1px solid var(--line);
-    border-radius: 3px;
-    padding: 32px 18px 26px;
-    cursor: pointer;
+  /* Section label divider */
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 0.32em;
+    color: rgba(212, 175, 55, 0.4);
     text-align: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-  }
-  .gate-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 50%;
-    transform: translateX(-50%);
-    width: 40%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--brass-deep), transparent);
-    transition: width 0.3s;
-  }
-  .gate-card:hover::before, .gate-card.active::before {
-    width: 80%;
-    background: linear-gradient(90deg, transparent, var(--brass), transparent);
-  }
-  .gate-card:active { transform: scale(0.97); }
-  .gate-card:hover, .gate-card.active {
-    border-color: var(--brass);
-    background: linear-gradient(180deg, rgba(201, 169, 97, 0.1), rgba(201, 169, 97, 0.03));
-    box-shadow: 0 16px 40px rgba(201, 169, 97, 0.15);
-  }
-  .gate-card .icon-wrap {
-    width: 56px; height: 56px;
-    margin: 0 auto 14px;
+    margin: 18px 0 12px;
     display: flex;
     align-items: center;
+    gap: 10px;
     justify-content: center;
-    border-radius: 50%;
-    border: 1px solid var(--brass-deep);
-    background: rgba(10, 8, 7, 0.6);
-    transition: all 0.3s;
+    font-weight: 600;
   }
-  .gate-card:hover .icon-wrap,
-  .gate-card.active .icon-wrap {
-    border-color: var(--brass);
-    box-shadow: 0 0 24px rgba(201, 169, 97, 0.3);
+  .section-label::before,
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 50px;
+    height: 0.5px;
+    background: rgba(212, 175, 55, 0.15);
   }
-  .gate-card .icon-wrap svg {
-    width: 26px; height: 26px;
-    stroke: var(--brass);
-    stroke-width: 1.5;
-    fill: none;
-  }
-  .gate-card .gate-num {
-    font-family: var(--display);
-    font-size: 14px;
-    color: var(--brass);
-    letter-spacing: 3px;
-    margin-bottom: 4px;
-    font-weight: 400;
-  }
-  .gate-card .gate-name {
-    font-family: var(--sans);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    color: var(--champagne);
-    margin-bottom: 4px;
-    text-transform: uppercase;
-  }
-  .gate-card .gate-desc {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 12px;
-    color: var(--bone);
-    opacity: 0.7;
-  }
-
-  /* ===== FOOTER ===== */
-  .footer-info {
-    text-align: center;
-    margin-top: 32px;
-    padding-top: 24px;
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 11px;
-    color: var(--bone);
-    opacity: 0.4;
-    letter-spacing: 2px;
-  }
-  .footer-info::before {
-    content: '◆';
-    display: block;
-    color: var(--brass);
-    margin-bottom: 12px;
-    font-size: 8px;
-    opacity: 0.6;
-  }
-
-  /* Subtle entrance for whole content */
-  .wrap > * {
-    animation: contentIn 0.6s ease-out backwards;
-  }
-  .wrap > *:nth-child(1) { animation-delay: 0s; }
-  .wrap > *:nth-child(2) { animation-delay: 0.1s; }
-  .wrap > *:nth-child(3) { animation-delay: 0.2s; }
-  @keyframes contentIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }.card-centered { text-align: center; }
-  .card-centered h2 { text-align: center; }
-  .card-centered .sub { text-align: center; }
 </style>
 </head>
 <body>
 
-<div class="deco-frame"></div>
-
 <div class="wrap">
 
-  <header class="masthead">
-    <div class="est">— EST · MMXXVI —</div>
-    <h1>BETTER · HIGH</h1>
-    <div class="deco-line">
-      <div class="bar"></div>
-      <div class="diamond"></div>
-      <div class="bar"></div>
+  <!-- ============================================ -->
+  <!--  SCREEN: LANDING / GATE SELECTOR             -->
+  <!-- ============================================ -->
+  <div class="hs-frame" id="screenLanding">
+    <div class="hs-top">
+      <span id="topTime">9:41</span>
+      <span>RECEPTION · CHECK-IN</span>
+      <span>—</span>
     </div>
-    <div class="subtitle">RECEPTION · CHECK-IN</div>
-    <div class="gate-pill" id="modeIndicator">AWAITING SELECTION</div>
-  </header>
 
-  <div id="msg" class="msg"></div>
+    <div class="hs-brand">
+      <div class="hs-est">— EST · MMXXVI —</div>
+      <div class="hs-name">HEAVEN · SAKE</div>
+      <div class="hs-event">A BETTER HIGH · 2026</div>
+      <div class="hs-pill"><span class="hs-dot"></span><span id="modeIndicator">AWAITING SELECTION</span></div>
+    </div>
 
-  <!-- ============================================ -->
-  <!--  GATE SELECTOR (Home)                        -->
-  <!-- ============================================ -->
-  <div id="screenGateSelect">
-    <div class="card card-centered">
-      <h2>Reception Desk</h2>
-      <div class="sub">Choose the operation to begin</div>
+    <div class="brand-info">
+      <strong>VILLA MIRAMAR · JUNE 6</strong>
+      Heaven Sake reimagines the ancient craft of junmai daiginjō for the modern sensorium — an evening of low-intervention sake, ambient sound, and quiet revelry.
+    </div>
 
-      <div class="gate-selector">
-        <div class="gate-card" id="selectGate1" onclick="selectGate('gate1')">
-          <div class="icon-wrap">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-          </div>
-          <div class="gate-num">— I —</div>
-          <div class="gate-name">QR Scan</div>
-          <div class="gate-desc">Verify Entry</div>
+    <div class="hs-card">
+      <div class="hs-card-title">Reception desk</div>
+      <div class="hs-card-sub">Choose an operation to begin</div>
+
+      <div class="hs-options">
+        <div class="hs-opt" onclick="selectGate('gate1')">
+          <div class="hs-icon-wrap"><i class="ti ti-qrcode"></i></div>
+          <div class="hs-num">— I —</div>
+          <div class="hs-opt-title">QR SCAN</div>
+          <div class="hs-opt-desc">Verify entry</div>
         </div>
-        <div class="gate-card" id="selectGate2" onclick="selectGate('gate2')">
-          <div class="icon-wrap">
-            <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="11" rx="1"/><path d="M7 8V6a5 5 0 0 1 10 0v2"/><circle cx="12" cy="13" r="1.5"/></svg>
-          </div>
-         <div class="gate-num">— II —</div>
-         <div class="gate-name">Assign Wristband</div>
-         <div class="gate-desc">Tap NFC Band</div>
+        <div class="hs-opt" onclick="selectGate('gate2')">
+          <div class="hs-icon-wrap"><i class="ti ti-wifi"></i></div>
+          <div class="hs-num">— II —</div>
+          <div class="hs-opt-title">ASSIGN BAND</div>
+          <div class="hs-opt-desc">Tap & merge</div>
         </div>
       </div>
     </div>
+
+    <div class="hs-foot">
+      BETTER HIGH 2026 · TEAM DIGITAL
+      <div class="hs-foot-event">— villa miramar —</div>
+    </div>
   </div>
 
   <!-- ============================================ -->
-  <!--  GATE 1 — ENTRY VERIFICATION                 -->
+  <!--  SCREEN: GATE 1 - QR SCAN                    -->
   <!-- ============================================ -->
-  <div id="screenGate1Home" class="hidden">
-    <div class="card">
-      <h2>Verify Entry</h2>
-      <div class="sub">Scan the guest's invitation to verify approval status</div>
-
-      <button class="scan-action" id="btnGate1Scan">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3M14 21h3"/></svg>
-        SCAN INVITATION
-      </button>
-      <div id="reader"></div>
-      <button class="btn btn-red hidden" id="btnGate1StopScan">CLOSE SCANNER</button>
-
-      <label style="margin-top:20px;">Or Enter QR ID Manually</label>
-      <input type="text" id="manualGate1Qr" placeholder="0V66O46" autocapitalize="characters">
-      <button class="btn btn-ghost" id="btnGate1Manual">VERIFY MANUALLY</button>
+  <div class="hs-frame hidden" id="screenGate1">
+    <div class="hs-top">
+      <span id="topTime2">9:41</span>
+      <span>SCAN QR</span>
+      <span class="close" onclick="goHome()"><i class="ti ti-x"></i></span>
     </div>
 
-    <button class="btn btn-dark" onclick="goHome()">← Back</button>
+    <div id="msg" class="msg"></div>
+
+    <div class="hs-brand">
+      <div class="hs-name" style="font-size:20px">Scan QR</div>
+      <div class="hs-event" style="margin-top:6px">POINT CAMERA AT GUEST'S CODE</div>
+    </div>
+
+    <!-- Decorative scan area (shown when camera not active) -->
+    <div class="qr-scan-area" id="gate1ScanDecor">
+      <div class="qr-corner tl"></div>
+      <div class="qr-corner tr"></div>
+      <div class="qr-corner bl"></div>
+      <div class="qr-corner br"></div>
+      <div class="qr-grid">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="qr-laser"></div>
+    </div>
+
+    <!-- Live camera (shown when active) -->
+    <div id="reader"></div>
+
+    <div class="wb-label" id="gate1ScanLabel">HOLD STEADY · AUTO-DETECTING</div>
+
+    <button class="wb-btn" id="btnGate1OpenScan" style="margin-top:14px">
+      <i class="ti ti-camera" style="font-size:13px;vertical-align:-2px"></i>&nbsp;&nbsp;OPEN CAMERA
+    </button>
+    <button class="wb-btn danger hidden" id="btnGate1StopScan" style="margin-top:8px">
+      CLOSE CAMERA
+    </button>
+
+    <div class="section-label">OR ENTER MANUALLY</div>
+    <input type="text" class="wb-input" id="manualGate1Qr" placeholder="QR CODE ID" autocapitalize="characters">
+    <button class="wb-btn ghost" id="btnGate1Manual">VERIFY MANUALLY</button>
+
+    <button class="wb-btn ghost" id="btnGate1Back" style="margin-top:14px">
+      <i class="ti ti-arrow-left" style="font-size:12px;vertical-align:-1px"></i>&nbsp;&nbsp;BACK
+    </button>
   </div>
 
-  <!-- Gate 1 Result -->
-  <div id="screenGate1Result" class="hidden">
+  <!-- ============================================ -->
+  <!--  SCREEN: GATE 1 RESULT                       -->
+  <!-- ============================================ -->
+  <div class="hs-frame hidden" id="screenGate1Result">
+    <div class="hs-top">
+      <span>9:41</span>
+      <span>VERIFY ENTRY</span>
+      <span class="close" onclick="goHome()"><i class="ti ti-x"></i></span>
+    </div>
     <div id="gate1ResultBox"></div>
-    <button class="btn btn-gold" id="btnGate1Next">VERIFY NEXT GUEST</button>
-    <button class="btn btn-dark" onclick="goHome()">← Back</button>
+    <button class="wb-btn" id="btnGate1Next" style="margin-top:6px">VERIFY NEXT GUEST</button>
+    <button class="wb-btn ghost" id="btnGate1Home" style="margin-top:8px">
+      <i class="ti ti-arrow-left" style="font-size:12px;vertical-align:-1px"></i>&nbsp;&nbsp;BACK TO HOME
+    </button>
   </div>
 
   <!-- ============================================ -->
-  <!--  GATE 2 — WRISTBAND FLOW                     -->
+  <!--  SCREEN: GATE 2 STEP 1 - TAP BAND            -->
   <!-- ============================================ -->
-  <div id="screenGate2Home" class="hidden">
-    <div class="nfc-tap-zone">
-      <div class="nfc-icon-wrap">
-        <svg viewBox="0 0 24 24">
-          <path d="M5 12a7 7 0 0 1 14 0M8 12a4 4 0 0 1 8 0M11 12a1 1 0 0 1 2 0"/>
-          <circle cx="12" cy="12" r="0.5" fill="currentColor"/>
-        </svg>
+  <div class="hs-frame hidden" id="screenGate2Step1">
+    <div class="hs-top">
+      <span>9:41</span>
+      <span>ASSIGN WRISTBAND</span>
+      <span class="close" onclick="goHome()"><i class="ti ti-x"></i></span>
+    </div>
+
+    <div id="msg2" class="msg"></div>
+
+    <div class="flow-progress">
+      <div class="node"><div class="circ active">1</div><div class="lbl active">BAND</div></div>
+      <div class="line"></div>
+      <div class="node"><div class="circ">2</div><div class="lbl">QR</div></div>
+      <div class="line"></div>
+      <div class="node"><div class="circ">3</div><div class="lbl">MERGE</div></div>
+    </div>
+
+    <div class="hs-brand">
+      <div class="hs-name" style="font-size:18px">Bring band near</div>
+      <div class="hs-event" style="margin-top:6px">HOLD WRISTBAND TO TOP OF DEVICE</div>
+    </div>
+
+    <div class="wb-stage">
+      <div class="wb-band">
+        <div class="wb-band-chip"></div>
       </div>
-      <div class="nfc-title">Tap Wristband</div>
-      <div class="nfc-subtitle">
-        Hold the wristband against the top of this iPhone.
-        The app automatically detects whether to assign or verify.
+      <div class="wb-wave"></div>
+      <div class="wb-wave w2"></div>
+      <div class="wb-wave w3"></div>
+      <div class="wb-phone">
+        <div class="wb-nfc"><i class="ti ti-wifi"></i></div>
       </div>
     </div>
 
-    <label>Or Enter Band ID Manually</label>
-    <input type="text" id="manualBand" placeholder="BAND001" autocapitalize="characters">
-    <button class="btn btn-ghost" id="btnManualBand">PROCESS BAND</button>
+    <div class="wb-label">OR ENTER BAND ID MANUALLY</div>
+    <input type="text" class="wb-input" id="manualBand" placeholder="BAND001" autocapitalize="characters">
+    <button class="wb-btn" id="btnManualBand">PROCESS BAND</button>
 
-    <button class="btn btn-dark" onclick="goHome()" style="margin-top:18px;">← Back</button>
+    <button class="wb-btn ghost" style="margin-top:14px" onclick="goHome()">
+      <i class="ti ti-arrow-left" style="font-size:12px;vertical-align:-1px"></i>&nbsp;&nbsp;BACK
+    </button>
   </div>
 
-  <!-- Band Banner -->
-  <div id="bandBanner" class="band-banner hidden">
-    <div class="label-mini">Wristband Detected</div>
-    <div class="id-big" id="bandBannerId">—</div>
-  </div>
+  <!-- ============================================ -->
+  <!--  SCREEN: GATE 2 STEP 2 - SCAN GUEST QR       -->
+  <!-- ============================================ -->
+  <div class="hs-frame hidden" id="screenGate2Step2">
+    <div class="hs-top">
+      <span>9:41</span>
+      <span>ASSIGN WRISTBAND</span>
+      <span class="close" onclick="goHome()"><i class="ti ti-x"></i></span>
+    </div>
 
-  <!-- Gate 2 Reception -->
-  <div id="screenReception" class="hidden">
-    <div class="card">
-      <h2>Assign Wristband</h2>
-      <div class="sub">This wristband is available — scan the guest's QR to link it</div>
+    <div id="msg3" class="msg"></div>
 
-      <div class="row">
-        <span class="label-text">Wristband</span>
-        <span class="value" id="receptionBandId">—</span>
+    <div class="flow-progress">
+      <div class="node"><div class="circ done"><i class="ti ti-check" style="font-size:10px"></i></div><div class="lbl">BAND</div></div>
+      <div class="line done"></div>
+      <div class="node"><div class="circ active">2</div><div class="lbl active">QR</div></div>
+      <div class="line"></div>
+      <div class="node"><div class="circ">3</div><div class="lbl">MERGE</div></div>
+    </div>
+
+    <div class="hs-brand">
+      <div class="hs-name" style="font-size:18px">Now scan QR</div>
+      <div class="hs-event" style="margin-top:6px"><span id="bandReadyId">BAND</span> READY · LINK TO GUEST</div>
+    </div>
+
+    <!-- Decorative scan area -->
+    <div class="qr-scan-area" id="gate2ScanDecor" style="max-width:200px">
+      <div class="qr-corner tl"></div>
+      <div class="qr-corner tr"></div>
+      <div class="qr-corner bl"></div>
+      <div class="qr-corner br"></div>
+      <div class="qr-grid">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
       </div>
-      <div class="row">
-        <span class="label-text">Status</span>
-        <span class="value"><span class="badge badge-gold">Available</span></span>
+      <div class="qr-laser"></div>
+    </div>
+
+    <div id="reader2"></div>
+
+    <div class="wb-label">POINT AT GUEST QR · LINKING BAND</div>
+
+    <button class="wb-btn" id="btnGate2OpenScan" style="margin-top:14px">
+      <i class="ti ti-camera" style="font-size:13px;vertical-align:-2px"></i>&nbsp;&nbsp;OPEN CAMERA
+    </button>
+    <button class="wb-btn danger hidden" id="btnGate2StopScan" style="margin-top:8px">
+      CLOSE CAMERA
+    </button>
+
+    <div class="section-label">OR ENTER MANUALLY</div>
+    <input type="text" class="wb-input" id="manualQr" placeholder="QR CODE ID" autocapitalize="characters">
+    <button class="wb-btn ghost" id="btnManualLookup">LOOKUP GUEST</button>
+
+    <button class="wb-btn ghost" id="btnCancelStep2" style="margin-top:14px">
+      <i class="ti ti-arrow-left" style="font-size:12px;vertical-align:-1px"></i>&nbsp;&nbsp;BACK
+    </button>
+  </div>
+
+  <!-- ============================================ -->
+  <!--  SCREEN: GATE 2 STEP 3 - MERGE & CONFIRM     -->
+  <!-- ============================================ -->
+  <div class="hs-frame hidden" id="screenGate2Step3">
+    <div class="hs-top">
+      <span>9:41</span>
+      <span>ASSIGN WRISTBAND</span>
+      <span class="close" onclick="goHome()"><i class="ti ti-x" style="color:var(--gold)"></i></span>
+    </div>
+
+    <div id="msg4" class="msg"></div>
+
+    <div class="flow-progress">
+      <div class="node"><div class="circ done"><i class="ti ti-check" style="font-size:10px"></i></div><div class="lbl">BAND</div></div>
+      <div class="line done"></div>
+      <div class="node"><div class="circ done"><i class="ti ti-check" style="font-size:10px"></i></div><div class="lbl">QR</div></div>
+      <div class="line"></div>
+      <div class="node"><div class="circ active">3</div><div class="lbl active">MERGE</div></div>
+    </div>
+
+    <div class="hs-brand">
+      <div class="hs-name" style="font-size:20px">Confirm assignment</div>
+      <div class="hs-event" style="margin-top:6px">REVIEW BEFORE CHECKING IN</div>
+    </div>
+
+    <div class="merge-card">
+      <div class="merge-side">
+        <i class="ti ti-wifi"></i>
+        <div>
+          <div class="t">WRISTBAND</div>
+          <div class="id" id="mergeBandId">—</div>
+        </div>
+      </div>
+      <span class="merge-link"><i class="ti ti-link"></i></span>
+      <div class="merge-side r">
+        <div>
+          <div class="t" id="mergeGuestName">—</div>
+          <div class="id" id="mergeGuestTier">—</div>
+        </div>
+        <i class="ti ti-user"></i>
       </div>
     </div>
 
-    <div class="card">
-      <h2>Scan Guest</h2>
-      <div class="sub">Open the camera or enter the QR ID manually</div>
-      <button class="scan-action" id="btnScanGuest">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3M14 21h3"/></svg>
-        SCAN INVITATION
-      </button>
-      <div id="reader2"></div>
-      <button class="btn btn-red hidden" id="btnStopScan">CLOSE SCANNER</button>
-
-      <label style="margin-top:20px;">Or Enter QR ID Manually</label>
-      <input type="text" id="manualQr" placeholder="0V66O46" autocapitalize="characters">
-      <button class="btn btn-ghost" id="btnManualLookup">LOOKUP GUEST</button>
+    <div id="guestExtraInfo" class="hs-card" style="margin-top:12px;">
+      <div class="row"><span class="label-text">QR ID</span><span class="value" id="confirmQrId">—</span></div>
+      <div class="row"><span class="label-text">Status</span><span class="value"><span id="confirmStatus" class="badge">—</span></span></div>
+      <div class="row"><span class="label-text">Phone</span><span class="value" id="confirmPhone">—</span></div>
     </div>
 
-    <button class="btn btn-dark" id="btnCancelReception">← Cancel</button>
+    <div id="confirmActions" style="margin-top:14px;"></div>
   </div>
 
-  <!-- Gate 2 Guest Found -->
-  <div id="screenGuestFound" class="hidden">
-    <div class="card">
-      <h2 id="guestName">—</h2>
-      <div class="sub" id="guestEmail">—</div>
+  <!-- ============================================ -->
+  <!--  SCREEN: GATE 2 SUCCESS                      -->
+  <!-- ============================================ -->
+  <div class="hs-frame hidden" id="screenGate2Success">
+    <div class="hs-top">
+      <span>9:41</span>
+      <span>ASSIGN WRISTBAND</span>
+      <span class="close" onclick="goHome()"><i class="ti ti-check" style="color:var(--gold)"></i></span>
+    </div>
 
-      <div class="tier-display">
-        <div id="guestTierBadge" class="tier-badge tier-default">—</div>
-      </div>
+    <div class="flow-progress">
+      <div class="node"><div class="circ done"><i class="ti ti-check" style="font-size:10px"></i></div><div class="lbl">BAND</div></div>
+      <div class="line done"></div>
+      <div class="node"><div class="circ done"><i class="ti ti-check" style="font-size:10px"></i></div><div class="lbl">QR</div></div>
+      <div class="line done"></div>
+      <div class="node"><div class="circ done"><i class="ti ti-check" style="font-size:10px"></i></div><div class="lbl">MERGE</div></div>
+    </div>
 
-      <div class="row">
-        <span class="label-text">QR ID</span>
-        <span class="value" id="guestQrId">—</span>
+    <div class="hs-brand">
+      <div class="hs-name" style="font-size:20px">Band assigned</div>
+      <div class="hs-event" style="margin-top:6px">PROFILE LINKED · GUEST IS IN</div>
+    </div>
+
+    <div class="merge-card">
+      <div class="merge-side">
+        <i class="ti ti-wifi"></i>
+        <div>
+          <div class="t">WRISTBAND</div>
+          <div class="id" id="successBandId">—</div>
+        </div>
       </div>
-      <div class="row">
-        <span class="label-text">Status</span>
-        <span class="value"><span id="guestStatus" class="badge">—</span></span>
-      </div>
-      <div class="row">
-        <span class="label-text">Phone</span>
-        <span class="value" id="guestPhone">—</span>
-      </div>
-      <div class="row">
-        <span class="label-text">Wristband</span>
-        <span class="value" id="guestBandId">—</span>
+      <span class="merge-link"><i class="ti ti-link"></i></span>
+      <div class="merge-side r">
+        <div>
+          <div class="t" id="successGuestName">—</div>
+          <div class="id" id="successGuestTier">—</div>
+        </div>
+        <i class="ti ti-user"></i>
       </div>
     </div>
 
-    <div id="guestActions"></div>
+    <button class="wb-btn" id="btnAssignNext" style="margin-top:14px">ASSIGN NEXT GUEST</button>
+    <button class="wb-btn ghost" id="btnDoneAssign" style="margin-top:8px">DONE</button>
   </div>
 
-  <!-- Gate 2 Checkpoint Result -->
-  <div id="screenCheckpoint" class="hidden">
+  <!-- ============================================ -->
+  <!--  SCREEN: GATE 2 CHECKPOINT VERIFY            -->
+  <!-- ============================================ -->
+  <div class="hs-frame hidden" id="screenCheckpoint">
+    <div class="hs-top">
+      <span>9:41</span>
+      <span>VERIFY GUEST</span>
+      <span class="close" onclick="goHome()"><i class="ti ti-x"></i></span>
+    </div>
     <div id="verifyResultBox"></div>
-    <button class="btn btn-gold" id="btnDoneVerify">VERIFY NEXT GUEST</button>
-    <button class="btn btn-dark" onclick="goHome()">← Back</button>
+    <button class="wb-btn" id="btnDoneVerify" style="margin-top:14px">VERIFY NEXT GUEST</button>
+    <button class="wb-btn ghost" id="btnHome" style="margin-top:8px">BACK TO HOME</button>
   </div>
 
-  <!-- Gate 2 Success -->
-  <div id="screenSuccess" class="hidden">
-    <div class="verify-hero success">
-      <div class="verify-icon-big">
-        <svg viewBox="0 0 24 24"><path d="M5 13l4 4 10-10"/></svg>
-      </div>
-      <div class="verify-name" id="successName">Welcome</div>
-      <div class="verify-meta" id="successMeta">—</div>
-      <div class="verify-message">SUCCESSFULLY CHECKED IN</div>
-      <div class="verify-detail-line">Wristband linked · Records updated</div>
+  <!-- ============================================ -->
+  <!--  SCREEN: LOADING                             -->
+  <!-- ============================================ -->
+  <div class="hs-frame hidden" id="screenLoading">
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <div class="loading-text" id="loadingText">PROCESSING</div>
+      <div class="loading-subtitle">One moment, please</div>
     </div>
-    <button class="btn btn-gold" id="btnNext">NEXT GUEST</button>
-    <button class="btn btn-dark" onclick="goHome()">← Back</button>
-  </div>
-
-  <!-- Loading -->
-  <div id="screenLoading" class="hidden">
-    <div class="card">
-      <div class="loading-state">
-        <div class="loading-spinner"></div>
-        <div class="loading-text" id="loadingText">Processing</div>
-        <div class="loading-subtitle">One moment, please</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-info">
-    BETTER HIGH 2026 · TEAM DIGITAL
   </div>
 
 </div>
 
 <script>
 // ============================================================
-//  BETTER HIGH 2026 — TWO-GATE CHECK-IN SYSTEM v4
-//  Auto-routes to Gate 2 when NFC URL has ?band=XXX
+//  HEAVEN SAKE — A BETTER HIGH 2026 CHECK-IN APP
 // ============================================================
 
 let scanner = null;
 let activeScannerId = null;
 let currentBand = null;
 let currentGuest = null;
-let currentGate = null;
 
 const $ = id => document.getElementById(id);
 
 function showScreen(screenId) {
-  ['screenGateSelect','screenGate1Home','screenGate1Result',
-   'screenGate2Home','screenReception','screenGuestFound',
-   'screenCheckpoint','screenSuccess','screenLoading']
+  ['screenLanding','screenGate1','screenGate1Result',
+   'screenGate2Step1','screenGate2Step2','screenGate2Step3','screenGate2Success',
+   'screenCheckpoint','screenLoading']
     .forEach(s => $(s).classList.add('hidden'));
   $(screenId).classList.remove('hidden');
   window.scrollTo(0,0);
 }
 
-function msg(text, type) {
-  const m = $('msg');
+function msg(text, type, msgEl) {
+  const m = $(msgEl || 'msg');
+  if (!m) return;
   m.textContent = text;
   m.className = 'msg show msg-' + type;
   setTimeout(() => m.classList.remove('show'), 5000);
@@ -1235,25 +1280,26 @@ function esc(s) {
 }
 
 function showLoading(text) {
-  $('loadingText').textContent = text || 'Processing';
+  $('loadingText').textContent = text || 'PROCESSING';
   showScreen('screenLoading');
 }
 
+function updateTime() {
+  const now = new Date();
+  const h = now.getHours();
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const timeStr = `${h}:${m}`;
+  ['topTime','topTime2'].forEach(id => { if($(id)) $(id).textContent = timeStr; });
+}
+setInterval(updateTime, 30000);
+updateTime();
+
 function selectGate(gate) {
-  currentGate = gate;
   try { localStorage.setItem('bh2026_gate', gate); } catch(e){}
-
-  $('selectGate1').classList.remove('active');
-  $('selectGate2').classList.remove('active');
-
   if (gate === 'gate1') {
-    $('selectGate1').classList.add('active');
-    $('modeIndicator').textContent = 'QR SCAN · VERIFY ENTRY';
-    showScreen('screenGate1Home');
+    showScreen('screenGate1');
   } else {
-    $('selectGate2').classList.add('active');
-    $('modeIndicator').textContent = 'ASSIGN WRISTBAND';
-    showScreen('screenGate2Home');
+    showScreen('screenGate2Step1');
   }
 }
 window.selectGate = selectGate;
@@ -1261,27 +1307,32 @@ window.selectGate = selectGate;
 function goHome() {
   currentBand = null;
   currentGuest = null;
-  $('manualGate1Qr').value = '';
-  $('manualQr').value = '';
-  $('manualBand').value = '';
-  $('bandBanner').classList.add('hidden');
-  $('modeIndicator').textContent = 'AWAITING SELECTION';
-  currentGate = null;
+  ['manualGate1Qr','manualQr','manualBand'].forEach(id => { if($(id)) $(id).value = ''; });
   try { localStorage.removeItem('bh2026_gate'); } catch(e){}
-  $('selectGate1').classList.remove('active');
-  $('selectGate2').classList.remove('active');
-  showScreen('screenGateSelect');
+  stopScan();
+  showScreen('screenLanding');
 }
 window.goHome = goHome;
 
-// FAST QR Scanner
-async function startScan(readerId, onSuccess) {
+function getTierClass(tier) {
+  if (!tier) return 'tier-default';
+  const t = String(tier).toUpperCase();
+  if (t.includes('VIP')) return 'tier-vip';
+  if (t.includes('CREW') || t.includes('STAFF')) return 'tier-crew';
+  if (t.includes('STANDARD') || t.includes('GENERAL')) return 'tier-standard';
+  return 'tier-default';
+}
+
+// ===== QR SCANNER (Optimized for Speed) =====
+async function startScan(readerId, decorId, onSuccess) {
   if (typeof Html5Qrcode === 'undefined') {
-    msg('QR scanner library not loaded. Please refresh.', 'error');
+    msg('QR scanner library not loaded.', 'error');
     return;
   }
 
   const reader = $(readerId);
+  const decor = $(decorId);
+  if (decor) decor.style.display = 'none';
   reader.classList.add('show');
 
   try {
@@ -1299,9 +1350,7 @@ async function startScan(readerId, onSuccess) {
       experimentalFeatures: {
         useBarCodeDetectorIfSupported: true
       },
-      formatsToSupport: [
-        Html5QrcodeSupportedFormats.QR_CODE
-      ],
+      formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
       videoConstraints: {
         facingMode: 'environment',
         width: { ideal: 1920 },
@@ -1315,7 +1364,7 @@ async function startScan(readerId, onSuccess) {
       await scanner.start({ facingMode: 'user' }, config, onSuccess, () => {});
     }
   } catch (err) {
-    msg('Unable to access camera: ' + (err.message || err.name), 'error');
+    msg('Camera error: ' + (err.message || err.name), 'error');
     await stopScan();
   }
 }
@@ -1332,18 +1381,22 @@ async function stopScan() {
     $(activeScannerId).classList.remove('show');
     activeScannerId = null;
   }
+  // Restore decorative scan areas
+  ['gate1ScanDecor','gate2ScanDecor'].forEach(id => {
+    if ($(id)) $(id).style.display = '';
+  });
 }
 
 // ============================================================
 //  GATE 1 — ENTRY VERIFICATION
 // ============================================================
 
-function startGate1Scan() {
-  $('btnGate1Scan').classList.add('hidden');
+async function startGate1Scan() {
+  $('btnGate1OpenScan').classList.add('hidden');
   $('btnGate1StopScan').classList.remove('hidden');
-  startScan('reader', async (text) => {
+  await startScan('reader', 'gate1ScanDecor', async (text) => {
     await stopScan();
-    $('btnGate1Scan').classList.remove('hidden');
+    $('btnGate1OpenScan').classList.remove('hidden');
     $('btnGate1StopScan').classList.add('hidden');
     await verifyGate1Entry(text.trim());
   });
@@ -1351,29 +1404,24 @@ function startGate1Scan() {
 
 async function stopGate1Scan() {
   await stopScan();
-  $('btnGate1Scan').classList.remove('hidden');
+  $('btnGate1OpenScan').classList.remove('hidden');
   $('btnGate1StopScan').classList.add('hidden');
 }
 
 async function verifyGate1Entry(qrId) {
-  if (!qrId) {
-    msg('Please provide a valid QR ID.', 'error');
-    return;
-  }
-
-  showLoading('Verifying Entry');
+  if (!qrId) { msg('Please provide a QR ID.', 'error'); return; }
+  showLoading('VERIFYING ENTRY');
 
   try {
     const res = await fetch('/api/guest?qrId=' + encodeURIComponent(qrId));
     const data = await res.json();
 
     if (!res.ok) {
-      renderGate1Result({ type:'failure', title:'Verification Error', meta:qrId, message:data.error||'Server error' });
+      renderGate1Result({ type:'failure', title:'Error', meta:qrId, message:data.error||'Server error' });
       return;
     }
-
     if (!data.guest) {
-      renderGate1Result({ type:'failure', title:'Not Found', meta:qrId, message:'No guest record matches this QR' });
+      renderGate1Result({ type:'failure', title:'Not Found', meta:qrId, message:'No matching guest record' });
       return;
     }
 
@@ -1396,53 +1444,21 @@ async function verifyGate1Entry(qrId) {
 
 function renderGate1Result(r) {
   const tierClass = getTierClass(r.tier);
-  let icon = '<svg viewBox="0 0 24 24"><path d="M5 13l4 4 10-10"/></svg>';
-  if (r.type === 'failure') icon = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-  if (r.type === 'pending') icon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>';
+  let icon = 'ti-check';
+  if (r.type === 'failure') icon = 'ti-x';
+  if (r.type === 'pending') icon = 'ti-clock';
 
-  let html = '';
-  if (r.type === 'success') {
-    html = `
-      <div class="verify-hero success">
-        <div class="verify-icon-big">${icon}</div>
-        <div class="verify-name">${esc(r.name)}</div>
-        <div class="verify-meta">${esc(r.meta)}</div>
-        <div class="tier-display"><div class="tier-badge ${tierClass}">${esc(r.tier)}</div></div>
-        <div class="verify-message">${esc(r.message)}</div>
-        <div class="verify-detail-line">Status · ${esc(r.status)}</div>
-      </div>`;
-  } else if (r.type === 'pending') {
-    html = `
-      <div class="verify-hero pending">
-        <div class="verify-icon-big">${icon}</div>
-        <div class="verify-name">${esc(r.name)}</div>
-        <div class="verify-meta">${esc(r.meta)}</div>
-        <div class="tier-display"><div class="tier-badge ${tierClass}">${esc(r.tier)}</div></div>
-        <div class="verify-message">${esc(r.message)}</div>
-        <div class="verify-detail-line">Please escalate to operations</div>
-      </div>`;
-  } else {
-    html = `
-      <div class="verify-hero failure">
-        <div class="verify-icon-big">${icon}</div>
-        <div class="verify-name">${esc(r.name || r.title || 'Denied')}</div>
-        <div class="verify-meta">${esc(r.meta || '—')}</div>
-        ${r.tier ? `<div class="tier-display"><div class="tier-badge ${tierClass}">${esc(r.tier)}</div></div>` : ''}
-        <div class="verify-message">${esc(r.message)}</div>
-      </div>`;
-  }
-
-  $('gate1ResultBox').innerHTML = html;
+  $('gate1ResultBox').innerHTML = `
+    <div class="result-hero ${r.type}">
+      <div class="result-icon"><i class="ti ${icon}"></i></div>
+      <div class="result-name">${esc(r.name || r.title || 'Denied')}</div>
+      <div class="result-meta">${esc(r.meta || '—')}</div>
+      ${r.tier ? `<div><span class="result-tier ${tierClass}">${esc(r.tier)}</span></div>` : ''}
+      <div class="result-message">${esc(r.message)}</div>
+      ${r.status ? `<div class="result-detail">Status · ${esc(r.status)}</div>` : ''}
+    </div>
+  `;
   showScreen('screenGate1Result');
-}
-
-function getTierClass(tier) {
-  if (!tier) return 'tier-default';
-  const t = String(tier).toUpperCase();
-  if (t.includes('VIP')) return 'tier-vip';
-  if (t.includes('CREW') || t.includes('STAFF')) return 'tier-crew';
-  if (t.includes('STANDARD') || t.includes('GENERAL')) return 'tier-standard';
-  return 'tier-default';
 }
 
 // ============================================================
@@ -1455,17 +1471,10 @@ function checkNfcParameter() {
 
   if (bandId) {
     const cleanBandId = bandId.trim().toUpperCase();
-
     if (window.history && window.history.replaceState) {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-
-    // AUTO-ROUTE TO GATE 2 when NFC URL detected
-    selectGate('gate2');
-
-    $('bandBannerId').textContent = cleanBandId;
-    $('bandBanner').classList.remove('hidden');
-
+    showScreen('screenGate2Step1');
     processBand(cleanBandId);
     return true;
   }
@@ -1473,21 +1482,20 @@ function checkNfcParameter() {
 }
 
 async function processBand(bandId) {
-  showLoading('Checking Wristband');
+  showLoading('CHECKING WRISTBAND');
 
   try {
     const res = await fetch('/api/band?bandId=' + encodeURIComponent(bandId));
     const data = await res.json();
 
     if (!res.ok) {
-      msg('Server error: ' + (data.error || res.status), 'error');
-      showScreen('screenGate2Home');
+      msg('Server error: ' + (data.error || res.status), 'error', 'msg2');
+      showScreen('screenGate2Step1');
       return;
     }
-
     if (!data.band) {
-      msg('Wristband "' + bandId + '" not found.', 'error');
-      showScreen('screenGate2Home');
+      msg('Wristband not found.', 'error', 'msg2');
+      showScreen('screenGate2Step1');
       return;
     }
 
@@ -1495,18 +1503,17 @@ async function processBand(bandId) {
     const status = data.band.fields.Status || 'Available';
 
     if (status === 'Available') {
-      $('receptionBandId').textContent = data.band.fields['Band ID'];
-      showScreen('screenReception');
-      msg('Wristband available · Scan guest QR to assign', 'info');
+      $('bandReadyId').textContent = 'BAND ' + (data.band.fields['Band ID'] || bandId);
+      showScreen('screenGate2Step2');
     } else if (status === 'Assigned') {
       verifyCheckpoint(data.band);
     } else {
-      msg('Unknown wristband status: ' + status, 'error');
-      showScreen('screenGate2Home');
+      msg('Unknown status: ' + status, 'error', 'msg2');
+      showScreen('screenGate2Step1');
     }
   } catch (err) {
-    msg('Connection error: ' + err.message, 'error');
-    showScreen('screenGate2Home');
+    msg('Connection error: ' + err.message, 'error', 'msg2');
+    showScreen('screenGate2Step1');
   }
 }
 
@@ -1520,127 +1527,114 @@ function verifyCheckpoint(band) {
   const bandId = f['Band ID'] || '—';
 
   const tierClass = getTierClass(guestTier);
-  let icon = '<svg viewBox="0 0 24 24"><path d="M5 13l4 4 10-10"/></svg>';
-  let resultClass = 'success';
-  let message = 'Access Granted';
+  let icon = 'ti-check', type = 'success', message = 'Access Granted';
 
   if (guestStatus !== 'Checked-in') {
-    icon = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-    resultClass = 'failure';
+    icon = 'ti-x';
+    type = 'failure';
     message = 'Access Denied';
   }
 
   $('verifyResultBox').innerHTML = `
-    <div class="verify-hero ${resultClass}">
-      <div class="verify-icon-big">${icon}</div>
-      <div class="verify-name">${esc(guestName)}</div>
-      <div class="verify-meta">${esc(bandId)}</div>
-      <div class="tier-display"><div class="tier-badge ${tierClass}">${esc(guestTier)}</div></div>
-      <div class="verify-message">${message}</div>
-      <div class="verify-detail-line">Status · ${esc(guestStatus)}</div>
+    <div class="result-hero ${type}">
+      <div class="result-icon"><i class="ti ${icon}"></i></div>
+      <div class="result-name">${esc(guestName)}</div>
+      <div class="result-meta">${esc(bandId)}</div>
+      <div><span class="result-tier ${tierClass}">${esc(guestTier)}</span></div>
+      <div class="result-message">${message}</div>
+      <div class="result-detail">Status · ${esc(guestStatus)}</div>
     </div>
   `;
-
   showScreen('screenCheckpoint');
-  $('msg').classList.remove('show');
 }
 
-function startGate2Scan() {
-  $('btnScanGuest').classList.add('hidden');
-  $('btnStopScan').classList.remove('hidden');
-  startScan('reader2', async (text) => {
+async function startGate2Scan() {
+  $('btnGate2OpenScan').classList.add('hidden');
+  $('btnGate2StopScan').classList.remove('hidden');
+  await startScan('reader2', 'gate2ScanDecor', async (text) => {
     await stopScan();
-    $('btnScanGuest').classList.remove('hidden');
-    $('btnStopScan').classList.add('hidden');
+    $('btnGate2OpenScan').classList.remove('hidden');
+    $('btnGate2StopScan').classList.add('hidden');
     await lookupGuest(text.trim());
   });
 }
 
 async function stopGate2Scan() {
   await stopScan();
-  $('btnScanGuest').classList.remove('hidden');
-  $('btnStopScan').classList.add('hidden');
+  $('btnGate2OpenScan').classList.remove('hidden');
+  $('btnGate2StopScan').classList.add('hidden');
 }
 
 async function lookupGuest(qrId) {
-  if (!qrId) {
-    msg('Please provide a valid QR ID.', 'error');
-    return;
-  }
-
-  showLoading('Looking Up Guest');
+  if (!qrId) { msg('Please provide a QR ID.', 'error', 'msg3'); return; }
+  showLoading('LOOKING UP GUEST');
 
   try {
     const res = await fetch('/api/guest?qrId=' + encodeURIComponent(qrId));
     const data = await res.json();
 
     if (!res.ok) {
-      msg('Server error: ' + (data.error || res.status), 'error');
-      showScreen('screenReception');
+      msg('Server error: ' + (data.error || res.status), 'error', 'msg3');
+      showScreen('screenGate2Step2');
       return;
     }
     if (!data.guest) {
-      msg('No guest found with QR ID "' + qrId + '".', 'error');
-      showScreen('screenReception');
+      msg('No guest found.', 'error', 'msg3');
+      showScreen('screenGate2Step2');
       return;
     }
 
     currentGuest = data.guest;
-    renderGuest(data.guest);
-    showScreen('screenGuestFound');
-    $('msg').classList.remove('show');
+    renderConfirmStep();
+    showScreen('screenGate2Step3');
   } catch (err) {
-    msg('Connection error: ' + err.message, 'error');
-    showScreen('screenReception');
+    msg('Connection error: ' + err.message, 'error', 'msg3');
+    showScreen('screenGate2Step2');
   }
 }
 
-function renderGuest(g) {
-  const f = g.fields;
+function renderConfirmStep() {
+  const f = currentGuest.fields;
   const name = f['Full Name'] || ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim() || 'Unnamed Guest';
-  $('guestName').textContent = name;
-  $('guestEmail').textContent = f['EMAIL ADDRESS'] || '—';
-  $('guestQrId').textContent = f['QR CODE ID'] || '—';
-  $('guestPhone').textContent = f['PHONE NUMBER'] || '—';
-  $('guestBandId').textContent = currentBand ? currentBand.fields['Band ID'] : '—';
-
   const tier = f['Tier'] || 'STANDARD';
-  const tierBadge = $('guestTierBadge');
-  tierBadge.textContent = tier;
-  tierBadge.className = 'tier-badge ' + getTierClass(tier);
-
   const status = f.Status || 'Unknown';
-  const badge = $('guestStatus');
+
+  $('mergeBandId').textContent = currentBand.fields['Band ID'] || '—';
+  $('mergeGuestName').textContent = name.toUpperCase();
+  $('mergeGuestTier').textContent = (tier + ' · TIER').toUpperCase();
+
+  $('confirmQrId').textContent = f['QR CODE ID'] || '—';
+  $('confirmPhone').textContent = f['PHONE NUMBER'] || '—';
+
+  const badge = $('confirmStatus');
   badge.textContent = status;
   badge.className = 'badge';
   if (status === 'Checked-in') badge.classList.add('badge-red');
   else if (status === 'Approved') badge.classList.add('badge-green');
   else badge.classList.add('badge-gold');
 
-  const actions = $('guestActions');
+  const actions = $('confirmActions');
   if (status === 'Checked-in') {
     actions.innerHTML = `
-      <div class="msg msg-warn show">⚠ This guest has already been checked in.</div>
-      <button class="btn btn-dark" onclick="goHome()">← Back</button>`;
+      <div class="msg msg-warn show">⚠ Already checked in. Cannot reassign.</div>
+      <button class="wb-btn ghost" onclick="goHome()">BACK TO HOME</button>`;
   } else if (status === 'Pending') {
     actions.innerHTML = `
-      <div class="msg msg-warn show">⚠ Guest status is Pending. Escalate to operations.</div>
-      <button class="btn btn-dark" onclick="goHome()">← Back</button>`;
+      <div class="msg msg-warn show">⚠ Guest is pending. Escalate to operations.</div>
+      <button class="wb-btn ghost" onclick="goHome()">BACK TO HOME</button>`;
   } else {
     actions.innerHTML = `
-      <button class="btn btn-green" id="btnConfirmCheckin">✓ CONFIRM AND CHECK IN</button>
-      <button class="btn btn-dark" onclick="goHome()">← Cancel</button>`;
+      <button class="wb-btn success" id="btnConfirmCheckin">
+        <i class="ti ti-check" style="font-size:13px;vertical-align:-2px"></i>&nbsp;&nbsp;CONFIRM AND CHECK IN
+      </button>
+      <button class="wb-btn ghost" onclick="goHome()" style="margin-top:8px">CANCEL</button>`;
     document.getElementById('btnConfirmCheckin').addEventListener('click', confirmCheckin);
   }
 }
 
 async function confirmCheckin() {
-  if (!currentGuest || !currentBand) {
-    msg('Missing guest or band data', 'error');
-    return;
-  }
-
-  showLoading('Processing Check-In');
+  if (!currentGuest || !currentBand) { msg('Missing data', 'error', 'msg4'); return; }
+  showLoading('PROCESSING CHECK-IN');
 
   try {
     const res = await fetch('/api/checkin', {
@@ -1651,104 +1645,89 @@ async function confirmCheckin() {
     const data = await res.json();
 
     if (!res.ok || !data.success) {
-      msg('Check-in failed: ' + (data.error || 'unknown error'), 'error');
-      showScreen('screenGuestFound');
+      msg('Check-in failed: ' + (data.error || 'error'), 'error', 'msg4');
+      showScreen('screenGate2Step3');
       return;
     }
 
     const f = currentGuest.fields;
     const name = f['Full Name'] || ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim();
-    $('successName').textContent = name;
-    $('successMeta').textContent = currentBand.fields['Band ID'] + ' · ' + new Date().toLocaleTimeString();
-    showScreen('screenSuccess');
-    $('msg').classList.remove('show');
+    const tier = f['Tier'] || 'STANDARD';
+
+    $('successBandId').textContent = currentBand.fields['Band ID'] || '—';
+    $('successGuestName').textContent = name.toUpperCase();
+    $('successGuestTier').textContent = (tier + ' · TIER').toUpperCase();
+
+    showScreen('screenGate2Success');
   } catch (err) {
-    msg('Connection error: ' + err.message, 'error');
-    showScreen('screenGuestFound');
+    msg('Connection error: ' + err.message, 'error', 'msg4');
+    showScreen('screenGate2Step3');
   }
 }
 
 function resetGate2Flow() {
   currentBand = null;
   currentGuest = null;
-  $('manualQr').value = '';
-  $('manualBand').value = '';
-  $('bandBanner').classList.add('hidden');
-  showScreen('screenGate2Home');
+  if ($('manualQr')) $('manualQr').value = '';
+  if ($('manualBand')) $('manualBand').value = '';
+  showScreen('screenGate2Step1');
 }
 
 // EVENT LISTENERS
-$('btnGate1Scan').addEventListener('click', startGate1Scan);
+$('btnGate1OpenScan').addEventListener('click', startGate1Scan);
 $('btnGate1StopScan').addEventListener('click', stopGate1Scan);
 $('btnGate1Manual').addEventListener('click', () => {
-  const val = $('manualGate1Qr').value.trim();
-  if (!val) { msg('Please enter a QR ID first.', 'error'); return; }
-  verifyGate1Entry(val);
+  const v = $('manualGate1Qr').value.trim();
+  if (!v) { msg('Please enter a QR ID.', 'error'); return; }
+  verifyGate1Entry(v);
 });
-$('manualGate1Qr').addEventListener('keypress', e => {
-  if (e.key === 'Enter') $('btnGate1Manual').click();
-});
+$('manualGate1Qr').addEventListener('keypress', e => { if (e.key === 'Enter') $('btnGate1Manual').click(); });
+$('btnGate1Back').addEventListener('click', goHome);
 $('btnGate1Next').addEventListener('click', () => {
   $('manualGate1Qr').value = '';
-  showScreen('screenGate1Home');
+  showScreen('screenGate1');
 });
+$('btnGate1Home').addEventListener('click', goHome);
 
 $('btnManualBand').addEventListener('click', () => {
-  const val = $('manualBand').value.trim().toUpperCase();
-  if (!val) { msg('Please enter a band ID first.', 'error'); return; }
-  $('bandBannerId').textContent = val;
-  $('bandBanner').classList.remove('hidden');
-  processBand(val);
+  const v = $('manualBand').value.trim().toUpperCase();
+  if (!v) { msg('Please enter a band ID.', 'error', 'msg2'); return; }
+  processBand(v);
 });
-$('manualBand').addEventListener('keypress', e => {
-  if (e.key === 'Enter') $('btnManualBand').click();
-});
+$('manualBand').addEventListener('keypress', e => { if (e.key === 'Enter') $('btnManualBand').click(); });
 
-$('btnScanGuest').addEventListener('click', startGate2Scan);
-$('btnStopScan').addEventListener('click', stopGate2Scan);
-
+$('btnGate2OpenScan').addEventListener('click', startGate2Scan);
+$('btnGate2StopScan').addEventListener('click', stopGate2Scan);
 $('btnManualLookup').addEventListener('click', () => {
-  const val = $('manualQr').value.trim();
-  if (!val) { msg('Please enter a QR ID first.', 'error'); return; }
-  lookupGuest(val);
+  const v = $('manualQr').value.trim();
+  if (!v) { msg('Please enter a QR ID.', 'error', 'msg3'); return; }
+  lookupGuest(v);
 });
-$('manualQr').addEventListener('keypress', e => {
-  if (e.key === 'Enter') $('btnManualLookup').click();
-});
+$('manualQr').addEventListener('keypress', e => { if (e.key === 'Enter') $('btnManualLookup').click(); });
+$('btnCancelStep2').addEventListener('click', () => showScreen('screenGate2Step1'));
 
-$('btnCancelReception').addEventListener('click', resetGate2Flow);
+$('btnAssignNext').addEventListener('click', resetGate2Flow);
+$('btnDoneAssign').addEventListener('click', goHome);
 $('btnDoneVerify').addEventListener('click', resetGate2Flow);
-$('btnNext').addEventListener('click', resetGate2Flow);
+$('btnHome').addEventListener('click', goHome);
 
 // INIT
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof Html5Qrcode === 'undefined') {
-    msg('QR scanner library failed to load.', 'error');
+    msg('Scanner library failed to load.', 'error');
   }
-
-  // If NFC URL parameter exists, auto-route to Gate 2 (skip gate selector)
   const hasNfc = checkNfcParameter();
-
   if (!hasNfc) {
-    // Restore last gate if no NFC param
     try {
       const savedGate = localStorage.getItem('bh2026_gate');
-      if (savedGate === 'gate1') {
-        selectGate('gate1');
-      } else if (savedGate === 'gate2') {
-        selectGate('gate2');
-      } else {
-        showScreen('screenGateSelect');
-      }
-    } catch(e) {
-      showScreen('screenGateSelect');
-    }
+      if (savedGate === 'gate1') showScreen('screenGate1');
+      else if (savedGate === 'gate2') showScreen('screenGate2Step1');
+      else showScreen('screenLanding');
+    } catch(e) { showScreen('screenLanding'); }
   }
 });
 
-window.addEventListener('focus', () => {
-  checkNfcParameter();
-});
+window.addEventListener('focus', () => { checkNfcParameter(); });
 </script>
 
 </body>
