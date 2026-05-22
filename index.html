@@ -13,15 +13,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-<style>
-  /* Fallback if Tabler icons don't load */
-  .ti::before {
-    font-family: 'tabler-icons', 'Segoe UI Symbol', sans-serif;
-  }
-</style><script src="/lib/html5-qrcode.min.js"></script>
+<script src="/lib/html5-qrcode.min.js"></script>
 <style>
   :root {
-    /* Heaven Sake Palette */
     --black: #0a0807;
     --black-deep: #050403;
     --noir: #14100c;
@@ -35,25 +29,24 @@
     --emerald: #5fb672;
     --crimson: #e84545;
 
-    /* Fonts */
     --font-display: 'Italiana', 'Cormorant Garamond', Georgia, serif;
     --font-serif: 'Cormorant Garamond', Georgia, serif;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'SF Mono', Menlo, monospace;
 
-    /* Lines */
     --line: rgba(212, 175, 55, 0.18);
     --line-soft: rgba(212, 175, 55, 0.1);
     --line-strong: rgba(212, 175, 55, 0.35);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; overscroll-behavior: none; }
 
- html, body {
+  html, body {
     height: 100%;
     min-height: 100dvh;
+    overscroll-behavior: none;
   }
+
   body {
     background: var(--black);
     color: var(--ivory);
@@ -62,7 +55,7 @@
     position: relative;
     overflow-x: hidden;
   }
-  /* Subtle gold radial atmosphere */
+
   body::before {
     content: '';
     position: fixed; inset: 0; z-index: -2;
@@ -71,7 +64,6 @@
       radial-gradient(ellipse 600px 400px at 50% 100%, rgba(168, 134, 42, 0.05) 0%, transparent 60%);
   }
 
-  /* Film grain noise */
   body::after {
     content: '';
     position: fixed; inset: 0; z-index: -1;
@@ -83,25 +75,43 @@
   .wrap {
     width: 100%;
     margin: 0 auto;
-    padding: 12px;
     min-height: 100dvh;
   }
 
-  /* MOBILE: Full screen frame, content distributed across viewport */
+  /* ============================== */
+  /*  FRAME                         */
+  /* ============================== */
+  .hs-frame {
+    background: var(--black);
+    border-radius: 22px;
+    padding: 20px 16px 24px;
+    border: 0.5px solid rgba(212, 175, 55, 0.18);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .hs-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.08), transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ============================== */
+  /*  MOBILE (< 768px)              */
+  /* ============================== */
   @media (max-width: 767px) {
-    .wrap {
-      padding: 0;
-    }
+    .wrap { padding: 0; }
     .hs-frame {
       border-radius: 0 !important;
       border: none !important;
       min-height: 100dvh;
-      padding: 16px 18px 32px !important;
-      display: flex;
-      flex-direction: column;
+      padding: 16px 18px 28px !important;
     }
     .hs-frame > .hs-top { flex-shrink: 0; }
-    .hs-frame > .hs-brand { flex-shrink: 0; padding-top: 8px; }
+    .hs-frame > .hs-brand { flex-shrink: 0; }
     .hs-frame > .brand-info { flex-shrink: 0; }
     .hs-frame > .hs-card {
       flex-shrink: 0;
@@ -113,38 +123,51 @@
       margin-top: auto;
     }
 
+    /* Make scan/wristband screens flow naturally */
+    #screenGate1 > *, #screenGate2Step1 > *, #screenGate2Step2 > *,
+    #screenGate2Step3 > *, #screenGate2Success > *, #screenCheckpoint > *,
+    #screenGate1Result > * {
+      flex-shrink: 0;
+    }
+    #screenGate1 .section-label,
+    #screenGate2Step2 .section-label {
+      margin-top: 24px;
+    }
+
     .hs-name { font-size: 30px !important; letter-spacing: 0.14em; }
     .hs-event { font-size: 10px; letter-spacing: 0.32em; margin-top: 6px; }
-    .brand-info {
-      font-size: 13px;
-      line-height: 1.7;
-      padding: 18px 16px;
-      margin-bottom: 24px;
-    }
+    .brand-info { font-size: 13px; line-height: 1.7; padding: 18px 16px; margin-bottom: 24px; }
     .hs-card { padding: 24px 18px; }
     .hs-card-title { font-size: 24px; margin-bottom: 4px; }
     .hs-card-sub { font-size: 12px; margin-bottom: 20px; }
     .hs-options { gap: 14px; }
     .hs-opt { padding: 28px 12px 22px; border-radius: 14px; }
-    .hs-icon-wrap {
-      width: 68px;
-      height: 68px;
-      margin-bottom: 14px;
-    }
+    .hs-icon-wrap { width: 68px; height: 68px; margin-bottom: 14px; }
     .hs-icon-wrap i { font-size: 30px; }
     .hs-num { font-size: 10px; letter-spacing: 0.24em; margin-bottom: 6px; }
     .hs-opt-title { font-size: 14px; letter-spacing: 0.18em; margin-bottom: 4px; }
     .hs-opt-desc { font-size: 11px; }
 
-    .hs-foot {
-      margin-top: auto;
-      padding-top: 24px;
-      font-size: 10px;
-    }
+    .hs-foot { padding-top: 24px; font-size: 10px; }
     .hs-foot-event { font-size: 11px; }
+
+    /* QR scan area bigger on mobile */
+    .qr-scan-area { max-width: 280px !important; }
+    #reader, #reader2 { max-width: 320px; }
+
+    /* Scan screen titles bigger */
+    #screenGate1 .hs-brand .hs-name,
+    #screenGate2Step1 .hs-brand .hs-name,
+    #screenGate2Step2 .hs-brand .hs-name,
+    #screenGate2Step3 .hs-brand .hs-name,
+    #screenGate2Success .hs-brand .hs-name {
+      font-size: 26px !important;
+    }
   }
 
-  /* TABLET & DESKTOP: Centered card with breathing room */
+  /* ============================== */
+  /*  TABLET & DESKTOP (≥ 768px)   */
+  /* ============================== */
   @media (min-width: 768px) {
     body {
       display: flex;
@@ -155,75 +178,29 @@
     .wrap {
       max-width: 560px;
       padding: 0 24px;
+      min-height: auto;
     }
-    .hs-frame {
-      padding: 32px 28px 36px;
-    }
-    .hs-name {
-      font-size: 30px !important;
-    }
-    .brand-info {
-      font-size: 13px;
-      padding: 18px;
-    }
-    .hs-card {
-      padding: 24px 20px;
-    }
-    .hs-card-title {
-      font-size: 22px;
-    }
-    .hs-card-sub {
-      font-size: 13px;
-    }
-    .hs-opt {
-      padding: 24px 12px 20px;
-    }
-    .hs-icon-wrap {
-      width: 64px;
-      height: 64px;
-    }
-    .hs-icon-wrap i {
-      font-size: 28px;
-    }
-    .hs-opt-title {
-      font-size: 13px;
-    }
-    .qr-scan-area {
-      max-width: 280px;
-    }
-    .wb-stage {
-      max-width: 320px;
-      height: 260px;
-    }
+    .hs-frame { padding: 32px 28px 36px; }
+    .hs-name { font-size: 30px !important; }
+    .brand-info { font-size: 13px; padding: 18px; }
+    .hs-card { padding: 24px 20px; }
+    .hs-card-title { font-size: 22px; }
+    .hs-card-sub { font-size: 13px; }
+    .hs-opt { padding: 24px 12px 20px; }
+    .hs-icon-wrap { width: 64px; height: 64px; }
+    .hs-icon-wrap i { font-size: 28px; }
+    .hs-opt-title { font-size: 13px; }
+    .qr-scan-area { max-width: 280px; }
+    .wb-stage { max-width: 320px; height: 260px; }
   }
 
-  /* LARGE DESKTOP: Keep frame compact, lots of margin around */
   @media (min-width: 1024px) {
-    .wrap {
-      max-width: 600px;
-    }
+    .wrap { max-width: 600px; }
   }
 
   /* ============================== */
-  /*  FRAME (the main card)         */
+  /*  TOP STATUS BAR                */
   /* ============================== */
-  .hs-frame {
-    background: var(--black);
-    border-radius: 22px;
-    padding: 20px 16px 24px;
-    border: 0.5px solid rgba(212, 175, 55, 0.18);
-    position: relative;
-    overflow: hidden;
-  }
-  .hs-frame::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.08), transparent 60%);
-    pointer-events: none;
-  }
-
-  /* Top status bar */
   .hs-top {
     display: flex;
     align-items: center;
@@ -244,11 +221,10 @@
   }
   .hs-top .close:hover { opacity: 0.7; }
 
-  /* Brand block */
-  .hs-brand {
-    text-align: center;
-    margin-bottom: 18px;
-  }
+  /* ============================== */
+  /*  BRAND BLOCK                   */
+  /* ============================== */
+  .hs-brand { text-align: center; margin-bottom: 18px; }
   .hs-est {
     font-size: 9px;
     letter-spacing: 0.32em;
@@ -262,6 +238,7 @@
     letter-spacing: 0.12em;
     color: var(--gold-bright);
     font-weight: 400;
+    line-height: 1.1;
   }
   .hs-event {
     font-size: 9px;
@@ -271,7 +248,6 @@
     font-weight: 500;
   }
 
-  /* Status pill */
   .hs-pill {
     display: inline-flex;
     align-items: center;
@@ -298,7 +274,6 @@
     50% { opacity: 0.5; transform: scale(0.85); }
   }
 
-  /* Brand info card (intro) */
   .brand-info {
     background: rgba(212, 175, 55, 0.03);
     border: 0.5px solid rgba(212, 175, 55, 0.15);
@@ -323,7 +298,6 @@
     margin-bottom: 6px;
   }
 
-  /* Inner card */
   .hs-card {
     background: rgba(255, 255, 255, 0.02);
     border: 0.5px solid rgba(212, 175, 55, 0.18);
@@ -348,12 +322,7 @@
     margin-bottom: 14px;
   }
 
-  /* Option cards */
-  .hs-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
+  .hs-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .hs-opt {
     background: linear-gradient(180deg, rgba(212, 175, 55, 0.06), rgba(212, 175, 55, 0.02));
     border: 0.5px solid rgba(212, 175, 55, 0.25);
@@ -380,10 +349,7 @@
     margin: 0 auto 10px;
     background: rgba(212, 175, 55, 0.05);
   }
-  .hs-icon-wrap i {
-    font-size: 24px;
-    color: var(--gold);
-  }
+  .hs-icon-wrap i { font-size: 24px; color: var(--gold); }
   .hs-num {
     font-size: 9px;
     letter-spacing: 0.22em;
@@ -405,7 +371,6 @@
     font-family: var(--font-serif);
   }
 
-  /* Footer */
   .hs-foot {
     text-align: center;
     font-size: 9px;
@@ -426,55 +391,77 @@
   }
 
   /* ============================== */
-  /*  QR SCAN AREA                  */
+  /*  QR SCAN AREA (FIXED)          */
   /* ============================== */
   .qr-scan-area {
     aspect-ratio: 1;
+    width: 100%;
     max-width: 240px;
     margin: 0 auto 14px;
     position: relative;
     border-radius: 12px;
     background: rgba(0, 0, 0, 0.4);
+    border: 0.5px solid rgba(212, 175, 55, 0.1);
+    overflow: hidden;
   }
   .qr-corner {
     position: absolute;
-    width: 28px;
-    height: 28px;
-    border: 2px solid var(--gold);
+    width: 32px;
+    height: 32px;
+    border: 2.5px solid var(--gold);
+    z-index: 2;
   }
-  .qr-corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; border-radius: 8px 0 0 0; }
-  .qr-corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; border-radius: 0 8px 0 0; }
-  .qr-corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; border-radius: 0 0 0 8px; }
-  .qr-corner.br { bottom: 0; right: 0; border-left: none; border-top: none; border-radius: 0 0 8px 0; }
+  .qr-corner.tl {
+    top: 8px; left: 8px;
+    border-right: none; border-bottom: none;
+    border-radius: 8px 0 0 0;
+  }
+  .qr-corner.tr {
+    top: 8px; right: 8px;
+    border-left: none; border-bottom: none;
+    border-radius: 0 8px 0 0;
+  }
+  .qr-corner.bl {
+    bottom: 8px; left: 8px;
+    border-right: none; border-top: none;
+    border-radius: 0 0 0 8px;
+  }
+  .qr-corner.br {
+    bottom: 8px; right: 8px;
+    border-left: none; border-top: none;
+    border-radius: 0 0 8px 0;
+  }
   .qr-laser {
     position: absolute;
-    left: 14px;
-    right: 14px;
-    height: 1.5px;
+    left: 20px;
+    right: 20px;
+    height: 2px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    top: 30px;
+    top: 20px;
     animation: laser 2.4s ease-in-out infinite;
-    box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.8);
+    z-index: 3;
   }
   @keyframes laser {
-    0%, 100% { top: 14px; opacity: 0.4; }
-    50% { top: calc(100% - 14px); opacity: 1; }
+    0%, 100% { top: 20px; opacity: 0.4; }
+    50% { top: calc(100% - 20px); opacity: 1; }
   }
   .qr-grid {
     position: absolute;
-    inset: 24px;
+    inset: 30px;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(7, 1fr);
     gap: 3px;
-    opacity: 0.18;
+    opacity: 0.15;
+    z-index: 1;
   }
   .qr-grid span {
     background: var(--gold);
     border-radius: 1px;
   }
 
-  /* Camera video container */
+  /* Camera video */
   #reader, #reader2 {
     width: 100%;
     max-width: 280px;
@@ -495,13 +482,14 @@
   }
 
   /* ============================== */
-  /*  WRISTBAND STAGE (Animation)   */
+  /*  WRISTBAND STAGE               */
   /* ============================== */
   .wb-stage {
     position: relative;
     height: 230px;
     margin: 0 auto 12px;
     max-width: 280px;
+    width: 100%;
   }
   .wb-phone {
     position: absolute;
@@ -627,9 +615,7 @@
     background: rgba(0, 0, 0, 0.6);
     box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
   }
-  .wb-input::placeholder {
-    color: rgba(212, 175, 55, 0.3);
-  }
+  .wb-input::placeholder { color: rgba(212, 175, 55, 0.3); }
   .wb-label {
     font-size: 9px;
     letter-spacing: 0.22em;
@@ -771,7 +757,7 @@
   }
 
   /* ============================== */
-  /*  RESULT HERO (Gate 1 / Verify) */
+  /*  RESULT HERO                   */
   /* ============================== */
   .result-hero {
     border-radius: 14px;
@@ -892,9 +878,6 @@
     margin-top: 6px;
   }
 
-  /* ============================== */
-  /*  DETAIL ROWS                   */
-  /* ============================== */
   .row {
     display: flex;
     justify-content: space-between;
@@ -932,9 +915,6 @@
   .badge-red { background: rgba(232, 69, 69, 0.15); color: var(--crimson); border: 0.5px solid var(--crimson); }
   .badge-gold { background: rgba(212, 175, 55, 0.12); color: var(--gold); border: 0.5px solid var(--gold); }
 
-  /* ============================== */
-  /*  MESSAGES                      */
-  /* ============================== */
   .msg {
     padding: 12px 16px;
     border-radius: 8px;
@@ -959,11 +939,7 @@
 
   .hidden { display: none !important; }
 
-  /* Loading */
-  .loading-state {
-    text-align: center;
-    padding: 48px 20px;
-  }
+  .loading-state { text-align: center; padding: 48px 20px; }
   .loading-spinner {
     width: 48px;
     height: 48px;
@@ -990,7 +966,6 @@
     margin-top: 10px;
   }
 
-  /* Section label divider */
   .section-label {
     font-size: 9px;
     letter-spacing: 0.32em;
@@ -1017,12 +992,10 @@
 
 <div class="wrap">
 
-  <!-- ============================================ -->
-  <!--  SCREEN: LANDING / GATE SELECTOR             -->
-  <!-- ============================================ -->
+  <!-- LANDING -->
   <div class="hs-frame" id="screenLanding">
     <div class="hs-top">
-      <span id="topTime">9:41</span>
+      <span>9:41</span>
       <span>RECEPTION · CHECK-IN</span>
       <span>—</span>
     </div>
@@ -1031,7 +1004,7 @@
       <div class="hs-est">— EST · MMXXVI —</div>
       <div class="hs-name">HEAVEN · SAKE</div>
       <div class="hs-event">A BETTER HIGH · 2026</div>
-      <div class="hs-pill"><span class="hs-dot"></span><span id="modeIndicator">AWAITING SELECTION</span></div>
+      <div class="hs-pill"><span class="hs-dot"></span>AWAITING SELECTION</div>
     </div>
 
     <div class="brand-info">
@@ -1065,12 +1038,10 @@
     </div>
   </div>
 
-  <!-- ============================================ -->
-  <!--  SCREEN: GATE 1 - QR SCAN                    -->
-  <!-- ============================================ -->
+  <!-- GATE 1 - QR SCAN -->
   <div class="hs-frame hidden" id="screenGate1">
     <div class="hs-top">
-      <span id="topTime2">9:41</span>
+      <span>9:41</span>
       <span>SCAN QR</span>
       <span class="close" onclick="goHome()"><i class="ti ti-x"></i></span>
     </div>
@@ -1078,11 +1049,10 @@
     <div id="msg" class="msg"></div>
 
     <div class="hs-brand">
-      <div class="hs-name" style="font-size:20px">Scan QR</div>
+      <div class="hs-name">Scan QR</div>
       <div class="hs-event" style="margin-top:6px">POINT CAMERA AT GUEST'S CODE</div>
     </div>
 
-    <!-- Decorative scan area (shown when camera not active) -->
     <div class="qr-scan-area" id="gate1ScanDecor">
       <div class="qr-corner tl"></div>
       <div class="qr-corner tr"></div>
@@ -1100,17 +1070,14 @@
       <div class="qr-laser"></div>
     </div>
 
-    <!-- Live camera (shown when active) -->
     <div id="reader"></div>
 
-    <div class="wb-label" id="gate1ScanLabel">HOLD STEADY · AUTO-DETECTING</div>
+    <div class="wb-label">HOLD STEADY · AUTO-DETECTING</div>
 
     <button class="wb-btn" id="btnGate1OpenScan" style="margin-top:14px">
       <i class="ti ti-camera" style="font-size:13px;vertical-align:-2px"></i>&nbsp;&nbsp;OPEN CAMERA
     </button>
-    <button class="wb-btn danger hidden" id="btnGate1StopScan" style="margin-top:8px">
-      CLOSE CAMERA
-    </button>
+    <button class="wb-btn danger hidden" id="btnGate1StopScan" style="margin-top:8px">CLOSE CAMERA</button>
 
     <div class="section-label">OR ENTER MANUALLY</div>
     <input type="text" class="wb-input" id="manualGate1Qr" placeholder="QR CODE ID" autocapitalize="characters">
@@ -1121,9 +1088,7 @@
     </button>
   </div>
 
-  <!-- ============================================ -->
-  <!--  SCREEN: GATE 1 RESULT                       -->
-  <!-- ============================================ -->
+  <!-- GATE 1 RESULT -->
   <div class="hs-frame hidden" id="screenGate1Result">
     <div class="hs-top">
       <span>9:41</span>
@@ -1137,9 +1102,7 @@
     </button>
   </div>
 
-  <!-- ============================================ -->
-  <!--  SCREEN: GATE 2 STEP 1 - TAP BAND            -->
-  <!-- ============================================ -->
+  <!-- GATE 2 STEP 1 -->
   <div class="hs-frame hidden" id="screenGate2Step1">
     <div class="hs-top">
       <span>9:41</span>
@@ -1158,14 +1121,12 @@
     </div>
 
     <div class="hs-brand">
-      <div class="hs-name" style="font-size:18px">Bring band near</div>
+      <div class="hs-name">Bring band near</div>
       <div class="hs-event" style="margin-top:6px">HOLD WRISTBAND TO TOP OF DEVICE</div>
     </div>
 
     <div class="wb-stage">
-      <div class="wb-band">
-        <div class="wb-band-chip"></div>
-      </div>
+      <div class="wb-band"><div class="wb-band-chip"></div></div>
       <div class="wb-wave"></div>
       <div class="wb-wave w2"></div>
       <div class="wb-wave w3"></div>
@@ -1183,9 +1144,7 @@
     </button>
   </div>
 
-  <!-- ============================================ -->
-  <!--  SCREEN: GATE 2 STEP 2 - SCAN GUEST QR       -->
-  <!-- ============================================ -->
+  <!-- GATE 2 STEP 2 -->
   <div class="hs-frame hidden" id="screenGate2Step2">
     <div class="hs-top">
       <span>9:41</span>
@@ -1204,12 +1163,11 @@
     </div>
 
     <div class="hs-brand">
-      <div class="hs-name" style="font-size:18px">Now scan QR</div>
+      <div class="hs-name">Now scan QR</div>
       <div class="hs-event" style="margin-top:6px"><span id="bandReadyId">BAND</span> READY · LINK TO GUEST</div>
     </div>
 
-    <!-- Decorative scan area -->
-    <div class="qr-scan-area" id="gate2ScanDecor" style="max-width:200px">
+    <div class="qr-scan-area" id="gate2ScanDecor">
       <div class="qr-corner tl"></div>
       <div class="qr-corner tr"></div>
       <div class="qr-corner bl"></div>
@@ -1233,9 +1191,7 @@
     <button class="wb-btn" id="btnGate2OpenScan" style="margin-top:14px">
       <i class="ti ti-camera" style="font-size:13px;vertical-align:-2px"></i>&nbsp;&nbsp;OPEN CAMERA
     </button>
-    <button class="wb-btn danger hidden" id="btnGate2StopScan" style="margin-top:8px">
-      CLOSE CAMERA
-    </button>
+    <button class="wb-btn danger hidden" id="btnGate2StopScan" style="margin-top:8px">CLOSE CAMERA</button>
 
     <div class="section-label">OR ENTER MANUALLY</div>
     <input type="text" class="wb-input" id="manualQr" placeholder="QR CODE ID" autocapitalize="characters">
@@ -1246,9 +1202,7 @@
     </button>
   </div>
 
-  <!-- ============================================ -->
-  <!--  SCREEN: GATE 2 STEP 3 - MERGE & CONFIRM     -->
-  <!-- ============================================ -->
+  <!-- GATE 2 STEP 3 -->
   <div class="hs-frame hidden" id="screenGate2Step3">
     <div class="hs-top">
       <span>9:41</span>
@@ -1267,7 +1221,7 @@
     </div>
 
     <div class="hs-brand">
-      <div class="hs-name" style="font-size:20px">Confirm assignment</div>
+      <div class="hs-name">Confirm assignment</div>
       <div class="hs-event" style="margin-top:6px">REVIEW BEFORE CHECKING IN</div>
     </div>
 
@@ -1289,7 +1243,7 @@
       </div>
     </div>
 
-    <div id="guestExtraInfo" class="hs-card" style="margin-top:12px;">
+    <div class="hs-card" style="margin-top:12px;">
       <div class="row"><span class="label-text">QR ID</span><span class="value" id="confirmQrId">—</span></div>
       <div class="row"><span class="label-text">Status</span><span class="value"><span id="confirmStatus" class="badge">—</span></span></div>
       <div class="row"><span class="label-text">Phone</span><span class="value" id="confirmPhone">—</span></div>
@@ -1298,9 +1252,7 @@
     <div id="confirmActions" style="margin-top:14px;"></div>
   </div>
 
-  <!-- ============================================ -->
-  <!--  SCREEN: GATE 2 SUCCESS                      -->
-  <!-- ============================================ -->
+  <!-- GATE 2 SUCCESS -->
   <div class="hs-frame hidden" id="screenGate2Success">
     <div class="hs-top">
       <span>9:41</span>
@@ -1317,7 +1269,7 @@
     </div>
 
     <div class="hs-brand">
-      <div class="hs-name" style="font-size:20px">Band assigned</div>
+      <div class="hs-name">Band assigned</div>
       <div class="hs-event" style="margin-top:6px">PROFILE LINKED · GUEST IS IN</div>
     </div>
 
@@ -1343,9 +1295,7 @@
     <button class="wb-btn ghost" id="btnDoneAssign" style="margin-top:8px">DONE</button>
   </div>
 
-  <!-- ============================================ -->
-  <!--  SCREEN: GATE 2 CHECKPOINT VERIFY            -->
-  <!-- ============================================ -->
+  <!-- CHECKPOINT -->
   <div class="hs-frame hidden" id="screenCheckpoint">
     <div class="hs-top">
       <span>9:41</span>
@@ -1357,9 +1307,7 @@
     <button class="wb-btn ghost" id="btnHome" style="margin-top:8px">BACK TO HOME</button>
   </div>
 
-  <!-- ============================================ -->
-  <!--  SCREEN: LOADING                             -->
-  <!-- ============================================ -->
+  <!-- LOADING -->
   <div class="hs-frame hidden" id="screenLoading">
     <div class="loading-state">
       <div class="loading-spinner"></div>
@@ -1371,10 +1319,6 @@
 </div>
 
 <script>
-// ============================================================
-//  HEAVEN SAKE — A BETTER HIGH 2026 CHECK-IN APP
-// ============================================================
-
 let scanner = null;
 let activeScannerId = null;
 let currentBand = null;
@@ -1414,7 +1358,6 @@ function updateTime() {
   const h = String(now.getHours()).padStart(2, '0');
   const m = String(now.getMinutes()).padStart(2, '0');
   const timeStr = `${h}:${m}`;
-  // Update ALL spans inside .hs-top that contain time
   document.querySelectorAll('.hs-top > span:first-child').forEach(el => {
     el.textContent = timeStr;
   });
@@ -1424,11 +1367,8 @@ updateTime();
 
 function selectGate(gate) {
   try { localStorage.setItem('bh2026_gate', gate); } catch(e){}
-  if (gate === 'gate1') {
-    showScreen('screenGate1');
-  } else {
-    showScreen('screenGate2Step1');
-  }
+  if (gate === 'gate1') showScreen('screenGate1');
+  else showScreen('screenGate2Step1');
 }
 window.selectGate = selectGate;
 
@@ -1451,7 +1391,6 @@ function getTierClass(tier) {
   return 'tier-default';
 }
 
-// ===== QR SCANNER (Optimized for Speed) =====
 async function startScan(readerId, decorId, onSuccess) {
   if (typeof Html5Qrcode === 'undefined') {
     msg('QR scanner library not loaded.', 'error');
@@ -1475,9 +1414,7 @@ async function startScan(readerId, decorId, onSuccess) {
         return { width: size, height: size };
       },
       aspectRatio: 1.0,
-      experimentalFeatures: {
-        useBarCodeDetectorIfSupported: true
-      },
+      experimentalFeatures: { useBarCodeDetectorIfSupported: true },
       formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
       videoConstraints: {
         facingMode: 'environment',
@@ -1509,15 +1446,10 @@ async function stopScan() {
     $(activeScannerId).classList.remove('show');
     activeScannerId = null;
   }
-  // Restore decorative scan areas
   ['gate1ScanDecor','gate2ScanDecor'].forEach(id => {
     if ($(id)) $(id).style.display = '';
   });
 }
-
-// ============================================================
-//  GATE 1 — ENTRY VERIFICATION
-// ============================================================
 
 async function startGate1Scan() {
   $('btnGate1OpenScan').classList.add('hidden');
@@ -1588,10 +1520,6 @@ function renderGate1Result(r) {
   `;
   showScreen('screenGate1Result');
 }
-
-// ============================================================
-//  GATE 2 — WRISTBAND FLOW
-// ============================================================
 
 function checkNfcParameter() {
   const params = new URLSearchParams(window.location.search);
@@ -1801,7 +1729,6 @@ function resetGate2Flow() {
   showScreen('screenGate2Step1');
 }
 
-// EVENT LISTENERS
 $('btnGate1OpenScan').addEventListener('click', startGate1Scan);
 $('btnGate1StopScan').addEventListener('click', stopGate1Scan);
 $('btnGate1Manual').addEventListener('click', () => {
@@ -1839,7 +1766,6 @@ $('btnDoneAssign').addEventListener('click', goHome);
 $('btnDoneVerify').addEventListener('click', resetGate2Flow);
 $('btnHome').addEventListener('click', goHome);
 
-// INIT
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof Html5Qrcode === 'undefined') {
     msg('Scanner library failed to load.', 'error');
