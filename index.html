@@ -6,183 +6,1151 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BH 2026">
-<meta name="theme-color" content="#0f0d0a">
-<title>Better High 2026 · Check-In System</title>
+<meta name="theme-color" content="#0a0807">
+<title>Better High 2026 · Check-In</title>
 <link rel="manifest" href="/manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="/lib/html5-qrcode.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; }
-  body { background: #0f0d0a; color: #f5f1e8; min-height: 100vh; padding: 16px; }
-  .wrap { max-width: 500px; margin: 0 auto; }
+  :root {
+    /* Colors — Deco Speakeasy */
+    --black: #0a0807;
+    --black-deep: #050403;
+    --noir: #14100c;
+    --noir-warm: #1c1610;
+    --champagne: #f4e8c8;
+    --ivory: #ebe2d1;
+    --bone: #c7baa1;
+    --brass: #c9a961;
+    --brass-bright: #e6c878;
+    --brass-deep: #8a7340;
+    --brass-rich: #b8945a;
+    --emerald: #4a8a4a;
+    --emerald-bright: #5fb672;
+    --crimson: #c5453c;
+    --burgundy: #6b1f1f;
 
-  .header { text-align: center; padding: 20px 0 24px; border-bottom: 1px solid rgba(201,169,97,0.2); margin-bottom: 24px; }
-  .header h1 { color: #c9a961; font-size: 20px; letter-spacing: 3px; font-weight: 700; }
-  .header p { color: #a8a298; font-size: 11px; margin-top: 6px; letter-spacing: 2px; }
+    /* Gradients */
+    --grad-brass: linear-gradient(135deg, #e6c878 0%, #c9a961 50%, #8a7340 100%);
+    --grad-vip: linear-gradient(120deg, #d4af37 0%, #f9e286 30%, #c9a961 70%, #8a7340 100%);
+    --grad-success: linear-gradient(135deg, rgba(95,182,114,0.3) 0%, rgba(74,138,74,0.1) 100%);
+    --grad-fail: linear-gradient(135deg, rgba(197,69,60,0.3) 0%, rgba(107,31,31,0.1) 100%);
+    --grad-pending: linear-gradient(135deg, rgba(201,169,97,0.25) 0%, rgba(138,115,64,0.08) 100%);
 
-  .btn { width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; cursor: pointer; margin-bottom: 12px; transition: transform 0.1s; }
+    /* Typography */
+    --display: 'Italiana', 'Cormorant Garamond', Georgia, serif;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* Lines */
+    --line: rgba(201, 169, 97, 0.15);
+    --line-soft: rgba(201, 169, 97, 0.08);
+    --line-strong: rgba(201, 169, 97, 0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overscroll-behavior: none; }
+
+  body {
+    background: var(--black);
+    color: var(--ivory);
+    min-height: 100dvh;
+    font-family: var(--sans);
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* ===== ATMOSPHERIC BACKGROUND ===== */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: -3;
+    background:
+      radial-gradient(ellipse 800px 600px at 20% 0%, rgba(201, 169, 97, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 700px 500px at 80% 100%, rgba(184, 148, 90, 0.05) 0%, transparent 60%),
+      linear-gradient(180deg, var(--black-deep) 0%, var(--black) 100%);
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: -2;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  }
+
+  /* Decorative deco frame on edges */
+  .deco-frame {
+    position: fixed;
+    inset: 12px;
+    border: 1px solid var(--brass-deep);
+    border-radius: 3px;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.25;
+  }
+  .deco-frame::before, .deco-frame::after {
+    content: '';
+    position: absolute;
+    width: 30px; height: 30px;
+    border: 2px solid var(--brass);
+  }
+  .deco-frame::before {
+    top: -1px; left: -1px;
+    border-right: none;
+    border-bottom: none;
+  }
+  .deco-frame::after {
+    bottom: -1px; right: -1px;
+    border-left: none;
+    border-top: none;
+  }
+
+  /* ===== LAYOUT ===== */
+  .wrap {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 24px 18px 32px;
+    min-height: 100dvh;
+    position: relative;
+  }
+
+  /* ===== HEADER ===== */
+  .masthead {
+    text-align: center;
+    padding: 14px 0 28px;
+    position: relative;
+  }
+  .masthead .est {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--bone);
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+  .masthead h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    color: var(--champagne);
+    font-size: 36px;
+    letter-spacing: 6px;
+    line-height: 1;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .masthead .deco-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 14px 0 12px;
+  }
+  .masthead .deco-line .bar {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--brass), transparent);
+  }
+  .masthead .deco-line .diamond {
+    width: 6px; height: 6px;
+    background: var(--brass);
+    transform: rotate(45deg);
+  }
+  .masthead .subtitle {
+    font-family: var(--sans);
+    color: var(--brass);
+    font-size: 10px;
+    letter-spacing: 5px;
+    font-weight: 600;
+  }
+
+  /* Gate indicator pill */
+  .gate-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 18px;
+    background: rgba(20, 16, 12, 0.6);
+    border: 1px solid var(--brass-deep);
+    border-radius: 100px;
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--brass);
+    font-weight: 700;
+    margin-top: 16px;
+    backdrop-filter: blur(8px);
+  }
+  .gate-pill::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--brass);
+    box-shadow: 0 0 10px var(--brass);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* ===== CARDS ===== */
+  .card {
+    background:
+      linear-gradient(180deg, rgba(28, 22, 16, 0.85) 0%, rgba(20, 16, 12, 0.7) 100%);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 28px 24px;
+    margin-bottom: 18px;
+    box-shadow:
+      0 30px 60px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(255,255,255,0.03);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+  }
+  /* Top accent strip */
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--brass), transparent);
+  }
+  /* Corner ornaments */
+  .card::after {
+    content: '';
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 16px; height: 16px;
+    border-top: 1px solid var(--brass-deep);
+    border-right: 1px solid var(--brass-deep);
+    opacity: 0.4;
+  }
+
+  .card h2 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 30px;
+    margin-bottom: 8px;
+    color: var(--champagne);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .card .sub {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--bone);
+    font-size: 14px;
+    margin-bottom: 22px;
+    opacity: 0.85;
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    width: 100%;
+    padding: 18px 24px;
+    border: none;
+    border-radius: 2px;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+  }
   .btn:active { transform: scale(0.98); }
-  .btn-gold { background: #c9a961; color: #0f0d0a; }
-  .btn-green { background: #4a8a4a; color: #fff; }
-  .btn-red { background: #c5453c; color: #fff; }
-  .btn-dark { background: #1a1816; color: #f5f1e8; border: 1px solid rgba(255,255,255,0.15); }
 
-  .card { background: #1a1816; border-radius: 14px; padding: 20px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.06); }
-  .card h2 { font-size: 22px; margin-bottom: 6px; color: #f5f1e8; }
-  .card .sub { color: #a8a298; font-size: 13px; margin-bottom: 16px; }
+  .btn-gold {
+    background: var(--grad-brass);
+    color: var(--black);
+    box-shadow:
+      0 8px 24px rgba(201, 169, 97, 0.3),
+      inset 0 1px 0 rgba(255,255,255,0.3),
+      inset 0 -1px 0 rgba(0,0,0,0.2);
+  }
+  .btn-gold:hover {
+    box-shadow:
+      0 12px 32px rgba(201, 169, 97, 0.45),
+      inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .btn-gold::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s;
+  }
+  .btn-gold:hover::before { left: 100%; }
 
-  input { width: 100%; background: #0f0d0a; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 16px; font-size: 16px; border-radius: 10px; margin-bottom: 12px; }
-  input:focus { outline: none; border-color: #c9a961; }
-  label { display: block; color: #a8a298; font-size: 11px; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; }
+  .btn-green {
+    background: linear-gradient(135deg, var(--emerald-bright), var(--emerald));
+    color: white;
+    box-shadow: 0 8px 24px rgba(95, 182, 114, 0.3);
+  }
 
-  .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px; gap: 12px; }
+  .btn-red {
+    background: linear-gradient(135deg, var(--crimson), var(--burgundy));
+    color: white;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--brass);
+    border: 1px solid var(--brass-deep);
+  }
+  .btn-ghost:hover {
+    background: rgba(201, 169, 97, 0.08);
+    border-color: var(--brass);
+  }
+
+  .btn-dark {
+    background: rgba(20, 16, 12, 0.6);
+    color: var(--bone);
+    border: 1px solid var(--line);
+    backdrop-filter: blur(8px);
+  }
+
+  /* Scan action button — extra prominent */
+  .scan-action {
+    background: var(--grad-brass);
+    color: var(--black);
+    border: none;
+    width: 100%;
+    padding: 26px;
+    border-radius: 2px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 5px;
+    cursor: pointer;
+    margin-bottom: 14px;
+    box-shadow:
+      0 16px 40px rgba(201, 169, 97, 0.35),
+      inset 0 1px 0 rgba(255,255,255,0.3),
+      inset 0 -1px 0 rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+  }
+  .scan-action::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 3s infinite;
+  }
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+  .scan-action svg {
+    width: 24px; height: 24px;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    fill: none;
+  }
+
+  /* ===== INPUTS ===== */
+  input {
+    width: 100%;
+    background: rgba(10, 8, 7, 0.5);
+    border: 1px solid var(--line);
+    color: var(--ivory);
+    padding: 16px 18px;
+    font-size: 16px;
+    font-family: 'SF Mono', Menlo, monospace;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+  }
+  input:focus {
+    outline: none;
+    border-color: var(--brass);
+    background: rgba(10, 8, 7, 0.8);
+    box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.1);
+  }
+  input::placeholder {
+    color: rgba(199, 186, 161, 0.3);
+    letter-spacing: 1px;
+  }
+
+  label {
+    display: block;
+    color: var(--brass);
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  /* ===== ROWS ===== */
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 14px;
+    gap: 12px;
+  }
   .row:last-child { border: none; }
-  .row .label { color: #a8a298; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; }
-  .row .value { color: #fff; font-weight: 500; text-align: right; word-break: break-word; }
+  .row .label-text {
+    color: var(--brass);
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    font-weight: 700;
+    opacity: 0.8;
+  }
+  .row .value {
+    color: var(--ivory);
+    font-family: var(--sans);
+    font-weight: 500;
+    text-align: right;
+    word-break: break-word;
+    letter-spacing: 0.5px;
+  }
 
-  .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 10px; letter-spacing: 1px; font-weight: 700; text-transform: uppercase; }
-  .badge-green { background: rgba(74,138,74,0.2); color: #4a8a4a; border: 1px solid #4a8a4a; }
-  .badge-red { background: rgba(197,69,60,0.15); color: #c5453c; border: 1px solid #c5453c; }
-  .badge-gold { background: rgba(201,169,97,0.15); color: #c9a961; border: 1px solid #c9a961; }
+  /* ===== BADGES ===== */
+  .badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 2px;
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .badge-green { background: rgba(95, 182, 114, 0.15); color: var(--emerald-bright); border: 1px solid var(--emerald-bright); }
+  .badge-red { background: rgba(197, 69, 60, 0.15); color: var(--crimson); border: 1px solid var(--crimson); }
+  .badge-gold { background: rgba(201, 169, 97, 0.12); color: var(--brass-bright); border: 1px solid var(--brass); }
 
-  #reader { width: 100%; border-radius: 14px; overflow: hidden; background: #000; margin-bottom: 12px; display: none; min-height: 320px; }
-  #reader.show { display: block; }
+  /* ===== TIER BADGE (Hero Display) ===== */
+  .tier-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 24px 0 16px;
+  }
+  .tier-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 32px;
+    border-radius: 2px;
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 8px;
+    text-align: center;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    position: relative;
+    text-transform: uppercase;
+  }
+  .tier-badge::before,
+  .tier-badge::after {
+    content: '◆';
+    font-size: 10px;
+    opacity: 0.4;
+  }
 
-  .msg { padding: 14px; border-radius: 10px; margin-bottom: 16px; font-size: 13px; line-height: 1.5; display: none; }
-  .msg.show { display: block; }
-  .msg-error { background: rgba(197,69,60,0.15); border: 1px solid #c5453c; color: #ff8a82; }
-  .msg-warn  { background: rgba(201,169,97,0.15); border: 1px solid #c9a961; color: #e6c878; }
-  .msg-ok    { background: rgba(74,138,74,0.2); border: 1px solid #4a8a4a; color: #8ad48a; }
-  .msg-info  { background: rgba(70,130,180,0.15); border: 1px solid #5a8ac0; color: #9ec4e8; }
+  .tier-vip {
+    background: var(--grad-vip);
+    color: #2a1f00;
+    border: 1px solid #f9e286;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+    box-shadow:
+      0 20px 50px rgba(212, 175, 55, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    animation: vip-shine 4s ease-in-out infinite;
+  }
+  @keyframes vip-shine {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.1); }
+  }
+  .tier-standard {
+    background: linear-gradient(135deg, var(--brass), var(--brass-deep));
+    color: var(--black);
+    border: 1px solid var(--brass-bright);
+  }
+  .tier-crew {
+    background: linear-gradient(135deg, #5a5046, #3a3228);
+    color: var(--champagne);
+    border: 1px solid var(--bone);
+  }
+  .tier-default {
+    background: linear-gradient(135deg, #3a3228, #1f1812);
+    color: var(--bone);
+    border: 1px solid var(--brass-deep);
+  }
+
+  /* ===== QR SCANNER ===== */
+  #reader, #reader2 {
+    width: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #000;
+    margin-bottom: 14px;
+    display: none;
+    min-height: 320px;
+    border: 1px solid var(--brass);
+    position: relative;
+    box-shadow:
+      0 0 0 4px var(--black),
+      0 0 0 5px var(--brass-deep),
+      0 20px 60px rgba(201, 169, 97, 0.2);
+  }
+  #reader.show, #reader2.show { display: block; }
+  #reader video, #reader2 video { border-radius: 3px; }
+
+  /* Scanner corner markers */
+  .scanner-corners {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .scanner-corners::before,
+  .scanner-corners::after {
+    content: '';
+    position: absolute;
+    width: 32px; height: 32px;
+    border: 2px solid var(--brass-bright);
+  }
+
+  /* ===== MESSAGES ===== */
+  .msg {
+    padding: 14px 18px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    display: none;
+    border-left: 3px solid currentColor;
+  }
+  .msg.show { display: block; animation: slideIn 0.4s ease-out; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .msg-error { background: rgba(197, 69, 60, 0.12); color: #ffaaa5; }
+  .msg-warn { background: rgba(201, 169, 97, 0.12); color: var(--brass-bright); }
+  .msg-ok { background: rgba(95, 182, 114, 0.18); color: #a5e8b5; }
+  .msg-info { background: rgba(70, 130, 180, 0.12); color: #9ec4e8; }
 
   .hidden { display: none !important; }
 
+  /* ===== BAND BANNER ===== */
   .band-banner {
-    background: linear-gradient(135deg, #c9a961, #8a7340);
-    color: #0f0d0a;
-    padding: 16px 20px;
-    border-radius: 12px;
-    margin-bottom: 16px;
-    font-weight: 700;
+    background: var(--grad-vip);
+    color: var(--black);
+    padding: 22px 26px;
+    border-radius: 2px;
+    margin-bottom: 18px;
     text-align: center;
+    box-shadow:
+      0 16px 40px rgba(212, 175, 55, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    position: relative;
+    animation: bandDrop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes bandDrop {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .band-banner .label-mini {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 4px;
+    opacity: 0.7;
+    margin-bottom: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .band-banner .id-big {
+    font-family: 'SF Mono', Menlo, monospace;
+    font-size: 28px;
+    letter-spacing: 4px;
+    font-weight: 700;
+  }
+  .band-banner::before,
+  .band-banner::after {
+    content: '◆';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    opacity: 0.4;
+  }
+  .band-banner::before { left: 16px; }
+  .band-banner::after { right: 16px; }
+
+  /* ===== NFC TAP ZONE ===== */
+  .nfc-tap-zone {
+    background:
+      radial-gradient(ellipse at center, rgba(201, 169, 97, 0.12) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(28, 22, 16, 0.5), rgba(20, 16, 12, 0.3));
+    border: 1px dashed var(--brass);
+    border-radius: 4px;
+    padding: 48px 28px;
+    text-align: center;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .nfc-tap-zone::before,
+  .nfc-tap-zone::after {
+    content: '';
+    position: absolute;
+    width: 30px; height: 30px;
+  }
+  .nfc-tap-zone::before {
+    top: 8px; left: 8px;
+    border-top: 1px solid var(--brass);
+    border-left: 1px solid var(--brass);
+  }
+  .nfc-tap-zone::after {
+    bottom: 8px; right: 8px;
+    border-bottom: 1px solid var(--brass);
+    border-right: 1px solid var(--brass);
+  }
+
+  .nfc-icon-wrap {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  .nfc-icon-wrap svg {
+    width: 80px; height: 80px;
+    stroke: var(--brass);
+    stroke-width: 1.5;
+    fill: none;
+    filter: drop-shadow(0 8px 24px rgba(201, 169, 97, 0.4));
+    animation: nfc-pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes nfc-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+  }
+  /* Radio wave rings */
+  .nfc-icon-wrap::before,
+  .nfc-icon-wrap::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 80px; height: 80px;
+    border: 1px solid var(--brass);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: wave 2.5s ease-out infinite;
+  }
+  .nfc-icon-wrap::after {
+    animation-delay: 1.25s;
+  }
+  @keyframes wave {
+    0% { opacity: 0.6; width: 80px; height: 80px; }
+    100% { opacity: 0; width: 160px; height: 160px; }
+  }
+
+  .nfc-title {
+    font-family: var(--display);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--champagne);
+    margin-bottom: 12px;
+    letter-spacing: 4px;
+  }
+  .nfc-subtitle {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--bone);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 340px;
+    margin: 0 auto;
+    opacity: 0.9;
+  }
+
+  /* ===== VERIFY HERO (Result Screen) ===== */
+  .verify-hero {
+    border-radius: 4px;
+    padding: 48px 28px 40px;
+    text-align: center;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    animation: heroIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes heroIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .verify-hero.success {
+    background: var(--grad-success);
+    border: 1px solid var(--emerald-bright);
+    box-shadow: 0 0 80px rgba(95, 182, 114, 0.25);
+  }
+  .verify-hero.failure {
+    background: var(--grad-fail);
+    border: 1px solid var(--crimson);
+    box-shadow: 0 0 80px rgba(197, 69, 60, 0.25);
+  }
+  .verify-hero.pending {
+    background: var(--grad-pending);
+    border: 1px solid var(--brass);
+    box-shadow: 0 0 80px rgba(201, 169, 97, 0.25);
+  }
+
+  /* Decorative corners on verify hero */
+  .verify-hero::before,
+  .verify-hero::after {
+    content: '';
+    position: absolute;
+    width: 40px; height: 40px;
+  }
+  .verify-hero::before {
+    top: 12px; left: 12px;
+    border-top: 1px solid currentColor;
+    border-left: 1px solid currentColor;
+    opacity: 0.4;
+  }
+  .verify-hero::after {
+    bottom: 12px; right: 12px;
+    border-bottom: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+    opacity: 0.4;
+  }
+  .verify-hero.success::before, .verify-hero.success::after { color: var(--emerald-bright); }
+  .verify-hero.failure::before, .verify-hero.failure::after { color: var(--crimson); }
+  .verify-hero.pending::before, .verify-hero.pending::after { color: var(--brass); }
+
+  .verify-icon-big {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    animation: iconPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+    position: relative;
+  }
+  @keyframes iconPop {
+    0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+    60% { transform: scale(1.15) rotate(0deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  .verify-icon-big svg {
+    width: 56px; height: 56px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+  }
+  .verify-hero.success .verify-icon-big { color: var(--emerald-bright); }
+  .verify-hero.failure .verify-icon-big { color: var(--crimson); }
+  .verify-hero.pending .verify-icon-big { color: var(--brass-bright); }
+  /* Glow halo */
+  .verify-icon-big::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: currentColor;
+    filter: blur(20px);
+    opacity: 0.3;
+    z-index: -1;
+  }
+
+  .verify-name {
+    font-family: var(--display);
+    font-size: 40px;
+    font-weight: 400;
+    margin-bottom: 6px;
+    color: var(--champagne);
+    line-height: 1.05;
     letter-spacing: 1px;
   }
-  .band-banner .label { font-size: 10px; letter-spacing: 2px; opacity: 0.7; margin-bottom: 4px; }
-  .band-banner .id { font-size: 22px; font-family: 'SF Mono', Menlo, monospace; }
 
-  .nfc-tap-zone {
-    background: linear-gradient(135deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02));
-    border: 2px dashed #c9a961;
-    border-radius: 16px;
-    padding: 32px 20px;
+  .verify-meta {
+    font-family: 'SF Mono', Menlo, monospace;
+    font-size: 12px;
+    color: var(--brass);
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+    opacity: 0.85;
+  }
+
+  .verify-message {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--champagne);
+    margin-top: 20px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+  .verify-detail-line {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--bone);
+    margin-top: 10px;
+    opacity: 0.7;
+  }
+
+  /* ===== LOADING ===== */
+  .loading-state {
     text-align: center;
-    margin-bottom: 16px;
+    padding: 60px 20px;
   }
-  .nfc-icon {
-    font-size: 70px;
-    line-height: 1;
-    margin-bottom: 16px;
-    color: #c9a961;
-    animation: pulse 2s ease-in-out infinite;
+  .loading-spinner {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 24px;
+    border: 1.5px solid var(--line);
+    border-top-color: var(--brass);
+    border-right-color: var(--brass);
+    border-radius: 50%;
+    animation: spin 1s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
+    position: relative;
   }
-  @keyframes pulse {
-    0%, 100% { opacity: 0.6; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.05); }
+  .loading-spinner::after {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px solid var(--brass-deep);
+    border-radius: 50%;
+    opacity: 0.4;
   }
-  .nfc-title { font-size: 18px; font-weight: 700; color: #c9a961; margin-bottom: 8px; letter-spacing: 1px; }
-  .nfc-subtitle { color: #a8a298; font-size: 13px; line-height: 1.6; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text {
+    font-family: var(--sans);
+    color: var(--brass);
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .loading-subtitle {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--bone);
+    font-size: 13px;
+    margin-top: 12px;
+    opacity: 0.6;
+  }
 
-  .verify-result { border-radius: 20px; padding: 36px 24px; text-align: center; margin-bottom: 16px; }
-  .verify-result.success { background: linear-gradient(135deg, rgba(74,138,74,0.25), rgba(74,138,74,0.1)); border: 3px solid #4a8a4a; }
-  .verify-result.failure { background: linear-gradient(135deg, rgba(197,69,60,0.25), rgba(197,69,60,0.1)); border: 3px solid #c5453c; }
-  .verify-icon { font-size: 80px; line-height: 1; margin-bottom: 16px; }
-  .verify-result.success .verify-icon { color: #4a8a4a; }
-  .verify-result.failure .verify-icon { color: #c5453c; }
-  .verify-name { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: #f5f1e8; }
-  .verify-band-id { font-family: 'SF Mono', Menlo, monospace; font-size: 14px; color: #c9a961; letter-spacing: 2px; margin-bottom: 12px; }
-  .verify-tier { display: inline-block; padding: 6px 14px; border-radius: 6px; font-size: 12px; letter-spacing: 2px; font-weight: 700; background: rgba(201,169,97,0.2); color: #c9a961; border: 1px solid #c9a961; margin: 10px 0; }
-  .verify-message { font-size: 16px; font-weight: 600; color: #fff; margin-top: 10px; }
+  /* ===== GATE SELECTOR ===== */
+  .gate-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .gate-card {
+    background: linear-gradient(180deg, rgba(28, 22, 16, 0.8), rgba(20, 16, 12, 0.6));
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 32px 18px 26px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .gate-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--brass-deep), transparent);
+    transition: width 0.3s;
+  }
+  .gate-card:hover::before, .gate-card.active::before {
+    width: 80%;
+    background: linear-gradient(90deg, transparent, var(--brass), transparent);
+  }
+  .gate-card:active { transform: scale(0.97); }
+  .gate-card:hover, .gate-card.active {
+    border-color: var(--brass);
+    background: linear-gradient(180deg, rgba(201, 169, 97, 0.1), rgba(201, 169, 97, 0.03));
+    box-shadow: 0 16px 40px rgba(201, 169, 97, 0.15);
+  }
+  .gate-card .icon-wrap {
+    width: 56px; height: 56px;
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--brass-deep);
+    background: rgba(10, 8, 7, 0.6);
+    transition: all 0.3s;
+  }
+  .gate-card:hover .icon-wrap,
+  .gate-card.active .icon-wrap {
+    border-color: var(--brass);
+    box-shadow: 0 0 24px rgba(201, 169, 97, 0.3);
+  }
+  .gate-card .icon-wrap svg {
+    width: 26px; height: 26px;
+    stroke: var(--brass);
+    stroke-width: 1.5;
+    fill: none;
+  }
+  .gate-card .gate-num {
+    font-family: var(--display);
+    font-size: 14px;
+    color: var(--brass);
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+  .gate-card .gate-name {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--champagne);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .gate-card .gate-desc {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--bone);
+    opacity: 0.7;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer-info {
+    text-align: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 11px;
+    color: var(--bone);
+    opacity: 0.4;
+    letter-spacing: 2px;
+  }
+  .footer-info::before {
+    content: '◆';
+    display: block;
+    color: var(--brass);
+    margin-bottom: 12px;
+    font-size: 8px;
+    opacity: 0.6;
+  }
+
+  /* Subtle entrance for whole content */
+  .wrap > * {
+    animation: contentIn 0.6s ease-out backwards;
+  }
+  .wrap > *:nth-child(1) { animation-delay: 0s; }
+  .wrap > *:nth-child(2) { animation-delay: 0.1s; }
+  .wrap > *:nth-child(3) { animation-delay: 0.2s; }
+  @keyframes contentIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 </style>
 </head>
 <body>
 
+<div class="deco-frame"></div>
+
 <div class="wrap">
 
-  <div class="header">
-    <h1>BETTER HIGH 2026</h1>
-    <p>EVENT CHECK-IN SYSTEM</p>
-  </div>
+  <header class="masthead">
+    <div class="est">— EST · MMXXVI —</div>
+    <h1>BETTER · HIGH</h1>
+    <div class="deco-line">
+      <div class="bar"></div>
+      <div class="diamond"></div>
+      <div class="bar"></div>
+    </div>
+    <div class="subtitle">RECEPTION · CHECK-IN</div>
+    <div class="gate-pill" id="modeIndicator">AWAITING SELECTION</div>
+  </header>
 
   <div id="msg" class="msg"></div>
 
-  <div id="bandBanner" class="band-banner hidden">
-    <div class="label">WRISTBAND DETECTED</div>
-    <div class="id" id="bandBannerId">—</div>
+  <!-- ============================================ -->
+  <!--  GATE SELECTOR (Home)                        -->
+  <!-- ============================================ -->
+  <div id="screenGateSelect">
+    <div class="card">
+      <h2>Select Gate</h2>
+      <div class="sub">Choose the checkpoint you're operating</div>
+
+      <div class="gate-selector">
+        <div class="gate-card" id="selectGate1" onclick="selectGate('gate1')">
+          <div class="icon-wrap">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <div class="gate-num">— I —</div>
+          <div class="gate-name">Gate One</div>
+          <div class="gate-desc">Entry Verify</div>
+        </div>
+        <div class="gate-card" id="selectGate2" onclick="selectGate('gate2')">
+          <div class="icon-wrap">
+            <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="11" rx="1"/><path d="M7 8V6a5 5 0 0 1 10 0v2"/><circle cx="12" cy="13" r="1.5"/></svg>
+          </div>
+          <div class="gate-num">— II —</div>
+          <div class="gate-name">Gate Two</div>
+          <div class="gate-desc">Wristband</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div id="screenHome">
+  <!-- ============================================ -->
+  <!--  GATE 1 — ENTRY VERIFICATION                 -->
+  <!-- ============================================ -->
+  <div id="screenGate1Home" class="hidden">
+    <div class="card">
+      <h2>Verify Entry</h2>
+      <div class="sub">Scan the guest's invitation to verify approval status</div>
+
+      <button class="scan-action" id="btnGate1Scan">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3M14 21h3"/></svg>
+        SCAN INVITATION
+      </button>
+      <div id="reader"></div>
+      <button class="btn btn-red hidden" id="btnGate1StopScan">CLOSE SCANNER</button>
+
+      <label style="margin-top:20px;">Or Enter QR ID Manually</label>
+      <input type="text" id="manualGate1Qr" placeholder="0V66O46" autocapitalize="characters">
+      <button class="btn btn-ghost" id="btnGate1Manual">VERIFY MANUALLY</button>
+    </div>
+
+    <button class="btn btn-dark" onclick="goHome()">← Change Gate</button>
+  </div>
+
+  <!-- Gate 1 Result -->
+  <div id="screenGate1Result" class="hidden">
+    <div id="gate1ResultBox"></div>
+    <button class="btn btn-gold" id="btnGate1Next">VERIFY NEXT GUEST</button>
+    <button class="btn btn-dark" onclick="goHome()">← Change Gate</button>
+  </div>
+
+  <!-- ============================================ -->
+  <!--  GATE 2 — WRISTBAND FLOW                     -->
+  <!-- ============================================ -->
+  <div id="screenGate2Home" class="hidden">
     <div class="nfc-tap-zone">
-      <div class="nfc-icon">📡</div>
-      <div class="nfc-title">TAP WRISTBAND</div>
+      <div class="nfc-icon-wrap">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 12a7 7 0 0 1 14 0M8 12a4 4 0 0 1 8 0M11 12a1 1 0 0 1 2 0"/>
+          <circle cx="12" cy="12" r="0.5" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="nfc-title">Tap Wristband</div>
       <div class="nfc-subtitle">
-        Tap any wristband against the top of this iPhone.<br><br>
-        The app will automatically detect if it needs check-in or verification.
+        Hold the wristband against the top of this iPhone.
+        The app automatically detects whether to assign or verify.
       </div>
     </div>
 
-    <label>OR ENTER BAND ID MANUALLY</label>
-    <input type="text" id="manualBand" placeholder="e.g. BAND001" autocapitalize="characters">
-    <button class="btn btn-dark" id="btnManualBand">🔍 PROCESS BAND</button>
+    <label>Or Enter Band ID Manually</label>
+    <input type="text" id="manualBand" placeholder="BAND001" autocapitalize="characters">
+    <button class="btn btn-ghost" id="btnManualBand">PROCESS BAND</button>
+
+    <button class="btn btn-dark" onclick="goHome()" style="margin-top:18px;">← Change Gate</button>
   </div>
 
+  <!-- Band Banner -->
+  <div id="bandBanner" class="band-banner hidden">
+    <div class="label-mini">Wristband Detected</div>
+    <div class="id-big" id="bandBannerId">—</div>
+  </div>
+
+  <!-- Gate 2 Reception -->
   <div id="screenReception" class="hidden">
     <div class="card">
       <h2>Assign Wristband</h2>
-      <div class="sub">This wristband is available. Scan the guest's QR to link it.</div>
+      <div class="sub">This wristband is available — scan the guest's QR to link it</div>
 
       <div class="row">
-        <span class="label">Wristband</span>
+        <span class="label-text">Wristband</span>
         <span class="value" id="receptionBandId">—</span>
       </div>
       <div class="row">
-        <span class="label">Status</span>
-        <span class="value"><span class="badge badge-gold">AVAILABLE</span></span>
+        <span class="label-text">Status</span>
+        <span class="value"><span class="badge badge-gold">Available</span></span>
       </div>
     </div>
 
     <div class="card">
-      <h2>Scan Guest QR</h2>
-      <div class="sub">Open the camera scanner or enter the QR ID manually</div>
-      <button class="btn btn-gold" id="btnScanGuest">📷 OPEN QR SCANNER</button>
-      <div id="reader"></div>
-      <button class="btn btn-red hidden" id="btnStopScan">✕ STOP SCANNER</button>
+      <h2>Scan Guest</h2>
+      <div class="sub">Open the camera or enter the QR ID manually</div>
+      <button class="scan-action" id="btnScanGuest">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3M14 21h3"/></svg>
+        SCAN INVITATION
+      </button>
+      <div id="reader2"></div>
+      <button class="btn btn-red hidden" id="btnStopScan">CLOSE SCANNER</button>
 
-      <label style="margin-top:16px;">OR ENTER QR ID MANUALLY</label>
-      <input type="text" id="manualQr" placeholder="e.g. 0V66O46" autocapitalize="characters">
-      <button class="btn btn-dark" id="btnManualLookup">🔍 LOOKUP GUEST</button>
+      <label style="margin-top:20px;">Or Enter QR ID Manually</label>
+      <input type="text" id="manualQr" placeholder="0V66O46" autocapitalize="characters">
+      <button class="btn btn-ghost" id="btnManualLookup">LOOKUP GUEST</button>
     </div>
 
-    <button class="btn btn-dark" id="btnCancelReception">← CANCEL</button>
+    <button class="btn btn-dark" id="btnCancelReception">← Cancel</button>
   </div>
 
+  <!-- Gate 2 Guest Found -->
   <div id="screenGuestFound" class="hidden">
     <div class="card">
       <h2 id="guestName">—</h2>
       <div class="sub" id="guestEmail">—</div>
 
+      <div class="tier-display">
+        <div id="guestTierBadge" class="tier-badge tier-default">—</div>
+      </div>
+
       <div class="row">
-        <span class="label">QR ID</span>
+        <span class="label-text">QR ID</span>
         <span class="value" id="guestQrId">—</span>
       </div>
       <div class="row">
-        <span class="label">Status</span>
+        <span class="label-text">Status</span>
         <span class="value"><span id="guestStatus" class="badge">—</span></span>
       </div>
       <div class="row">
-        <span class="label">Phone</span>
+        <span class="label-text">Phone</span>
         <span class="value" id="guestPhone">—</span>
       </div>
       <div class="row">
-        <span class="label">Wristband</span>
+        <span class="label-text">Wristband</span>
         <span class="value" id="guestBandId">—</span>
       </div>
     </div>
@@ -190,41 +1158,63 @@
     <div id="guestActions"></div>
   </div>
 
+  <!-- Gate 2 Checkpoint Result -->
   <div id="screenCheckpoint" class="hidden">
     <div id="verifyResultBox"></div>
-    <button class="btn btn-gold" id="btnDoneVerify">📡 VERIFY NEXT GUEST</button>
+    <button class="btn btn-gold" id="btnDoneVerify">VERIFY NEXT GUEST</button>
+    <button class="btn btn-dark" onclick="goHome()">← Change Gate</button>
   </div>
 
+  <!-- Gate 2 Success -->
   <div id="screenSuccess" class="hidden">
-    <div class="card" style="text-align:center;">
-      <div style="font-size:60px; margin-bottom:8px;">✅</div>
-      <h2 id="successName">Successfully Checked In</h2>
-      <div class="sub" id="successDetail">—</div>
-      <div style="margin-top:16px; font-size:11px; color:#6a6359; letter-spacing:1px;">
-        WRISTBAND LINKED · AIRTABLE UPDATED
+    <div class="verify-hero success">
+      <div class="verify-icon-big">
+        <svg viewBox="0 0 24 24"><path d="M5 13l4 4 10-10"/></svg>
+      </div>
+      <div class="verify-name" id="successName">Welcome</div>
+      <div class="verify-meta" id="successMeta">—</div>
+      <div class="verify-message">SUCCESSFULLY CHECKED IN</div>
+      <div class="verify-detail-line">Wristband linked · Records updated</div>
+    </div>
+    <button class="btn btn-gold" id="btnNext">NEXT GUEST</button>
+    <button class="btn btn-dark" onclick="goHome()">← Change Gate</button>
+  </div>
+
+  <!-- Loading -->
+  <div id="screenLoading" class="hidden">
+    <div class="card">
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">Processing</div>
+        <div class="loading-subtitle">One moment, please</div>
       </div>
     </div>
-    <button class="btn btn-gold" id="btnNext">📡 NEXT GUEST</button>
+  </div>
+
+  <div class="footer-info">
+    BETTER HIGH 2026 · TEAM DIGITAL
   </div>
 
 </div>
 
 <script>
 // ============================================================
-//  BETTER HIGH 2026 — SMART AUTO-DETECT CHECK-IN APP
-//  Single URL, status-based routing.
-//  Available band = Reception flow (assign to guest)
-//  Assigned band = Checkpoint flow (verify guest)
+//  BETTER HIGH 2026 — TWO-GATE CHECK-IN SYSTEM v4
+//  Auto-routes to Gate 2 when NFC URL has ?band=XXX
 // ============================================================
 
 let scanner = null;
+let activeScannerId = null;
 let currentBand = null;
 let currentGuest = null;
+let currentGate = null;
 
 const $ = id => document.getElementById(id);
 
-function show(screenId) {
-  ['screenHome','screenReception','screenGuestFound','screenCheckpoint','screenSuccess']
+function showScreen(screenId) {
+  ['screenGateSelect','screenGate1Home','screenGate1Result',
+   'screenGate2Home','screenReception','screenGuestFound',
+   'screenCheckpoint','screenSuccess','screenLoading']
     .forEach(s => $(s).classList.add('hidden'));
   $(screenId).classList.remove('hidden');
   window.scrollTo(0,0);
@@ -242,6 +1232,221 @@ function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 }
 
+function showLoading(text) {
+  $('loadingText').textContent = text || 'Processing';
+  showScreen('screenLoading');
+}
+
+function selectGate(gate) {
+  currentGate = gate;
+  try { localStorage.setItem('bh2026_gate', gate); } catch(e){}
+
+  $('selectGate1').classList.remove('active');
+  $('selectGate2').classList.remove('active');
+
+  if (gate === 'gate1') {
+    $('selectGate1').classList.add('active');
+    $('modeIndicator').textContent = 'GATE I · ENTRY VERIFY';
+    showScreen('screenGate1Home');
+  } else {
+    $('selectGate2').classList.add('active');
+    $('modeIndicator').textContent = 'GATE II · WRISTBAND';
+    showScreen('screenGate2Home');
+  }
+}
+window.selectGate = selectGate;
+
+function goHome() {
+  currentBand = null;
+  currentGuest = null;
+  $('manualGate1Qr').value = '';
+  $('manualQr').value = '';
+  $('manualBand').value = '';
+  $('bandBanner').classList.add('hidden');
+  $('modeIndicator').textContent = 'AWAITING SELECTION';
+  currentGate = null;
+  try { localStorage.removeItem('bh2026_gate'); } catch(e){}
+  $('selectGate1').classList.remove('active');
+  $('selectGate2').classList.remove('active');
+  showScreen('screenGateSelect');
+}
+window.goHome = goHome;
+
+// FAST QR Scanner
+async function startScan(readerId, onSuccess) {
+  if (typeof Html5Qrcode === 'undefined') {
+    msg('QR scanner library not loaded. Please refresh.', 'error');
+    return;
+  }
+
+  const reader = $(readerId);
+  reader.classList.add('show');
+
+  try {
+    scanner = new Html5Qrcode(readerId);
+    activeScannerId = readerId;
+
+    const config = {
+      fps: 30,
+      qrbox: function(w, h) {
+        const min = Math.min(w, h);
+        const size = Math.floor(min * 0.85);
+        return { width: size, height: size };
+      },
+      aspectRatio: 1.0,
+      experimentalFeatures: {
+        useBarCodeDetectorIfSupported: true
+      },
+      formatsToSupport: [
+        Html5QrcodeSupportedFormats.QR_CODE
+      ],
+      videoConstraints: {
+        facingMode: 'environment',
+        width: { ideal: 1920 },
+        height: { ideal: 1080 }
+      }
+    };
+
+    try {
+      await scanner.start({ facingMode: 'environment' }, config, onSuccess, () => {});
+    } catch(e) {
+      await scanner.start({ facingMode: 'user' }, config, onSuccess, () => {});
+    }
+  } catch (err) {
+    msg('Unable to access camera: ' + (err.message || err.name), 'error');
+    await stopScan();
+  }
+}
+
+async function stopScan() {
+  if (scanner) {
+    try {
+      if (scanner.isScanning) await scanner.stop();
+      await scanner.clear();
+    } catch(e) {}
+    scanner = null;
+  }
+  if (activeScannerId) {
+    $(activeScannerId).classList.remove('show');
+    activeScannerId = null;
+  }
+}
+
+// ============================================================
+//  GATE 1 — ENTRY VERIFICATION
+// ============================================================
+
+function startGate1Scan() {
+  $('btnGate1Scan').classList.add('hidden');
+  $('btnGate1StopScan').classList.remove('hidden');
+  startScan('reader', async (text) => {
+    await stopScan();
+    $('btnGate1Scan').classList.remove('hidden');
+    $('btnGate1StopScan').classList.add('hidden');
+    await verifyGate1Entry(text.trim());
+  });
+}
+
+async function stopGate1Scan() {
+  await stopScan();
+  $('btnGate1Scan').classList.remove('hidden');
+  $('btnGate1StopScan').classList.add('hidden');
+}
+
+async function verifyGate1Entry(qrId) {
+  if (!qrId) {
+    msg('Please provide a valid QR ID.', 'error');
+    return;
+  }
+
+  showLoading('Verifying Entry');
+
+  try {
+    const res = await fetch('/api/guest?qrId=' + encodeURIComponent(qrId));
+    const data = await res.json();
+
+    if (!res.ok) {
+      renderGate1Result({ type:'failure', title:'Verification Error', meta:qrId, message:data.error||'Server error' });
+      return;
+    }
+
+    if (!data.guest) {
+      renderGate1Result({ type:'failure', title:'Not Found', meta:qrId, message:'No guest record matches this QR' });
+      return;
+    }
+
+    const f = data.guest.fields;
+    const name = f['Full Name'] || ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim() || 'Unnamed Guest';
+    const tier = f['Tier'] || 'STANDARD';
+    const status = f['Status'] || 'Unknown';
+
+    if (status === 'Approved' || status === 'Checked-in') {
+      renderGate1Result({ type:'success', name, meta:'QR · '+(f['QR CODE ID']||qrId), tier, status, message:'Entry Approved' });
+    } else if (status === 'Pending') {
+      renderGate1Result({ type:'pending', name, meta:'QR · '+(f['QR CODE ID']||qrId), tier, status, message:'Pending Approval' });
+    } else {
+      renderGate1Result({ type:'failure', name, meta:'QR · '+(f['QR CODE ID']||qrId), tier, status, message:'Entry Denied · '+status });
+    }
+  } catch (err) {
+    renderGate1Result({ type:'failure', title:'Connection Error', meta:qrId, message:err.message });
+  }
+}
+
+function renderGate1Result(r) {
+  const tierClass = getTierClass(r.tier);
+  let icon = '<svg viewBox="0 0 24 24"><path d="M5 13l4 4 10-10"/></svg>';
+  if (r.type === 'failure') icon = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  if (r.type === 'pending') icon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>';
+
+  let html = '';
+  if (r.type === 'success') {
+    html = `
+      <div class="verify-hero success">
+        <div class="verify-icon-big">${icon}</div>
+        <div class="verify-name">${esc(r.name)}</div>
+        <div class="verify-meta">${esc(r.meta)}</div>
+        <div class="tier-display"><div class="tier-badge ${tierClass}">${esc(r.tier)}</div></div>
+        <div class="verify-message">${esc(r.message)}</div>
+        <div class="verify-detail-line">Status · ${esc(r.status)}</div>
+      </div>`;
+  } else if (r.type === 'pending') {
+    html = `
+      <div class="verify-hero pending">
+        <div class="verify-icon-big">${icon}</div>
+        <div class="verify-name">${esc(r.name)}</div>
+        <div class="verify-meta">${esc(r.meta)}</div>
+        <div class="tier-display"><div class="tier-badge ${tierClass}">${esc(r.tier)}</div></div>
+        <div class="verify-message">${esc(r.message)}</div>
+        <div class="verify-detail-line">Please escalate to operations</div>
+      </div>`;
+  } else {
+    html = `
+      <div class="verify-hero failure">
+        <div class="verify-icon-big">${icon}</div>
+        <div class="verify-name">${esc(r.name || r.title || 'Denied')}</div>
+        <div class="verify-meta">${esc(r.meta || '—')}</div>
+        ${r.tier ? `<div class="tier-display"><div class="tier-badge ${tierClass}">${esc(r.tier)}</div></div>` : ''}
+        <div class="verify-message">${esc(r.message)}</div>
+      </div>`;
+  }
+
+  $('gate1ResultBox').innerHTML = html;
+  showScreen('screenGate1Result');
+}
+
+function getTierClass(tier) {
+  if (!tier) return 'tier-default';
+  const t = String(tier).toUpperCase();
+  if (t.includes('VIP')) return 'tier-vip';
+  if (t.includes('CREW') || t.includes('STAFF')) return 'tier-crew';
+  if (t.includes('STANDARD') || t.includes('GENERAL')) return 'tier-standard';
+  return 'tier-default';
+}
+
+// ============================================================
+//  GATE 2 — WRISTBAND FLOW
+// ============================================================
+
 function checkNfcParameter() {
   const params = new URLSearchParams(window.location.search);
   const bandId = params.get('band');
@@ -253,16 +1458,20 @@ function checkNfcParameter() {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
 
+    // AUTO-ROUTE TO GATE 2 when NFC URL detected
+    selectGate('gate2');
+
     $('bandBannerId').textContent = cleanBandId;
     $('bandBanner').classList.remove('hidden');
 
     processBand(cleanBandId);
+    return true;
   }
+  return false;
 }
 
-// SMART BAND PROCESSING — Core Logic
 async function processBand(bandId) {
-  msg('Checking wristband status...', 'warn');
+  showLoading('Checking Wristband');
 
   try {
     const res = await fetch('/api/band?bandId=' + encodeURIComponent(bandId));
@@ -270,13 +1479,13 @@ async function processBand(bandId) {
 
     if (!res.ok) {
       msg('Server error: ' + (data.error || res.status), 'error');
-      show('screenHome');
+      showScreen('screenGate2Home');
       return;
     }
 
     if (!data.band) {
-      msg('Wristband "' + bandId + '" was not found in the database.', 'error');
-      show('screenHome');
+      msg('Wristband "' + bandId + '" not found.', 'error');
+      showScreen('screenGate2Home');
       return;
     }
 
@@ -285,96 +1494,70 @@ async function processBand(bandId) {
 
     if (status === 'Available') {
       $('receptionBandId').textContent = data.band.fields['Band ID'];
-      show('screenReception');
-      msg('Wristband is available. Scan the guest QR to assign it.', 'info');
+      showScreen('screenReception');
+      msg('Wristband available · Scan guest QR to assign', 'info');
     } else if (status === 'Assigned') {
       verifyCheckpoint(data.band);
     } else {
-      msg('Wristband has unknown status: ' + status, 'error');
-      show('screenHome');
+      msg('Unknown wristband status: ' + status, 'error');
+      showScreen('screenGate2Home');
     }
   } catch (err) {
     msg('Connection error: ' + err.message, 'error');
-    show('screenHome');
+    showScreen('screenGate2Home');
   }
 }
 
 function verifyCheckpoint(band) {
   const f = band.fields;
   const rollup = f['Full Name Rollup (from Linked Invitee)'];
-  const guestName = (Array.isArray(rollup) ? rollup[0] : rollup) || f['Guest Name'] || '(name not available)';
-  const guestTier = f['Guest Tier'] || 'STANDARD';
+  const guestName = (Array.isArray(rollup) ? rollup[0] : rollup) || f['Guest Name'] || 'Unknown';
+  const tierRollup = f['Tier Rollup (from Linked Invitee)'] || f['Guest Tier Rollup (from Linked Invitee)'];
+  const guestTier = (Array.isArray(tierRollup) ? tierRollup[0] : tierRollup) || f['Guest Tier'] || 'STANDARD';
   const guestStatus = f['Guest Status'] || 'Checked-in';
   const bandId = f['Band ID'] || '—';
 
-  if (guestStatus === 'Checked-in') {
-    $('verifyResultBox').innerHTML =
-      '<div class="verify-result success">' +
-      '<div class="verify-icon">✓</div>' +
-      '<div class="verify-name">' + esc(guestName) + '</div>' +
-      '<div class="verify-band-id">' + esc(bandId) + '</div>' +
-      '<div class="verify-tier">' + esc(guestTier) + '</div>' +
-      '<div class="verify-message">Access Granted</div>' +
-      '</div>';
-  } else {
-    $('verifyResultBox').innerHTML =
-      '<div class="verify-result failure">' +
-      '<div class="verify-icon">✗</div>' +
-      '<div class="verify-name">' + esc(guestName) + '</div>' +
-      '<div class="verify-band-id">' + esc(bandId) + '</div>' +
-      '<div class="verify-message">Guest status: ' + esc(guestStatus) + '</div>' +
-      '</div>';
+  const tierClass = getTierClass(guestTier);
+  let icon = '<svg viewBox="0 0 24 24"><path d="M5 13l4 4 10-10"/></svg>';
+  let resultClass = 'success';
+  let message = 'Access Granted';
+
+  if (guestStatus !== 'Checked-in') {
+    icon = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    resultClass = 'failure';
+    message = 'Access Denied';
   }
 
-  show('screenCheckpoint');
+  $('verifyResultBox').innerHTML = `
+    <div class="verify-hero ${resultClass}">
+      <div class="verify-icon-big">${icon}</div>
+      <div class="verify-name">${esc(guestName)}</div>
+      <div class="verify-meta">${esc(bandId)}</div>
+      <div class="tier-display"><div class="tier-badge ${tierClass}">${esc(guestTier)}</div></div>
+      <div class="verify-message">${message}</div>
+      <div class="verify-detail-line">Status · ${esc(guestStatus)}</div>
+    </div>
+  `;
+
+  showScreen('screenCheckpoint');
   $('msg').classList.remove('show');
 }
 
-async function startGuestScan() {
-  if (typeof Html5Qrcode === 'undefined') {
-    msg('QR scanner library failed to load. Please refresh the page.', 'error');
-    return;
-  }
-
-  $('reader').classList.add('show');
-  $('btnStopScan').classList.remove('hidden');
+function startGate2Scan() {
   $('btnScanGuest').classList.add('hidden');
-
-  try {
-    scanner = new Html5Qrcode('reader');
-    const config = {
-      fps: 15,
-      qrbox: { width: 260, height: 260 },
-      aspectRatio: 1.0,
-      experimentalFeatures: { useBarCodeDetectorIfSupported: true }
-    };
-    try {
-      await scanner.start({ facingMode: 'environment' }, config, onGuestScan, ()=>{});
-    } catch(e) {
-      await scanner.start({ facingMode: 'user' }, config, onGuestScan, ()=>{});
-    }
-  } catch (err) {
-    msg('Unable to access camera: ' + (err.message || err.name), 'error');
-    await stopGuestScan();
-  }
+  $('btnStopScan').classList.remove('hidden');
+  startScan('reader2', async (text) => {
+    await stopScan();
+    $('btnScanGuest').classList.remove('hidden');
+    $('btnStopScan').classList.add('hidden');
+    await lookupGuest(text.trim());
+  });
 }
 
-async function stopGuestScan() {
-  if (scanner) {
-    try {
-      if (scanner.isScanning) await scanner.stop();
-      await scanner.clear();
-    } catch(e) {}
-    scanner = null;
-  }
-  $('reader').classList.remove('show');
+async function stopGate2Scan() {
+  await stopScan();
+  $('btnScanGuest').classList.remove('hidden');
   $('btnStopScan').classList.add('hidden');
-  if ($('btnScanGuest')) $('btnScanGuest').classList.remove('hidden');
-}
-
-async function onGuestScan(text) {
-  await stopGuestScan();
-  await lookupGuest(text.trim());
 }
 
 async function lookupGuest(qrId) {
@@ -383,37 +1566,46 @@ async function lookupGuest(qrId) {
     return;
   }
 
-  msg('Looking up guest record...', 'warn');
+  showLoading('Looking Up Guest');
+
   try {
     const res = await fetch('/api/guest?qrId=' + encodeURIComponent(qrId));
     const data = await res.json();
 
     if (!res.ok) {
       msg('Server error: ' + (data.error || res.status), 'error');
+      showScreen('screenReception');
       return;
     }
     if (!data.guest) {
-      msg('No guest found with QR ID "' + qrId + '". Please verify and try again.', 'error');
+      msg('No guest found with QR ID "' + qrId + '".', 'error');
+      showScreen('screenReception');
       return;
     }
 
     currentGuest = data.guest;
     renderGuest(data.guest);
-    show('screenGuestFound');
+    showScreen('screenGuestFound');
     $('msg').classList.remove('show');
   } catch (err) {
     msg('Connection error: ' + err.message, 'error');
+    showScreen('screenReception');
   }
 }
 
 function renderGuest(g) {
   const f = g.fields;
-  const name = f['Full Name'] || ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim() || '(unnamed guest)';
+  const name = f['Full Name'] || ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim() || 'Unnamed Guest';
   $('guestName').textContent = name;
   $('guestEmail').textContent = f['EMAIL ADDRESS'] || '—';
   $('guestQrId').textContent = f['QR CODE ID'] || '—';
   $('guestPhone').textContent = f['PHONE NUMBER'] || '—';
   $('guestBandId').textContent = currentBand ? currentBand.fields['Band ID'] : '—';
+
+  const tier = f['Tier'] || 'STANDARD';
+  const tierBadge = $('guestTierBadge');
+  tierBadge.textContent = tier;
+  tierBadge.className = 'tier-badge ' + getTierClass(tier);
 
   const status = f.Status || 'Unknown';
   const badge = $('guestStatus');
@@ -425,17 +1617,17 @@ function renderGuest(g) {
 
   const actions = $('guestActions');
   if (status === 'Checked-in') {
-    actions.innerHTML =
-      '<div class="msg msg-warn show" style="margin-bottom:12px;">⚠ This guest has already been checked in. Cannot re-assign a wristband.</div>' +
-      '<button class="btn btn-dark" onclick="resetFlow()">← BACK</button>';
+    actions.innerHTML = `
+      <div class="msg msg-warn show">⚠ This guest has already been checked in.</div>
+      <button class="btn btn-dark" onclick="goHome()">← Back</button>`;
   } else if (status === 'Pending') {
-    actions.innerHTML =
-      '<div class="msg msg-warn show" style="margin-bottom:12px;">⚠ Guest status is Pending. Please escalate to operations team.</div>' +
-      '<button class="btn btn-dark" onclick="resetFlow()">← BACK</button>';
+    actions.innerHTML = `
+      <div class="msg msg-warn show">⚠ Guest status is Pending. Escalate to operations.</div>
+      <button class="btn btn-dark" onclick="goHome()">← Back</button>`;
   } else {
-    actions.innerHTML =
-      '<button class="btn btn-green" id="btnConfirmCheckin">✓ CONFIRM AND CHECK IN</button>' +
-      '<button class="btn btn-dark" onclick="resetFlow()">← CANCEL</button>';
+    actions.innerHTML = `
+      <button class="btn btn-green" id="btnConfirmCheckin">✓ CONFIRM AND CHECK IN</button>
+      <button class="btn btn-dark" onclick="goHome()">← Cancel</button>`;
     document.getElementById('btnConfirmCheckin').addEventListener('click', confirmCheckin);
   }
 }
@@ -446,7 +1638,8 @@ async function confirmCheckin() {
     return;
   }
 
-  msg('Processing check-in...', 'warn');
+  showLoading('Processing Check-In');
+
   try {
     const res = await fetch('/api/checkin', {
       method: 'POST',
@@ -457,28 +1650,46 @@ async function confirmCheckin() {
 
     if (!res.ok || !data.success) {
       msg('Check-in failed: ' + (data.error || 'unknown error'), 'error');
+      showScreen('screenGuestFound');
       return;
     }
 
-    const name = currentGuest.fields['Full Name'] || ((currentGuest.fields['FIRST NAME']||'') + ' ' + (currentGuest.fields['LAST NAME']||'')).trim();
-    $('successName').textContent = name + ' ✓';
-    $('successDetail').textContent = 'Wristband ' + currentBand.fields['Band ID'] + ' linked at ' + new Date().toLocaleTimeString();
-    show('screenSuccess');
+    const f = currentGuest.fields;
+    const name = f['Full Name'] || ((f['FIRST NAME']||'') + ' ' + (f['LAST NAME']||'')).trim();
+    $('successName').textContent = name;
+    $('successMeta').textContent = currentBand.fields['Band ID'] + ' · ' + new Date().toLocaleTimeString();
+    showScreen('screenSuccess');
     $('msg').classList.remove('show');
   } catch (err) {
     msg('Connection error: ' + err.message, 'error');
+    showScreen('screenGuestFound');
   }
 }
 
-function resetFlow() {
+function resetGate2Flow() {
   currentBand = null;
   currentGuest = null;
   $('manualQr').value = '';
   $('manualBand').value = '';
   $('bandBanner').classList.add('hidden');
-  show('screenHome');
+  showScreen('screenGate2Home');
 }
-window.resetFlow = resetFlow;
+
+// EVENT LISTENERS
+$('btnGate1Scan').addEventListener('click', startGate1Scan);
+$('btnGate1StopScan').addEventListener('click', stopGate1Scan);
+$('btnGate1Manual').addEventListener('click', () => {
+  const val = $('manualGate1Qr').value.trim();
+  if (!val) { msg('Please enter a QR ID first.', 'error'); return; }
+  verifyGate1Entry(val);
+});
+$('manualGate1Qr').addEventListener('keypress', e => {
+  if (e.key === 'Enter') $('btnGate1Manual').click();
+});
+$('btnGate1Next').addEventListener('click', () => {
+  $('manualGate1Qr').value = '';
+  showScreen('screenGate1Home');
+});
 
 $('btnManualBand').addEventListener('click', () => {
   const val = $('manualBand').value.trim().toUpperCase();
@@ -491,8 +1702,8 @@ $('manualBand').addEventListener('keypress', e => {
   if (e.key === 'Enter') $('btnManualBand').click();
 });
 
-$('btnScanGuest').addEventListener('click', startGuestScan);
-$('btnStopScan').addEventListener('click', stopGuestScan);
+$('btnScanGuest').addEventListener('click', startGate2Scan);
+$('btnStopScan').addEventListener('click', stopGate2Scan);
 
 $('btnManualLookup').addEventListener('click', () => {
   const val = $('manualQr').value.trim();
@@ -503,15 +1714,34 @@ $('manualQr').addEventListener('keypress', e => {
   if (e.key === 'Enter') $('btnManualLookup').click();
 });
 
-$('btnCancelReception').addEventListener('click', resetFlow);
-$('btnDoneVerify').addEventListener('click', resetFlow);
-$('btnNext').addEventListener('click', resetFlow);
+$('btnCancelReception').addEventListener('click', resetGate2Flow);
+$('btnDoneVerify').addEventListener('click', resetGate2Flow);
+$('btnNext').addEventListener('click', resetGate2Flow);
 
+// INIT
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof Html5Qrcode === 'undefined') {
-    msg('QR scanner library failed to load. Please check your internet connection.', 'error');
+    msg('QR scanner library failed to load.', 'error');
   }
-  checkNfcParameter();
+
+  // If NFC URL parameter exists, auto-route to Gate 2 (skip gate selector)
+  const hasNfc = checkNfcParameter();
+
+  if (!hasNfc) {
+    // Restore last gate if no NFC param
+    try {
+      const savedGate = localStorage.getItem('bh2026_gate');
+      if (savedGate === 'gate1') {
+        selectGate('gate1');
+      } else if (savedGate === 'gate2') {
+        selectGate('gate2');
+      } else {
+        showScreen('screenGateSelect');
+      }
+    } catch(e) {
+      showScreen('screenGateSelect');
+    }
+  }
 });
 
 window.addEventListener('focus', () => {
