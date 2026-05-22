@@ -1008,7 +1008,7 @@
   <!-- ============================================ -->
   <div id="screenGateSelect">
     <div class="card">
-      <h2>Select Gate</h2>
+      <h2>Reception Desk</h2>
       <div class="sub">Choose the checkpoint you're operating</div>
 
       <div class="gate-selector">
@@ -1246,7 +1246,7 @@ function selectGate(gate) {
 
   if (gate === 'gate1') {
     $('selectGate1').classList.add('active');
-    $('modeIndicator').textContent = '· ENTRY VERIFY';
+    $('modeIndicator').textContent = 'QR SCAN · VERIFY ENTRY';
     showScreen('screenGate1Home');
   } else {
     $('selectGate2').classList.add('active');
