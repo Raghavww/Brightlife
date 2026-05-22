@@ -50,7 +50,11 @@
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; overscroll-behavior: none; }
 
- body {
+ html, body {
+    height: 100%;
+    min-height: 100dvh;
+  }
+  body {
     background: var(--black);
     color: var(--ivory);
     min-height: 100dvh;
@@ -58,7 +62,6 @@
     position: relative;
     overflow-x: hidden;
   }
-
   /* Subtle gold radial atmosphere */
   body::before {
     content: '';
@@ -84,7 +87,7 @@
     min-height: 100dvh;
   }
 
-  /* MOBILE: Full screen frame, no outer card look */
+  /* MOBILE: Full screen frame, content distributed across viewport */
   @media (max-width: 767px) {
     .wrap {
       padding: 0;
@@ -93,34 +96,52 @@
       border-radius: 0 !important;
       border: none !important;
       min-height: 100dvh;
-      padding: 16px 18px 24px !important;
+      padding: 16px 18px 32px !important;
+      display: flex;
+      flex-direction: column;
     }
-    .hs-name {
-      font-size: 28px !important;
+    .hs-frame > .hs-top { flex-shrink: 0; }
+    .hs-frame > .hs-brand { flex-shrink: 0; padding-top: 8px; }
+    .hs-frame > .brand-info { flex-shrink: 0; }
+    .hs-frame > .hs-card {
+      flex-shrink: 0;
+      margin-top: auto;
+      margin-bottom: 16px;
     }
+    .hs-frame > .hs-foot {
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+
+    .hs-name { font-size: 30px !important; letter-spacing: 0.14em; }
+    .hs-event { font-size: 10px; letter-spacing: 0.32em; margin-top: 6px; }
     .brand-info {
       font-size: 13px;
       line-height: 1.7;
+      padding: 18px 16px;
+      margin-bottom: 24px;
     }
-    .hs-card-title {
-      font-size: 22px;
-    }
-    .hs-card-sub {
-      font-size: 12px;
-    }
-    .hs-opt {
-      padding: 24px 10px 18px;
-    }
+    .hs-card { padding: 24px 18px; }
+    .hs-card-title { font-size: 24px; margin-bottom: 4px; }
+    .hs-card-sub { font-size: 12px; margin-bottom: 20px; }
+    .hs-options { gap: 14px; }
+    .hs-opt { padding: 28px 12px 22px; border-radius: 14px; }
     .hs-icon-wrap {
-      width: 64px;
-      height: 64px;
+      width: 68px;
+      height: 68px;
+      margin-bottom: 14px;
     }
-    .hs-icon-wrap i {
-      font-size: 28px;
+    .hs-icon-wrap i { font-size: 30px; }
+    .hs-num { font-size: 10px; letter-spacing: 0.24em; margin-bottom: 6px; }
+    .hs-opt-title { font-size: 14px; letter-spacing: 0.18em; margin-bottom: 4px; }
+    .hs-opt-desc { font-size: 11px; }
+
+    .hs-foot {
+      margin-top: auto;
+      padding-top: 24px;
+      font-size: 10px;
     }
-    .hs-opt-title {
-      font-size: 13px;
-    }
+    .hs-foot-event { font-size: 11px; }
   }
 
   /* TABLET & DESKTOP: Centered card with breathing room */
