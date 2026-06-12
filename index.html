@@ -13,7 +13,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-<script src="/lib/html5-qrcode.min.js"></script>
+<!-- QR Scanner loaded from CDN so it always works -->
+<script src="https://unpkg.com/[email protected]/html5-qrcode.min.js"></script>
 <style>
   :root {
     --black: #0a0807;
@@ -92,9 +93,7 @@
     pointer-events: none;
   }
 
-  /* ============================== */
-  /*  MOBILE (< 768px)              */
-  /* ============================== */
+  /* MOBILE */
   @media (max-width: 767px) {
     .wrap { padding: 0; }
     .hs-frame {
@@ -110,19 +109,13 @@
       margin-top: auto;
       margin-bottom: auto;
     }
-    .hs-frame > .hs-foot {
-      flex-shrink: 0;
-    }
+    .hs-frame > .hs-foot { flex-shrink: 0; }
 
     #screenGate1 > *, #screenGate2Step1 > *, #screenGate2Step2 > *,
     #screenGate2Step3 > *, #screenGate2Success > *, #screenCheckpoint > *,
-    #screenGate1Result > * {
-      flex-shrink: 0;
-    }
+    #screenGate1Result > * { flex-shrink: 0; }
     #screenGate1 .section-label,
-    #screenGate2Step2 .section-label {
-      margin-top: 28px;
-    }
+    #screenGate2Step2 .section-label { margin-top: 28px; }
 
     .hs-top { font-size: 12px; padding: 0 8px 16px; }
     .hs-est { font-size: 11px; letter-spacing: 0.32em; margin-bottom: 8px; }
@@ -149,9 +142,7 @@
     #screenGate2Step1 .hs-brand .hs-name,
     #screenGate2Step2 .hs-brand .hs-name,
     #screenGate2Step3 .hs-brand .hs-name,
-    #screenGate2Success .hs-brand .hs-name {
-      font-size: 32px !important;
-    }
+    #screenGate2Success .hs-brand .hs-name { font-size: 32px !important; }
 
     .wb-btn { font-size: 13px; padding: 16px; letter-spacing: 0.22em; }
     .wb-input { font-size: 15px; padding: 16px 18px; }
@@ -184,9 +175,7 @@
     .msg { font-size: 13px; padding: 14px 16px; }
   }
 
-  /* ============================== */
-  /*  TABLET (≥ 768px)              */
-  /* ============================== */
+  /* TABLET */
   @media (min-width: 768px) {
     body {
       display: flex;
@@ -253,9 +242,7 @@
     .msg { font-size: 14px; padding: 16px 20px; }
   }
 
-  /* ============================== */
-  /*  DESKTOP (≥ 1024px)            */
-  /* ============================== */
+  /* DESKTOP */
   @media (min-width: 1024px) {
     .wrap { max-width: 860px; padding: 0 32px; }
     .hs-frame { padding: 56px 52px 60px; border-radius: 28px; }
@@ -271,9 +258,7 @@
     .result-name { font-size: 48px; }
   }
 
-  /* ============================== */
-  /*  LARGE DESKTOP (≥ 1280px)      */
-  /* ============================== */
+  /* LARGE DESKTOP */
   @media (min-width: 1280px) {
     .wrap { max-width: 940px; }
     .hs-name { font-size: 68px !important; }
@@ -281,9 +266,7 @@
     .hs-icon-wrap i { font-size: 52px; }
   }
 
-  /* ============================== */
-  /*  BASE STYLES                   */
-  /* ============================== */
+  /* BASE STYLES */
   .hs-top {
     display: flex;
     align-items: center;
@@ -378,6 +361,7 @@
     margin-bottom: 14px;
   }
 
+  /* Stacked vertical action cards */
   .hs-options { display: grid; grid-template-columns: 1fr; gap: 14px; }
   .hs-opt {
     background: linear-gradient(180deg, rgba(212, 175, 55, 0.06), rgba(212, 175, 55, 0.02));
@@ -508,7 +492,7 @@
     border: 2px solid var(--gold);
   }
   #reader.show, #reader2.show { display: block; }
-  #reader video, #reader2 video { width: 100%; height: 100%; object-fit: cover; }
+  #reader video, #reader2 video { width: 100% !important; height: 100% !important; object-fit: cover; }
 
   .wb-stage {
     position: relative;
@@ -1349,7 +1333,7 @@ function msg(text, type, msgEl) {
   if (!m) return;
   m.textContent = text;
   m.className = 'msg show msg-' + type;
-  setTimeout(() => m.classList.remove('show'), 5000);
+  setTimeout(() => m.classList.remove('show'), 6000);
 }
 
 function esc(s) {
@@ -1400,45 +1384,138 @@ function getTierClass(tier) {
   return 'tier-default';
 }
 
+// =============================================
+//  QR SCANNER — IMPROVED FOR RELIABILITY
+// =============================================
 async function startScan(readerId, decorId, onSuccess) {
+  // Check library loaded
   if (typeof Html5Qrcode === 'undefined') {
-    msg('QR scanner library not loaded.', 'error');
+    msg('Scanner library not loaded. Please refresh the page.', 'error');
     return;
   }
 
-  const reader = $(readerId);
+  // Hide decorative scan area, show camera container
   const decor = $(decorId);
   if (decor) decor.style.display = 'none';
+  const reader = $(readerId);
   reader.classList.add('show');
 
+  // Stop any previous scanner first
+  if (scanner) {
+    try {
+      if (scanner.isScanning) await scanner.stop();
+      await scanner.clear();
+    } catch(e) {}
+    scanner = null;
+  }
+
   try {
-    scanner = new Html5Qrcode(readerId);
+    scanner = new Html5Qrcode(readerId, { verbose: false });
     activeScannerId = readerId;
 
     const config = {
-      fps: 30,
-      qrbox: function(w, h) {
-        const min = Math.min(w, h);
-        const size = Math.floor(min * 0.85);
+      fps: 10,
+      qrbox: function(viewfinderWidth, viewfinderHeight) {
+        const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+        const size = Math.floor(minEdge * 0.75);
         return { width: size, height: size };
       },
       aspectRatio: 1.0,
-      experimentalFeatures: { useBarCodeDetectorIfSupported: true },
-      formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
-      videoConstraints: {
-        facingMode: 'environment',
-        width: { ideal: 1920 },
-        height: { ideal: 1080 }
+      disableFlip: false,
+      experimentalFeatures: {
+        useBarCodeDetectorIfSupported: true
       }
     };
 
-    try {
-      await scanner.start({ facingMode: 'environment' }, config, onSuccess, () => {});
-    } catch(e) {
-      await scanner.start({ facingMode: 'user' }, config, onSuccess, () => {});
+    // Wrap the success callback to handle results properly
+    const wrappedSuccess = (decodedText, decodedResult) => {
+      // Clean the decoded text — extract just the QR ID
+      // If QR contains URL (e.g. ?band=BAND001), extract the band/qr value
+      let cleanText = decodedText.trim();
+
+      // If it's a URL with band parameter, extract the band ID
+      if (cleanText.includes('?band=')) {
+        const match = cleanText.match(/[?&]band=([^&]+)/);
+        if (match) cleanText = match[1];
+      }
+      // If it's a URL with qr parameter, extract the qr ID
+      else if (cleanText.includes('?qr=')) {
+        const match = cleanText.match(/[?&]qr=([^&]+)/);
+        if (match) cleanText = match[1];
+      }
+      // If it's a URL, try to extract the last path segment
+      else if (cleanText.startsWith('http')) {
+        try {
+          const url = new URL(cleanText);
+          // Check for any query param that might be the ID
+          const params = url.searchParams;
+          for (const key of ['id', 'qrId', 'guestId', 'code']) {
+            if (params.has(key)) {
+              cleanText = params.get(key);
+              break;
+            }
+          }
+        } catch(e) {}
+      }
+
+      onSuccess(cleanText, decodedResult);
+    };
+
+    // Try environment (back) camera first, then fall back to front
+    const cameraConfigs = [
+      { facingMode: { exact: 'environment' } },
+      { facingMode: 'environment' },
+      { facingMode: 'user' }
+    ];
+
+    let started = false;
+    let lastError = null;
+    for (const camConfig of cameraConfigs) {
+      try {
+        await scanner.start(camConfig, config, wrappedSuccess, () => {});
+        started = true;
+        break;
+      } catch (err) {
+        lastError = err;
+        continue;
+      }
+    }
+
+    if (!started) {
+      // Try listing cameras and using the first one as fallback
+      try {
+        const devices = await Html5Qrcode.getCameras();
+        if (devices && devices.length) {
+          // Prefer back camera if available
+          let cameraId = devices[devices.length - 1].id;
+          for (const d of devices) {
+            if (/back|rear|environment/i.test(d.label)) {
+              cameraId = d.id;
+              break;
+            }
+          }
+          await scanner.start(cameraId, config, wrappedSuccess, () => {});
+          started = true;
+        }
+      } catch (err) {
+        lastError = err;
+      }
+    }
+
+    if (!started) {
+      throw lastError || new Error('No camera available');
     }
   } catch (err) {
-    msg('Camera error: ' + (err.message || err.name), 'error');
+    console.error('Scanner start error:', err);
+    let errMsg = 'Camera error: ' + (err.message || err.name || 'Unknown');
+    if (err.name === 'NotAllowedError' || /permission/i.test(err.message||'')) {
+      errMsg = 'Camera permission denied. Allow camera access in your browser settings.';
+    } else if (err.name === 'NotFoundError') {
+      errMsg = 'No camera found on this device.';
+    } else if (err.name === 'NotReadableError') {
+      errMsg = 'Camera is being used by another app. Close other apps and try again.';
+    }
+    msg(errMsg, 'error');
     await stopScan();
   }
 }
@@ -1777,7 +1854,7 @@ $('btnHome').addEventListener('click', goHome);
 
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof Html5Qrcode === 'undefined') {
-    msg('Scanner library failed to load.', 'error');
+    msg('Scanner library failed to load. Check your internet connection.', 'error');
   }
   const hasNfc = checkNfcParameter();
   if (!hasNfc) {
